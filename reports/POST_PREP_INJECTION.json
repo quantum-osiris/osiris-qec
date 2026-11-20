@@ -1,0 +1,267 @@
+[
+ {
+  "error": "Z on data q0 AFTER prep",
+  "x_syndrome_plaquettes": [
+   1,
+   6
+  ],
+  "detected": true,
+  "in_codespace": false,
+  "corrected": false,
+  "classification": "detected_by_x_syndrome_but_NOT_corrected (no post-prep syndrome round)"
+ },
+ {
+  "error": "Z on data q1 AFTER prep",
+  "x_syndrome_plaquettes": [
+   0,
+   6
+  ],
+  "detected": true,
+  "in_codespace": false,
+  "corrected": false,
+  "classification": "detected_by_x_syndrome_but_NOT_corrected (no post-prep syndrome round)"
+ },
+ {
+  "error": "Z on data q2 AFTER prep",
+  "x_syndrome_plaquettes": [
+   0,
+   7
+  ],
+  "detected": true,
+  "in_codespace": false,
+  "corrected": false,
+  "classification": "detected_by_x_syndrome_but_NOT_corrected (no post-prep syndrome round)"
+ },
+ {
+  "error": "Z on data q3 AFTER prep",
+  "x_syndrome_plaquettes": [
+   1,
+   7
+  ],
+  "detected": true,
+  "in_codespace": false,
+  "corrected": false,
+  "classification": "detected_by_x_syndrome_but_NOT_corrected (no post-prep syndrome round)"
+ },
+ {
+  "error": "Z on data q4 AFTER prep",
+  "x_syndrome_plaquettes": [
+   1,
+   2
+  ],
+  "detected": true,
+  "in_codespace": false,
+  "corrected": false,
+  "classification": "detected_by_x_syndrome_but_NOT_corrected (no post-prep syndrome round)"
+ },
+ {
+  "error": "Z on data q5 AFTER prep",
+  "x_syndrome_plaquettes": [
+   0,
+   2
+  ],
+  "detected": true,
+  "in_codespace": false,
+  "corrected": false,
+  "classification": "detected_by_x_syndrome_but_NOT_corrected (no post-prep syndrome round)"
+ },
+ {
+  "error": "Z on data q6 AFTER prep",
+  "x_syndrome_plaquettes": [
+   0,
+   3
+  ],
+  "detected": true,
+  "in_codespace": false,
+  "corrected": false,
+  "classification": "detected_by_x_syndrome_but_NOT_corrected (no post-prep syndrome round)"
+ },
+ {
+  "error": "Z on data q7 AFTER prep",
+  "x_syndrome_plaquettes": [
+   1,
+   3
+  ],
+  "detected": true,
+  "in_codespace": false,
+  "corrected": false,
+  "classification": "detected_by_x_syndrome_but_NOT_corrected (no post-prep syndrome round)"
+ },
+ {
+  "error": "Z on data q8 AFTER prep",
+  "x_syndrome_plaquettes": [
+   2,
+   5
+  ],
+  "detected": true,
+  "in_codespace": false,
+  "corrected": false,
+  "classification": "detected_by_x_syndrome_but_NOT_corrected (no post-prep syndrome round)"
+ },
+ {
+  "error": "Z on data q9 AFTER prep",
+  "x_syndrome_plaquettes": [
+   2,
+   4
+  ],
+  "detected": true,
+  "in_codespace": false,
+  "corrected": false,
+  "classification": "detected_by_x_syndrome_but_NOT_corrected (no post-prep syndrome round)"
+ },
+ {
+  "error": "Z on data q10 AFTER prep",
+  "x_syndrome_plaquettes": [
+   3,
+   4
+  ],
+  "detected": true,
+  "in_codespace": false,
+  "corrected": false,
+  "classification": "detected_by_x_syndrome_but_NOT_corrected (no post-prep syndrome round)"
+ },
+ {
+  "error": "Z on data q11 AFTER prep",
+  "x_syndrome_plaquettes": [
+   3,
+   5
+  ],
+  "detected": true,
+  "in_codespace": false,
+  "corrected": false,
+  "classification": "detected_by_x_syndrome_but_NOT_corrected (no post-prep syndrome round)"
+ },
+ {
+  "error": "Z on data q12 AFTER prep",
+  "x_syndrome_plaquettes": [
+   5,
+   6
+  ],
+  "detected": true,
+  "in_codespace": false,
+  "corrected": false,
+  "classification": "detected_by_x_syndrome_but_NOT_corrected (no post-prep syndrome round)"
+ },
+ {
+  "error": "Z on data q13 AFTER prep",
+  "x_syndrome_plaquettes": [
+   4,
+   6
+  ],
+  "detected": true,
+  "in_codespace": false,
+  "corrected": false,
+  "classification": "detected_by_x_syndrome_but_NOT_corrected (no post-prep syndrome round)"
+ },
+ {
+  "error": "Z on data q14 AFTER prep",
+  "x_syndrome_plaquettes": [
+   4,
+   7
+  ],
+  "detected": true,
+  "in_codespace": false,
+  "corrected": false,
+  "classification": "detected_by_x_syndrome_but_NOT_corrected (no post-prep syndrome round)"
+ },
+ {
+  "error": "Z on data q15 AFTER prep",
+  "x_syndrome_plaquettes": [
+   5,
+   7
+  ],
+  "detected": true,
+  "in_codespace": false,
+  "corrected": false,
+  "classification": "detected_by_x_syndrome_but_NOT_corrected (no post-prep syndrome round)"
+ },
+ {
+  "error": "Z on data q5 BEFORE prep (contrast)",
+  "detected": true,
+  "in_codespace": true,
+  "corrected": true,
+  "classification": "corrected_by_feedforward",
+  "fidelity_to_prepared_state": 0.9999999999999885
+ },
+ {
+  "error": "X on data q0 AFTER prep",
+  "x_syndrome_plaquettes": [],
+  "z_syndrome_plaquettes": [
+   0,
+   7
+  ],
+  "detected": false,
+  "in_codespace": false,
+  "corrected": false,
+  "classification": "UNDETECTED (X-syndrome zero; Z-syndrome nonzero but Z generators never measured)"
+ },
+ {
+  "error": "X on data q5 AFTER prep",
+  "x_syndrome_plaquettes": [],
+  "z_syndrome_plaquettes": [
+   0,
+   2
+  ],
+  "detected": false,
+  "in_codespace": false,
+  "corrected": false,
+  "classification": "UNDETECTED (X-syndrome zero; Z-syndrome nonzero but Z generators never measured)"
+ },
+ {
+  "error": "X on data q15 AFTER prep",
+  "x_syndrome_plaquettes": [],
+  "z_syndrome_plaquettes": [
+   5,
+   7
+  ],
+  "detected": false,
+  "in_codespace": false,
+  "corrected": false,
+  "classification": "UNDETECTED (X-syndrome zero; Z-syndrome nonzero but Z generators never measured)"
+ },
+ {
+  "error": "Y on data q0 AFTER prep",
+  "x_syndrome_plaquettes": [
+   1,
+   6
+  ],
+  "z_syndrome_plaquettes": [
+   0,
+   7
+  ],
+  "detected": true,
+  "in_codespace": false,
+  "corrected": false,
+  "classification": "PARTIALLY_DETECTED (X-syndrome nonzero) but NOT corrected; Z-syndrome unmeasured"
+ },
+ {
+  "error": "Y on data q5 AFTER prep",
+  "x_syndrome_plaquettes": [
+   0,
+   2
+  ],
+  "z_syndrome_plaquettes": [
+   0,
+   2
+  ],
+  "detected": true,
+  "in_codespace": false,
+  "corrected": false,
+  "classification": "PARTIALLY_DETECTED (X-syndrome nonzero) but NOT corrected; Z-syndrome unmeasured"
+ },
+ {
+  "error": "Y on data q15 AFTER prep",
+  "x_syndrome_plaquettes": [
+   5,
+   7
+  ],
+  "z_syndrome_plaquettes": [
+   5,
+   7
+  ],
+  "detected": true,
+  "in_codespace": false,
+  "corrected": false,
+  "classification": "PARTIALLY_DETECTED (X-syndrome nonzero) but NOT corrected; Z-syndrome unmeasured"
+ }
+]

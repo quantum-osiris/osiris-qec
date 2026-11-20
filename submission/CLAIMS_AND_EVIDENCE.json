@@ -1,0 +1,35 @@
+{
+  "package": "osiris-qec wen-plaquette feed-forward preparation",
+  "generated": "2026-11-20",
+  "status": "HARDWARE-UNVALIDATED",
+  "provenance": "Preparation protocol is prior art: arXiv:2302.01917 (Iqbal et al., Quantinuum H1) and Quantinuum tutorial 'Topological Order from Measurements and Feed-Forward' implement the same 4x4 Wen-plaquette preparation (16 data + 4 ancilla qubits, two X-measurement rounds, 7-entry LUT, conditional Z). This package contributes the pytket CustomPass integration, independent verification, regression tests, and reproducible benchmarking.",
+  "environment": {
+    "python": "3.14.6", "pytket": "2.18.5", "pytket-qiskit": "0.79.0",
+    "pytket-quantinuum": "0.59.3", "qnexus": "0.51.4", "qiskit": "2.6.2",
+    "qiskit-aer": "0.18.4", "numpy": "2.5.5", "pytest": "9.2.0"
+  },
+  "claims": [
+    {"claim": "Preparation protocol is novel", "status": "REFUTED", "evidence": "prior art arXiv:2302.01917 + Quantinuum tutorial; contribution is compiler integration + verification + tests + benchmarking"},
+    {"claim": "Compiler pass enforces preparation-only contract (nonempty input rejected)", "status": "VERIFIED", "evidence": "tests/test_compiler_pass.py (9 tests); full pytest suite passes"},
+    {"claim": "Corrected pass output identical to baseline on empty input", "status": "VERIFIED", "evidence": "test_regression_identical_to_baseline_on_empty_input (SHA-256 equality)"},
+    {"claim": "Stabilizers match independent lattice derivation; all commute; rank 14; k=2; d=4", "status": "VERIFIED", "evidence": "reports/QEC_BASELINE_AUDIT.md; qec_math.py exhaustive weight<=3 enumeration"},
+    {"claim": "LUT corrections consistent with independently computed syndromes", "status": "VERIFIED", "evidence": "audit_baseline.py lut_audit; verify_independent.py"},
+    {"claim": "Endianness mapping (BE syndrome -> LE condition value) correct in unit and emitted circuit", "status": "VERIFIED", "evidence": "ordering tests in tests/test_qec_behavior.py; grouped-conditional check in verify_independent.py"},
+    {"claim": "Noiseless preparation lands in codespace on all reachable branches", "status": "VERIFIED", "evidence": "exact enumeration: 128/128 reachable branches, worst stabilizer exp 0.9999999999999942; 128 zero-probability branches detected"},
+    {"claim": "AerBackend (C++) cross-check of full dynamic circuit", "status": "VERIFIED", "evidence": "X-basis 512 shots 0 X-plaquette parity violations; Z-basis 256 shots 0 Z-plaquette parity violations"},
+    {"claim": "c5_end measurement basis is explicit and both bases verified", "status": "VERIFIED", "evidence": "test_final_measurement_basis_is_explicit (H-before-Measure ordering for X; absent for Z); dual Aer cross-checks"},
+    {"claim": "Weight-1 Z errors on all 16 data qubits corrected (pre-preparation)", "status": "VERIFIED", "evidence": "reports/ERROR_CORRECTION_MATRIX.json: corrected_fraction 1.0 for 16/16, 16 shots each"},
+    {"claim": "Weight-1 X/Y errors detected and corrected", "status": "REFUTED", "evidence": "ERROR_CORRECTION_MATRIX.json: 0/32 corrected; Z-type generators never measured"},
+    {"claim": "Post-preparation errors are corrected by this circuit", "status": "REFUTED", "evidence": "tests/test_post_prep_injection.py + reports/POST_PREP_INJECTION.json: post-prep Z detectable (nonzero X-syndrome, all 16 qubits) but not corrected (fid < 0.001); pre-prep Z corrected (fid 1.0)"},
+    {"claim": "Circuit is a fault-tolerant quantum memory", "status": "REFUTED", "evidence": "single preparation round; no repeated syndrome extraction after prep"},
+    {"claim": "Arbitrary logical states encodable", "status": "REFUTED", "evidence": "reports/LOGICAL_VALIDATION.md: fixed logical state (Z_L=+1, X_L=0); branch-independent prep fidelity 0.9999999999999885"},
+    {"claim": "Logical state preserved under weight-1 Z error", "status": "VERIFIED", "evidence": "LOGICAL_VALIDATION.md fidelity 1.000000; under X error fidelity 0.000000"},
+    {"claim": "Noisy benchmark reproducible (seeds 11/22/33)", "status": "VERIFIED", "evidence": "reports/QEC_BENCHMARK_RESULTS.json/.png; logical fid with FF: 1.0000/0.9889/0.9056/0.6389/0.3833 at p=0/1e-4/1e-3/5e-3/1e-2"},
+    {"claim": "Quantum advantage / error suppression beyond baseline", "status": "UNVERIFIED", "evidence": "no hardware data; no-feed-forward baseline included; no advantage claimed"},
+    {"claim": "H2-1 ISA compilation (offline)", "status": "VERIFIED", "evidence": "reports/H2_COMPATIBILITY.md; depth 19, 32 ZZPhase, 20/56 qubits, 28/4000 clbits; hashes in hardware/experiment_manifest.json"},
+    {"claim": "Current submission path (qnexus/Nexus) validated; legacy API retired", "status": "VERIFIED", "evidence": "docs.quantinuum.com/product-updates (legacy API sunset); qnexus 0.51.4 installed and API inspected (QuantinuumConfig(device_name=...), devices.get_all, start_compile_job/start_execute_job); not logged in"},
+    {"claim": "Acceptance criterion is statistically strict (95% Wilson lower bound > 0.99)", "status": "VERIFIED", "evidence": "hardware/experiment_manifest.json + submission/EXPERIMENT_PROTOCOL.md"},
+    {"claim": "H2 hardware execution", "status": "BLOCKED", "evidence": "requires qnexus credentials + HQC; no jobs submitted; manifest + protocol prepared for authorized submission"},
+    {"claim": "Verifier detects corrupted LUT / invalid stabilizer / endianness mismatch", "status": "VERIFIED", "evidence": "verify_independent.py negative tests; reports/INDEPENDENT_VERIFICATION.md"}
+  ]
+}

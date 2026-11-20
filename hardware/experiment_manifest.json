@@ -1,0 +1,76 @@
+{
+ "manifest_version": "1.0",
+ "status": "PREPARED_LOCALLY__NOT_SUBMITTED",
+ "target_backends": [
+  {
+   "name": "H2-1SC",
+   "role": "syntax checker (free, no HQC consumed)",
+   "requires_api": true
+  },
+  {
+   "name": "H2-1E",
+   "role": "device emulator (consumes HQC)",
+   "requires_api": true
+  },
+  {
+   "name": "H2-1",
+   "role": "hardware (subscription / Azure Quantum / ORNL QCUP)",
+   "requires_api": true
+  }
+ ],
+ "circuits": [
+  {
+   "id": "wen_plaquette_prep_v1",
+   "pre_compile_sha256": "b86aeabd70eecb7f5fbca5d0e1688e06d71dc358fd9fbaaab7fd8e4f9634230b",
+   "h2_compiled_sha256": "02d5cb72849f9b473c022e68023486fdecc8c9f7fc3da9a9a9299c3482f31062",
+   "n_qubits": 20,
+   "n_clbits": 28,
+   "depth_after_compile": 19,
+   "gate_counts_after_compile": {
+    "Barrier": 1,
+    "Conditional": 20,
+    "Measure": 24,
+    "PhasedX": 72,
+    "Reset": 8,
+    "Rz": 20,
+    "ZZPhase": 32
+   }
+  }
+ ],
+ "shot_allocation": {
+  "H2-1SC": "syntax check only, 1 shot",
+  "H2-1E": "1000-10000 shots (emulator)",
+  "H2-1": "1000-10000 shots proposed"
+ },
+ "estimated_cost": "H2-1SC: no HQC. H2-1E / H2-1: consumes HQC; exact cost TBD via qnexus at submission time. No job has been submitted.",
+ "scientific_hypothesis": "The 20-qubit Wen-plaquette feed-forward preparation circuit compiles to the H2 ISA and, on H2-1, the final X-basis readout of the 16 data qubits satisfies all 8 Z-plaquette even-parity constraints in every shot (codespace preparation), with feed-forward corrections visible in the classical register.",
+ "expected_observations": [
+  "All 24 mid-circuit measurements execute; 20 conditional Z corrections present.",
+  "Every c5_end outcome string has even parity on each Z-plaquette support.",
+  "Syndrome distribution over c4_2nd matches the ideal uniform-over-even-parity distribution."
+ ],
+ "submission_path": {
+  "status": "legacy Quantinuum API SUNSET; pytket-quantinuum job-submission API retired (docs.quantinuum.com/product-updates).",
+  "current_path": "qnexus 0.51.4 (installed, API inspected, NOT logged in): qnexus.login_with_credentials() / Nexus portal auth -> qnexus.devices.get_all() -> qnexus.QuantinuumConfig(device_name='H2-1SC'|'H2-1E'|'H2-1') -> qnexus.start_compile_job / qnexus.start_execute_job. pytket-quantinuum 0.59.3 used here ONLY for offline local compilation (QuantinuumAPIOffline), which remains valid.",
+  "note": "No submission attempted; credentials required and supplied at runtime by an authorized user only."
+ },
+ "acceptance_criteria": [
+  "H2-1SC syntax check passes via qnexus.",
+  "X-basis run: 95% Wilson LOWER confidence bound on the fraction of shots satisfying all X-plaquette parity constraints exceeds 0.99 (stronger than observing >=99% at n=1000).",
+  "Z-basis run: same criterion on Z-plaquette parity.",
+  "Round-2 syndrome parity always even in simulation-derived expectation; on hardware, report raw distribution."
+ ],
+ "stopping_conditions": [
+  "Stop after syntax check if it fails (fix compilation, do not submit).",
+  "Stop emulator run if >5% parity violations at low shot count.",
+  "Never submit to H2-1 hardware without explicit human authorization."
+ ],
+ "result_retrieval": "qnexus / Quantinuum API job results; counts keyed by c5_end; compare against reports/QEC_BENCHMARK_RESULTS.json noise predictions.",
+ "credentials": "NONE stored, printed, or committed. API tokens are supplied at runtime via environment variables by an authorized user only.",
+ "authorization": {
+  "granted": "2026-11-20",
+  "scope": "full pipeline H2-1SC -> H2-1E -> H2-1 with manifest gates enforced",
+  "by": "package owner (chat)",
+  "note": "authentication via qnx login out-of-band; no credentials in repo/transcripts"
+ }
+}

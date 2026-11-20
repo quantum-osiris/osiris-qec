@@ -1,0 +1,10 @@
+{
+ "pipeline": "H2-1SC -> H2-1E -> H2-1 (gated)",
+ "authorization": "owner authorized full pipeline 2026-11-20 ('authorize all'); gates per manifest still enforced",
+ "timestamp_utc": "2026-11-20T19:10:50.758772+00:00",
+ "jobs": [],
+ "circuit_sha256": "b86aeabd70eecb7f5fbca5d0e1688e06d71dc358fd9fbaaab7fd8e4f9634230b",
+ "hash_match": true,
+ "status": "BLOCKED_NO_CREDENTIALS",
+ "detail": "AuthenticationError: not authenticated. Run `qnx login` in your terminal (or export the token env var in your shell), then rerun this script. Never paste credentials into chat."
+}

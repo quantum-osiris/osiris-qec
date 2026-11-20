@@ -1,0 +1,44 @@
+{
+  "title": "Compiler-Contract Enforcement, Exact 256-Branch Verification, Pre/Post-Preparation Error Taxonomy, and Pre-Registered Quantinuum H2 Protocol for 20-Qubit Toroidal Wen-Plaquette Feed-Forward Preparation",
+  "upload_type": "publication",
+  "publication_type": "preprint",
+  "publication_date": "2026-11-20",
+  "version": "1.0.0",
+  "license": "cc-by-4.0",
+  "access_right": "open",
+  "creators": [
+    {
+      "name": "Davis, Devin Phillip",
+      "affiliation": "Agile Defense Systems LLC"
+    }
+  ],
+  "keywords": [
+    "quantum error correction",
+    "Wen-plaquette code",
+    "toric code",
+    "mid-circuit measurement",
+    "classical feed-forward",
+    "pytket CustomPass",
+    "Quantinuum H2",
+    "pre-registered quantum protocol",
+    "OSIRIS-QEC"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/quantum-osiris/osiris-qec/tree/v1.0.0",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    },
+    {
+      "identifier": "arXiv:2302.01917",
+      "relation": "cites",
+      "scheme": "arxiv"
+    },
+    {
+      "identifier": "10.5281/zenodo.24293756",
+      "relation": "references",
+      "scheme": "doi"
+    }
+  ],
+  "notes": "STATUS: HARDWARE-UNVALIDATED (local exact simulation, dual-basis Qiskit Aer cross-checks, and offline Quantinuum H2-1 ISA compilation; zero hardware jobs submitted). Frozen pre-compile SHA-256: b86aeabd70eecb7f5fbca5d0e1688e06d71dc358fd9fbaaab7fd8e4f9634230b. Frozen H2-1 compiled SHA-256: 02d5cb72849f9b473c022e68023486fdecc8c9f7fc3da9a9a9299c3482f31062."
+}

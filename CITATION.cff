@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use this package, verification suite, or preprint, please cite it as below."
+authors:
+  - family-names: "Davis"
+    given-names: "Devin Phillip"
+    affiliation: "Agile Defense Systems LLC"
+title: "Compiler-Contract Enforcement, Exact 256-Branch Verification, Pre/Post-Preparation Error Taxonomy, and Pre-Registered Quantinuum H2 Protocol for 20-Qubit Toroidal Wen-Plaquette Feed-Forward Preparation"
+version: 1.0.0
+doi: "10.5281/zenodo.24406733"
+date-released: 2026-11-20
+url: "https://github.com/quantum-osiris/osiris-qec"
+repository-code: "https://github.com/quantum-osiris/osiris-qec"
+license: Apache-2.0
+type: software
+keywords:
+  - quantum error correction
+  - Wen-plaquette code
+  - topological order
+  - mid-circuit measurement
+  - classical feed-forward
+  - pytket
+  - Quantinuum H2
+  - pre-registered quantum experiment

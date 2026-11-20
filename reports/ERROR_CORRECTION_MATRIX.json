@@ -1,0 +1,600 @@
+[
+ {
+  "error": "X on [0]",
+  "pauli": "X",
+  "qubits": [
+   0
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 0,
+  "corrected_fraction": 0.0
+ },
+ {
+  "error": "Y on [0]",
+  "pauli": "Y",
+  "qubits": [
+   0
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 0,
+  "corrected_fraction": 0.0
+ },
+ {
+  "error": "Z on [0]",
+  "pauli": "Z",
+  "qubits": [
+   0
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 16,
+  "corrected_fraction": 1.0
+ },
+ {
+  "error": "X on [1]",
+  "pauli": "X",
+  "qubits": [
+   1
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 0,
+  "corrected_fraction": 0.0
+ },
+ {
+  "error": "Y on [1]",
+  "pauli": "Y",
+  "qubits": [
+   1
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 0,
+  "corrected_fraction": 0.0
+ },
+ {
+  "error": "Z on [1]",
+  "pauli": "Z",
+  "qubits": [
+   1
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 16,
+  "corrected_fraction": 1.0
+ },
+ {
+  "error": "X on [2]",
+  "pauli": "X",
+  "qubits": [
+   2
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 0,
+  "corrected_fraction": 0.0
+ },
+ {
+  "error": "Y on [2]",
+  "pauli": "Y",
+  "qubits": [
+   2
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 0,
+  "corrected_fraction": 0.0
+ },
+ {
+  "error": "Z on [2]",
+  "pauli": "Z",
+  "qubits": [
+   2
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 16,
+  "corrected_fraction": 1.0
+ },
+ {
+  "error": "X on [3]",
+  "pauli": "X",
+  "qubits": [
+   3
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 0,
+  "corrected_fraction": 0.0
+ },
+ {
+  "error": "Y on [3]",
+  "pauli": "Y",
+  "qubits": [
+   3
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 0,
+  "corrected_fraction": 0.0
+ },
+ {
+  "error": "Z on [3]",
+  "pauli": "Z",
+  "qubits": [
+   3
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 16,
+  "corrected_fraction": 1.0
+ },
+ {
+  "error": "X on [4]",
+  "pauli": "X",
+  "qubits": [
+   4
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 0,
+  "corrected_fraction": 0.0
+ },
+ {
+  "error": "Y on [4]",
+  "pauli": "Y",
+  "qubits": [
+   4
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 0,
+  "corrected_fraction": 0.0
+ },
+ {
+  "error": "Z on [4]",
+  "pauli": "Z",
+  "qubits": [
+   4
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 16,
+  "corrected_fraction": 1.0
+ },
+ {
+  "error": "X on [5]",
+  "pauli": "X",
+  "qubits": [
+   5
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 0,
+  "corrected_fraction": 0.0
+ },
+ {
+  "error": "Y on [5]",
+  "pauli": "Y",
+  "qubits": [
+   5
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 0,
+  "corrected_fraction": 0.0
+ },
+ {
+  "error": "Z on [5]",
+  "pauli": "Z",
+  "qubits": [
+   5
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 16,
+  "corrected_fraction": 1.0
+ },
+ {
+  "error": "X on [6]",
+  "pauli": "X",
+  "qubits": [
+   6
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 0,
+  "corrected_fraction": 0.0
+ },
+ {
+  "error": "Y on [6]",
+  "pauli": "Y",
+  "qubits": [
+   6
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 0,
+  "corrected_fraction": 0.0
+ },
+ {
+  "error": "Z on [6]",
+  "pauli": "Z",
+  "qubits": [
+   6
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 16,
+  "corrected_fraction": 1.0
+ },
+ {
+  "error": "X on [7]",
+  "pauli": "X",
+  "qubits": [
+   7
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 0,
+  "corrected_fraction": 0.0
+ },
+ {
+  "error": "Y on [7]",
+  "pauli": "Y",
+  "qubits": [
+   7
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 0,
+  "corrected_fraction": 0.0
+ },
+ {
+  "error": "Z on [7]",
+  "pauli": "Z",
+  "qubits": [
+   7
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 16,
+  "corrected_fraction": 1.0
+ },
+ {
+  "error": "X on [8]",
+  "pauli": "X",
+  "qubits": [
+   8
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 0,
+  "corrected_fraction": 0.0
+ },
+ {
+  "error": "Y on [8]",
+  "pauli": "Y",
+  "qubits": [
+   8
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 0,
+  "corrected_fraction": 0.0
+ },
+ {
+  "error": "Z on [8]",
+  "pauli": "Z",
+  "qubits": [
+   8
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 16,
+  "corrected_fraction": 1.0
+ },
+ {
+  "error": "X on [9]",
+  "pauli": "X",
+  "qubits": [
+   9
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 0,
+  "corrected_fraction": 0.0
+ },
+ {
+  "error": "Y on [9]",
+  "pauli": "Y",
+  "qubits": [
+   9
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 0,
+  "corrected_fraction": 0.0
+ },
+ {
+  "error": "Z on [9]",
+  "pauli": "Z",
+  "qubits": [
+   9
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 16,
+  "corrected_fraction": 1.0
+ },
+ {
+  "error": "X on [10]",
+  "pauli": "X",
+  "qubits": [
+   10
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 0,
+  "corrected_fraction": 0.0
+ },
+ {
+  "error": "Y on [10]",
+  "pauli": "Y",
+  "qubits": [
+   10
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 0,
+  "corrected_fraction": 0.0
+ },
+ {
+  "error": "Z on [10]",
+  "pauli": "Z",
+  "qubits": [
+   10
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 16,
+  "corrected_fraction": 1.0
+ },
+ {
+  "error": "X on [11]",
+  "pauli": "X",
+  "qubits": [
+   11
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 0,
+  "corrected_fraction": 0.0
+ },
+ {
+  "error": "Y on [11]",
+  "pauli": "Y",
+  "qubits": [
+   11
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 0,
+  "corrected_fraction": 0.0
+ },
+ {
+  "error": "Z on [11]",
+  "pauli": "Z",
+  "qubits": [
+   11
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 16,
+  "corrected_fraction": 1.0
+ },
+ {
+  "error": "X on [12]",
+  "pauli": "X",
+  "qubits": [
+   12
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 0,
+  "corrected_fraction": 0.0
+ },
+ {
+  "error": "Y on [12]",
+  "pauli": "Y",
+  "qubits": [
+   12
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 0,
+  "corrected_fraction": 0.0
+ },
+ {
+  "error": "Z on [12]",
+  "pauli": "Z",
+  "qubits": [
+   12
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 16,
+  "corrected_fraction": 1.0
+ },
+ {
+  "error": "X on [13]",
+  "pauli": "X",
+  "qubits": [
+   13
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 0,
+  "corrected_fraction": 0.0
+ },
+ {
+  "error": "Y on [13]",
+  "pauli": "Y",
+  "qubits": [
+   13
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 0,
+  "corrected_fraction": 0.0
+ },
+ {
+  "error": "Z on [13]",
+  "pauli": "Z",
+  "qubits": [
+   13
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 16,
+  "corrected_fraction": 1.0
+ },
+ {
+  "error": "X on [14]",
+  "pauli": "X",
+  "qubits": [
+   14
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 0,
+  "corrected_fraction": 0.0
+ },
+ {
+  "error": "Y on [14]",
+  "pauli": "Y",
+  "qubits": [
+   14
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 0,
+  "corrected_fraction": 0.0
+ },
+ {
+  "error": "Z on [14]",
+  "pauli": "Z",
+  "qubits": [
+   14
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 16,
+  "corrected_fraction": 1.0
+ },
+ {
+  "error": "X on [15]",
+  "pauli": "X",
+  "qubits": [
+   15
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 0,
+  "corrected_fraction": 0.0
+ },
+ {
+  "error": "Y on [15]",
+  "pauli": "Y",
+  "qubits": [
+   15
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 0,
+  "corrected_fraction": 0.0
+ },
+ {
+  "error": "Z on [15]",
+  "pauli": "Z",
+  "qubits": [
+   15
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 16,
+  "corrected_fraction": 1.0
+ },
+ {
+  "error": "Z on [0, 1]",
+  "pauli": "Z",
+  "qubits": [
+   0,
+   1
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 16,
+  "corrected_fraction": 1.0
+ },
+ {
+  "error": "Z on [0, 4]",
+  "pauli": "Z",
+  "qubits": [
+   0,
+   4
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 16,
+  "corrected_fraction": 1.0
+ },
+ {
+  "error": "Z on [5, 6]",
+  "pauli": "Z",
+  "qubits": [
+   5,
+   6
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 16,
+  "corrected_fraction": 1.0
+ },
+ {
+  "error": "Z on [0, 5]",
+  "pauli": "Z",
+  "qubits": [
+   0,
+   5
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 16,
+  "corrected_fraction": 1.0
+ },
+ {
+  "error": "X on [16]",
+  "pauli": "X",
+  "qubits": [
+   16
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 0,
+  "corrected_fraction": 0.0
+ },
+ {
+  "error": "Z on [16]",
+  "pauli": "Z",
+  "qubits": [
+   16
+  ],
+  "timing": "injected_before_preparation",
+  "shots": 16,
+  "shots_in_codespace_after_feedforward": 16,
+  "corrected_fraction": 1.0
+ }
+]
