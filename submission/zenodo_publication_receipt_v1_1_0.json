@@ -1,0 +1,110 @@
+{
+  "package": "osiris-qec",
+  "version": "1.1.0",
+  "status": "HARDWARE-UNVALIDATED",
+  "baseline_v1_0_0_doi": "10.5281/zenodo.24406733",
+  "record_id": 24421051,
+  "doi": "10.5281/zenodo.24421051",
+  "conceptdoi": "10.5281/zenodo.24406732",
+  "doi_url": "https://doi.org/10.5281/zenodo.24421051",
+  "record_html": "https://zenodo.org/record/24421051",
+  "github_release_url": "https://github.com/quantum-osiris/osiris-qec/releases/tag/v1.1.0",
+  "precompile_sha256": "b86aeabd70eecb7f5fbca5d0e1688e06d71dc358fd9fbaaab7fd8e4f9634230b",
+  "isa_sha256": "02d5cb72849f9b473c022e68023486fdecc8c9f7fc3da9a9a9299c3482f31062",
+  "optimisation_level": 0,
+  "state": "done",
+  "submitted": true,
+  "created": "2026-11-21T15:10:35.628756+00:00",
+  "uploaded_files": [
+    {
+      "name": "wen_plaquette_feedforward_qec_v1_1.pdf",
+      "bytes": 49788,
+      "checksum": "md5:3abd93a6581765370e0bc57648207397"
+    },
+    {
+      "name": "wen_plaquette_feedforward_qec_v1_1.tex",
+      "bytes": 4831,
+      "checksum": "md5:36d2c7d88da9d835a76ba72567ad8a50"
+    },
+    {
+      "name": "fig1_torus_checkerboard_lut.pdf",
+      "bytes": 11870,
+      "checksum": "md5:5569ab30f9a9971fdce867a4b28364db"
+    },
+    {
+      "name": "fig2_noisy_fidelity_benchmark.pdf",
+      "bytes": 12741,
+      "checksum": "md5:ece9ff99f32e48299717c5e98269fc62"
+    },
+    {
+      "name": "fig3_error_taxonomy_and_wilson_gate.pdf",
+      "bytes": 5108,
+      "checksum": "md5:d05d608cac4153b3f3d1b982a4e4fd19"
+    },
+    {
+      "name": "SHA256SUMS.txt",
+      "bytes": 2521,
+      "checksum": "md5:d8bb356a58501a815b30634e51fd1152"
+    },
+    {
+      "name": "osiris-qec-v1.1.0-reproducibility-bundle.tar.gz",
+      "bytes": 187665,
+      "checksum": "md5:cafe548b23bc7d1e1fd0decc20381f78"
+    },
+    {
+      "name": "experiment_manifest_v1_0_0.json",
+      "bytes": 1336,
+      "checksum": "md5:f5f8fe7060d671199e3e90cb24539d06"
+    },
+    {
+      "name": "experiment_manifest_v1_1_0.json",
+      "bytes": 1150,
+      "checksum": "md5:945b9ac5dc332c3764317d3b67c4e2e3"
+    },
+    {
+      "name": "ledger_schema_v1_1_0.json",
+      "bytes": 2286,
+      "checksum": "md5:91ed9df7ff6a08b7728cc92f23927ad0"
+    },
+    {
+      "name": "hashlock_policy_v1_1_0.md",
+      "bytes": 2591,
+      "checksum": "md5:7831a6943d2c6e9ce0de9127bfe9e96b"
+    },
+    {
+      "name": "POST_PREP_Y_SWEEP_V1_1.json",
+      "bytes": 5428,
+      "checksum": "md5:f1cf0fb969e5da137864fc4247c310a0"
+    },
+    {
+      "name": "POST_PREP_INJECTION.json",
+      "bytes": 6022,
+      "checksum": "md5:14216aaccd19c7071f57af7dc647d10f"
+    },
+    {
+      "name": "ERROR_CORRECTION_MATRIX.json",
+      "bytes": 10953,
+      "checksum": "md5:693d46fc37dc9751585c2c2dfbd4ddfc"
+    },
+    {
+      "name": "QEC_BENCHMARK_RESULTS.json",
+      "bytes": 8220,
+      "checksum": "md5:5ed9490d335787eb171b40aef3ad179c"
+    },
+    {
+      "name": "EXPERIMENT_PROTOCOL.md",
+      "bytes": 6093,
+      "checksum": "md5:811c1185aa263a6fe95d221db48779f8"
+    },
+    {
+      "name": "CHANGELOG.md",
+      "bytes": 3112,
+      "checksum": "md5:f069d66cd14a815c7f729137e75345ac"
+    },
+    {
+      "name": "SECURITY_REVIEW.md",
+      "bytes": 2936,
+      "checksum": "md5:8b8b7f7ad3dabb56258c25a811eba8a9"
+    }
+  ]
+}
