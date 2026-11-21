@@ -1,0 +1,54 @@
+{
+ "manifest_version": "1.0.0",
+ "status": "FROZEN_V1_0_0_IMMUTABLE_BASELINE",
+ "baseline_commit": "ac668e4",
+ "zenodo_doi": "10.5281/zenodo.24406733",
+ "precompile_sha256": "b86aeabd70eecb7f5fbca5d0e1688e06d71dc358fd9fbaaab7fd8e4f9634230b",
+ "isa_sha256": "02d5cb72849f9b473c022e68023486fdecc8c9f7fc3da9a9a9299c3482f31062",
+ "qnexus_version": "0.51.4",
+ "depth": 19,
+ "zzphase_count": 32,
+ "target_backends": [
+  {
+   "name": "H2-1SC",
+   "role": "syntax checker (free, no HQC consumed)",
+   "requires_api": true
+  },
+  {
+   "name": "H2-1E",
+   "role": "device emulator (consumes HQC)",
+   "requires_api": true
+  },
+  {
+   "name": "H2-1",
+   "role": "hardware (subscription / Azure Quantum / ORNL QCUP)",
+   "requires_api": true
+  }
+ ],
+ "circuits": [
+  {
+   "id": "wen_plaquette_prep_v1",
+   "pre_compile_sha256": "b86aeabd70eecb7f5fbca5d0e1688e06d71dc358fd9fbaaab7fd8e4f9634230b",
+   "h2_compiled_sha256": "02d5cb72849f9b473c022e68023486fdecc8c9f7fc3da9a9a9299c3482f31062",
+   "n_qubits": 20,
+   "n_clbits": 28,
+   "depth_after_compile": 19,
+   "gate_counts_after_compile": {
+    "Barrier": 1,
+    "Conditional": 20,
+    "Measure": 24,
+    "PhasedX": 72,
+    "Reset": 8,
+    "Rz": 20,
+    "ZZPhase": 32
+   }
+  }
+ ],
+ "wilson_thresholds_95_gt_0_99": {
+  "512": 512,
+  "1000": 997,
+  "2000": 1989,
+  "5000": 4964,
+  "10000": 9920
+ }
+}

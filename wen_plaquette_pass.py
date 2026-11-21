@@ -1,46 +1,64 @@
 """
-Wen-Plaquette 20-qubit feed-forward preparation pass (corrected contract).
+Wen-Plaquette 20-qubit feed-forward preparation pass (v1.1.0 hardened contract).
 
 Baseline: dnalang_wen_plaquette_pass.py (vendored verbatim, preserved for
-comparison). This module keeps the same public API and circuit output, with
-one enforced repair:
+comparison). This module keeps the same public API and frozen v1.0.0 circuit
+output (`b86aeabd70eecb7f5fbca5d0e1688e06d71dc358fd9fbaaab7fd8e4f9634230b`),
+with v1.1.0 compiler hardening:
 
-  TRANSFORMATION CONTRACT (preparation-only):
-    WenPlaquetteFeedForwardPass._transform() builds a fresh 20-qubit
-    preparation circuit. It therefore REQUIRES an empty input circuit
-    (zero commands). Any nonempty input is rejected with ValueError instead
-    of being silently discarded. Pre-declared registers that conflict with
-    the pass's own register layout (e.g. a "q" register of size != 20) are
-    also rejected. An empty circuit with no commands (with or without
-    harmless register declarations) is accepted.
-
-Includes:
-  - Explicit endianness normalization & even-parity syndrome verification
-  - 2-round non-destructive XXXX syndrome extraction with OpType.Reset
-  - Post-pass Conditional op bit-order audit
-  - Provenance capsule emission (SHA-256 bound)
+  1. TRANSFORMATION CONTRACT & REGISTER COLLISION PROTECTION:
+     - Requires an empty input circuit (zero commands); nonempty inputs raise
+       ValueError before any transformation occurs.
+     - Rejects colliding or reserved quantum registers (`qr`, `quantum`, or `q`
+       with conflicting size; `build_wen_plaquette()` additionally rejects any
+       pre-existing `q` register).
+     - Rejects colliding or reserved classical registers (`c`, `creg`, `cl`,
+       `classical`, or conflicting `c0_1st..c3_1st`, `c4_2nd`, `c5_end`).
+  2. METADATA DETERMINISM & HASH STABILITY:
+     - Normalizes `circuit.name`, `circuit.phase`, and `circuit.metadata` prior
+       to canonical SHA-256 calculation so metadata drift never perturbs circuit
+       digests (`v1.0.0 hash == v1.1.0 hash` bit-for-bit on empty input).
+     - Explicitly freezes `{"osiris_qec_version": "1.1.0", "compiler_lock": True,
+       "hash_locked": True}` on emitted circuits when `compiler_lock=True`.
 """
 
 from __future__ import annotations
 
 import hashlib
 import json
+import math
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Dict, List, Literal, Tuple
+from typing import Any, Dict, List, Literal, Tuple
 
 from pytket import Circuit, OpType
 from pytket.circuit import Bit, BitRegister, Qubit, QubitRegister
 from pytket.passes import BasePass, CustomPass
 
+OSIRIS_QEC_VERSION = "1.1.0"
+FROZEN_PRECOMPILE_SHA256 = "b86aeabd70eecb7f5fbca5d0e1688e06d71dc358fd9fbaaab7fd8e4f9634230b"
+FROZEN_H2_ISA_SHA256 = "02d5cb72849f9b473c022e68023486fdecc8c9f7fc3da9a9a9299c3482f31062"
+
 N_DATA = 16
 N_ANCILLA = 4
 N_TOTAL = N_DATA + N_ANCILLA  # 20
 
+RESERVED_Q_REGISTERS = frozenset({"q", "qr", "quantum"})
+RESERVED_C_REGISTERS = frozenset(
+    {"c", "creg", "cl", "classical", "c0_1st", "c1_1st", "c2_1st", "c3_1st", "c4_2nd", "c5_end"}
+)
+
+LOCKED_COMPILER_METADATA: Dict[str, Any] = {
+    "osiris_qec_version": OSIRIS_QEC_VERSION,
+    "compiler_lock": True,
+    "hash_locked": True,
+}
+
 
 class EndiannessPolicy(str, Enum):
     """Explicit bit-ordering contract for classical condition registers."""
+
     TKET_LITTLE_ENDIAN = "tket_little_endian"   # c_reg[0] is LSB (bit 0)
     QISKIT_BIG_ENDIAN = "qiskit_big_endian"     # string index 0 is MSB
 
@@ -67,6 +85,9 @@ class EndiannessAuditEntry:
 class NexusProvenanceCapsule:
     capsule_version: str = "osiris.nexus.v1"
     pass_name: str = "WenPlaquetteFeedForwardPass"
+    osiris_qec_version: str = OSIRIS_QEC_VERSION
+    compiler_lock: bool = True
+    hash_locked: bool = True
     timestamp_utc: str = field(
         default_factory=lambda: datetime.now(timezone.utc).isoformat()
     )
@@ -107,22 +128,22 @@ class NexusProvenanceCapsule:
 # Checkerboard plaquettes: Z-type on (r+c) even, X-type on (r+c) odd.
 
 WEN_STABILIZERS: List[PauliStabilizer] = [
-    PauliStabilizer("Z", (0, 1, 4, 5)),    # 0
-    PauliStabilizer("X", (1, 2, 5, 6)),    # 1  (Round 2)
-    PauliStabilizer("Z", (2, 3, 6, 7)),    # 2
-    PauliStabilizer("X", (3, 0, 7, 4)),    # 3  (Round 2)
-    PauliStabilizer("X", (4, 5, 8, 9)),    # 4  (Round 1)
-    PauliStabilizer("Z", (5, 6, 9, 10)),   # 5
-    PauliStabilizer("X", (6, 7, 10, 11)),  # 6  (Round 1)
-    PauliStabilizer("Z", (7, 4, 11, 8)),   # 7
-    PauliStabilizer("Z", (8, 9, 12, 13)),  # 8
-    PauliStabilizer("X", (9, 10, 13, 14)), # 9  (Round 2)
-    PauliStabilizer("Z", (10, 11, 14, 15)),# 10
-    PauliStabilizer("X", (11, 8, 15, 12)), # 11 (Round 2)
-    PauliStabilizer("X", (12, 13, 0, 1)),  # 12 (Round 1)
-    PauliStabilizer("Z", (13, 14, 1, 2)),  # 13
-    PauliStabilizer("X", (14, 15, 2, 3)),  # 14 (Round 1)
-    PauliStabilizer("Z", (15, 12, 3, 0)),  # 15
+    PauliStabilizer("Z", (0, 1, 4, 5)),     # 0
+    PauliStabilizer("X", (1, 2, 5, 6)),     # 1  (Round 2)
+    PauliStabilizer("Z", (2, 3, 6, 7)),     # 2
+    PauliStabilizer("X", (3, 0, 7, 4)),     # 3  (Round 2)
+    PauliStabilizer("X", (4, 5, 8, 9)),     # 4  (Round 1)
+    PauliStabilizer("Z", (5, 6, 9, 10)),    # 5
+    PauliStabilizer("X", (6, 7, 10, 11)),   # 6  (Round 1)
+    PauliStabilizer("Z", (7, 4, 11, 8)),    # 7
+    PauliStabilizer("Z", (8, 9, 12, 13)),   # 8
+    PauliStabilizer("X", (9, 10, 13, 14)),  # 9  (Round 2)
+    PauliStabilizer("Z", (10, 11, 14, 15)), # 10
+    PauliStabilizer("X", (11, 8, 15, 12)),  # 11 (Round 2)
+    PauliStabilizer("X", (12, 13, 0, 1)),   # 12 (Round 1)
+    PauliStabilizer("Z", (13, 14, 1, 2)),   # 13
+    PauliStabilizer("X", (14, 15, 2, 3)),   # 14 (Round 1)
+    PauliStabilizer("Z", (15, 12, 3, 0)),   # 15
 ]
 
 ROUND_1_MAP: Dict[int, Tuple[int, int, int]] = {
@@ -151,7 +172,7 @@ ROUND_2_LUT_BE: Dict[str, List[int]] = {
 
 
 # ---------------------------------------------------------------------------
-# Endianness & hashing utilities
+# Endianness, metadata normalization & deterministic hashing utilities
 # ---------------------------------------------------------------------------
 
 def encode_syndrome_condition(
@@ -185,14 +206,92 @@ def encode_syndrome_condition(
     return cond_val, parity_valid
 
 
+def _normalize_phase_str(raw_phase: Any) -> str:
+    """Normalize global circuit phase (in half-turns, mod 2.0) to canonical TKET string."""
+    try:
+        val = float(raw_phase)
+    except (TypeError, ValueError):
+        return str(raw_phase)
+    if not math.isfinite(val):
+        raise ValueError(f"Non-finite circuit phase: {raw_phase}")
+    mod_val = val % 2.0
+    if abs(mod_val) < 1e-12 or abs(mod_val - 2.0) < 1e-12:
+        return "0.0"
+    return f"{mod_val:.12g}"
+
+
+_CIRCUIT_METADATA_REGISTRY: Dict[int, Dict[str, Any]] = {}
+
+
+def set_circuit_metadata(circ: Circuit, metadata: Dict[str, Any]) -> None:
+    """Attach metadata to `circ` (in `.metadata` if supported, else module registry)."""
+    copy_meta = dict(metadata)
+    try:
+        setattr(circ, "metadata", copy_meta)
+    except (AttributeError, TypeError):
+        _CIRCUIT_METADATA_REGISTRY[id(circ)] = copy_meta
+
+
+def get_circuit_metadata(circ: Circuit) -> Dict[str, Any]:
+    """Retrieve normalized metadata associated with `circ`."""
+    if hasattr(circ, "metadata"):
+        val = getattr(circ, "metadata")
+        if isinstance(val, dict):
+            return dict(val)
+    return dict(_CIRCUIT_METADATA_REGISTRY.get(id(circ), {}))
+
+
+def normalize_circuit_metadata(circ: Circuit, compiler_lock: bool = True) -> Circuit:
+    """
+    Normalize mutable circuit metadata (`name`, `phase`, `metadata`) in place to
+    prevent metadata drift across pytket passes. When `compiler_lock=True`,
+    freezes `{"osiris_qec_version": "1.1.0", "compiler_lock": True, "hash_locked": True}`
+    without altering the canonical circuit SHA-256.
+    """
+    if circ.name is not None and circ.name != "":
+        circ.name = ""
+    try:
+        p_val = float(circ.phase) % 2.0
+        if abs(p_val) < 1e-12 or abs(p_val - 2.0) < 1e-12:
+            p_val = 0.0
+        if float(circ.phase) != p_val:
+            circ.add_phase(p_val - float(circ.phase))
+    except Exception:
+        pass
+
+    target_meta = dict(LOCKED_COMPILER_METADATA) if compiler_lock else {}
+    set_circuit_metadata(circ, target_meta)
+    return circ
+
+
+def canonical_circuit_dict(circ: Circuit) -> Dict[str, Any]:
+    """Return metadata-normalized pytket dictionary suitable for deterministic hashing."""
+    d = dict(circ.to_dict())
+    d.pop("name", None)
+    d.pop("metadata", None)
+    if "phase" in d:
+        d["phase"] = _normalize_phase_str(d["phase"])
+    return d
+
+
 def hash_tket_circuit(circ: Circuit) -> str:
-    """Deterministic SHA-256 digest of a pytket Circuit via its canonical JSON dict."""
-    canonical = json.dumps(circ.to_dict(), sort_keys=True, separators=(",", ":")).encode("utf-8")
+    """
+    Deterministic SHA-256 digest of a pytket Circuit via its metadata-normalized
+    canonical JSON dict. Bit-for-bit identical between v1.0.0 and v1.1.0 on clean inputs.
+    """
+    canonical = json.dumps(
+        canonical_circuit_dict(circ), sort_keys=True, separators=(",", ":")
+    ).encode("utf-8")
     return hashlib.sha256(canonical).hexdigest()
 
 
+def compute_sha256(circ: Circuit) -> str:
+    """Alias for `hash_tket_circuit` used in v1.1.0 specification verification helpers."""
+    return hash_tket_circuit(circ)
+
+
 # ---------------------------------------------------------------------------
-# Compilation pass (preparation-only contract)
+# Compilation pass (preparation-only contract + v1.1.0 register/metadata lock)
 # ---------------------------------------------------------------------------
 
 class WenPlaquetteFeedForwardPass:
@@ -211,6 +310,8 @@ class WenPlaquetteFeedForwardPass:
         target_device: str = "H2-1",
         policy: EndiannessPolicy = EndiannessPolicy.TKET_LITTLE_ENDIAN,
         dd_options: Dict[str, object] | None = None,
+        compiler_lock: bool = True,
+        strict_registers: bool = False,
     ) -> None:
         self.measurement_setting = measurement_setting
         self.target_device = target_device
@@ -221,10 +322,12 @@ class WenPlaquetteFeedForwardPass:
             "combine_SQ": True,
             "combine_rotates": True,
         }
+        self.compiler_lock = compiler_lock
+        self.strict_registers = strict_registers
         self.last_capsule: NexusProvenanceCapsule | None = None
 
     def _check_input_contract(self, circ: Circuit) -> None:
-        """Enforce the preparation-only contract; never silently drop input."""
+        """Enforce preparation-only and register-collision contracts before transformation."""
         n_cmd = len(circ.get_commands())
         if n_cmd != 0:
             raise ValueError(
@@ -233,11 +336,30 @@ class WenPlaquetteFeedForwardPass:
                 "Apply the pass to an empty Circuit, or compose it after a pass that "
                 "produces the empty base circuit."
             )
-        for reg in circ.q_registers:
-            if reg.name == "q" and reg.size != N_TOTAL:
+
+        for qreg in circ.q_registers:
+            if qreg.name == "q":
+                if self.strict_registers:
+                    raise ValueError(
+                        'Input already declares quantum register "q"; strict register '
+                        "collision protection requires an unallocated input circuit."
+                    )
+                if qreg.size != N_TOTAL:
+                    raise ValueError(
+                        f'Input declares q register "q" of size {qreg.size}; this pass '
+                        f"requires size {N_TOTAL}."
+                    )
+            elif qreg.name in RESERVED_Q_REGISTERS:
                 raise ValueError(
-                    f'Input declares q register "q" of size {reg.size}; this pass '
-                    f"requires size {N_TOTAL}."
+                    f'Input declares colliding quantum register "{qreg.name}" '
+                    f"(reserved names: {sorted(RESERVED_Q_REGISTERS)})."
+                )
+
+        for creg in circ.c_registers:
+            if creg.name in RESERVED_C_REGISTERS:
+                raise ValueError(
+                    f'Input declares colliding classical register "{creg.name}" '
+                    f"(reserved names: {sorted(RESERVED_C_REGISTERS)})."
                 )
 
     @staticmethod
@@ -339,7 +461,7 @@ class WenPlaquetteFeedForwardPass:
                 out.H(q_reg[q_idx])
             out.Measure(q_reg[q_idx], c_reg_end[q_idx])
 
-        # Post-pass structural audit & provenance capsule emission
+        # Post-pass structural audit & metadata normalization
         cond_ops = [cmd for cmd in out.get_commands() if cmd.op.type == OpType.Conditional]
         reset_ops = [cmd for cmd in out.get_commands() if cmd.op.type == OpType.Reset]
 
@@ -349,7 +471,11 @@ class WenPlaquetteFeedForwardPass:
                 f"Conditional op count mismatch: expected {expected_cond_ops}, got {len(cond_ops)}."
             )
 
+        normalize_circuit_metadata(out, compiler_lock=self.compiler_lock)
+
         capsule = NexusProvenanceCapsule(
+            compiler_lock=self.compiler_lock,
+            hash_locked=self.compiler_lock,
             target_device=self.target_device,
             measurement_setting=self.measurement_setting,
             dd_options=self.dd_options,
@@ -367,7 +493,36 @@ class WenPlaquetteFeedForwardPass:
 
     def to_tket_pass(self) -> BasePass:
         """Return a composable pytket BasePass instance (preparation-only contract)."""
-        return CustomPass(self._transform, label="WenPlaquetteFeedForwardPass")
+        def _apply_and_preserve_meta(c: Circuit) -> Circuit:
+            built = self._transform(c)
+            normalize_circuit_metadata(built, compiler_lock=self.compiler_lock)
+            return built
+
+        return CustomPass(_apply_and_preserve_meta, label="WenPlaquetteFeedForwardPass")
+
+
+def build_wen_plaquette(
+    circ: Circuit | None = None,
+    *,
+    measurement_setting: Literal["X", "Z"] = "X",
+    target_device: str = "H2-1",
+    compiler_lock: bool = True,
+) -> Circuit:
+    """
+    Functional entry point enforcing strict register collision protection
+    (rejecting any pre-existing `q`, `qr`, `quantum`, `c`, `creg`, `cl`, or
+    `classical` register) and returning a metadata-normalized Circuit.
+    """
+    target = Circuit() if circ is None else circ
+    builder = WenPlaquetteFeedForwardPass(
+        measurement_setting=measurement_setting,
+        target_device=target_device,
+        compiler_lock=compiler_lock,
+        strict_registers=True,
+    )
+    out = builder._transform(target)
+    normalize_circuit_metadata(out, compiler_lock=compiler_lock)
+    return out
 
 
 if __name__ == "__main__":
@@ -376,6 +531,7 @@ if __name__ == "__main__":
 
     circ = Circuit()
     tket_pass.apply(circ)
+    normalize_circuit_metadata(circ, compiler_lock=True)
 
     assert builder.last_capsule is not None
     print(json.dumps(asdict(builder.last_capsule), indent=2))

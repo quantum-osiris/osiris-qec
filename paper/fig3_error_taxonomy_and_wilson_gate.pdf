@@ -26,8 +26,8 @@ endobj
 stream
 1 1 1 rg
 0 0 540.00 208.00 re f
-BT /F2 9.4 Tf 0.067 0.094 0.153 rg 55.77 193.00 Td (Pre- vs. Post-Preparation Error Injection Taxonomy & Pre-Registered Quantinuum H2 Gate) Tj ET
-BT /F2 7.8 Tf 0.067 0.094 0.153 rg 48.58 179.00 Td (\(a\) Single-Qubit Pauli Injection \(Pre vs. Post\)) Tj ET
+BT /F2 9.2 Tf 0.067 0.094 0.153 rg 50.58 193.00 Td (Pre/Post-Prep Fault Taxonomy \(Incl. 16/16 Y Sweep\) & Hash-Locked H2 Gate \(opt_level=0\)) Tj ET
+BT /F2 7.6 Tf 0.067 0.094 0.153 rg 47.26 179.00 Td (\(a\) Pauli Injection \(Pre vs. Post, 16/16 Y Sweep\)) Tj ET
 0.90 w 0.980 0.980 0.980 rg 0.216 0.255 0.318 RG 42.00 34.00 224.00 138.00 re B
 q [5 3] 0 d 0.70 w 0.898 0.906 0.922 RG 42.00 34.00 m 266.00 34.00 l S Q
 BT /F3 6.4 Tf 0.067 0.094 0.153 rg 30.32 31.50 Td (0%) Tj ET
@@ -58,10 +58,10 @@ BT /F3 6.1 Tf 0.067 0.094 0.153 rg 236.35 23.00 Td (Post Y) Tj ET
 BT /F1 5.9 Tf 0.067 0.094 0.153 rg 96.00 157.00 Td (X-Syndrome Detected) Tj ET
 0.60 w 0.020 0.588 0.412 rg 0.024 0.373 0.275 RG 86.00 147.50 7.00 5.50 re B
 BT /F1 5.9 Tf 0.067 0.094 0.153 rg 96.00 148.00 Td (Codespace Corrected) Tj ET
-BT /F1 6.4 Tf 0.216 0.255 0.318 rg 40.40 10.00 Td (Post-prep Z detected \(16/16\) but 0/16 corrected \(not a QEC memory\).) Tj ET
-BT /F2 7.8 Tf 0.067 0.094 0.153 rg 302.72 179.00 Td (\(b\) Frozen H2-1 ISA & 95% Wilson Gate \(>0.99\)) Tj ET
+BT /F1 6.3 Tf 0.216 0.255 0.318 rg 57.92 10.00 Td (Post-prep Z \(16/16\) & Y \(16/16\) detected, 0/32 corrected.) Tj ET
+BT /F2 7.8 Tf 0.067 0.094 0.153 rg 313.05 179.00 Td (\(b\) Hash-Locked H2-1 ISA & 95% Wilson Gate) Tj ET
 0.90 w 0.973 0.980 0.988 rg 0.200 0.255 0.333 RG 284.00 20.00 240.00 152.00 re B
-BT /F3 6.6 Tf 0.059 0.090 0.165 rg 292.00 159.00 Td (Offline H2-1 ISA \(depth 19, 20/56Q, 28/4000C\):) Tj ET
+BT /F3 6.5 Tf 0.059 0.090 0.165 rg 292.00 159.00 Td (Frozen H2-1 ISA \(depth 19, opt_level=0 lock\):) Tj ET
 BT /F3 6.2 Tf 0.118 0.251 0.686 rg 292.00 148.00 Td (ZZPhase:32 PhasedX:72 Rz:20 Cond:20 Meas:24 Rst:8) Tj ET
 q [] 0 d 0.80 w 0.796 0.835 0.882 RG 290.00 142.00 m 518.00 142.00 l S Q
 BT /F3 6.3 Tf 0.067 0.094 0.153 rg 292.00 131.00 Td (Shots/Basis   Min Pass \(k\)   Max Fail   Wilson LCB) Tj ET
@@ -71,8 +71,8 @@ BT /F3 6.3 Tf 0.016 0.471 0.341 rg 292.00 90.00 Td (2000          1989          
 BT /F3 6.3 Tf 0.016 0.471 0.341 rg 292.00 75.50 Td (5000          4964           36         0.9900) Tj ET
 BT /F3 6.3 Tf 0.016 0.471 0.341 rg 292.00 61.00 Td (10000         9920           80         0.9900) Tj ET
 q [] 0 d 0.80 w 0.796 0.835 0.882 RG 290.00 46.00 m 518.00 46.00 l S Q
-BT /F3 6.3 Tf 0.573 0.251 0.055 rg 292.00 35.00 Td (Path: qnexus 0.51.4 \(H2-1SC -> H2-1E -> H2-1\)) Tj ET
-BT /F3 6.2 Tf 0.725 0.110 0.110 rg 292.00 25.00 Td (Status: PREPARED_LOCALLY__NOT_SUBMITTED) Tj ET
+BT /F3 6.1 Tf 0.573 0.251 0.055 rg 292.00 35.00 Td (osiris qec: SHA-256 pre/post lock + RFC8785 WAL) Tj ET
+BT /F3 6.1 Tf 0.725 0.110 0.110 rg 292.00 25.00 Td (Status: HARDWARE-UNVALIDATED \(fail-closed gate\)) Tj ET
 endstream
 endobj
 9 0 obj

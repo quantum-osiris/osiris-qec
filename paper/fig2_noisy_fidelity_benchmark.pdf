@@ -22,7 +22,7 @@ endobj
 << /Type /Pages /Kids [9 0 R] /Count 1 >>
 endobj
 8 0 obj
-<< /Length 11679 >>
+<< /Length 11668 >>
 stream
 1 1 1 rg
 0 0 540.00 208.00 re f
@@ -137,7 +137,7 @@ q [] 0 d 1.60 w 0.020 0.588 0.412 RG 317.00 62.00 m 329.00 62.00 l S Q
 BT /F2 6.3 Tf 0.020 0.588 0.412 rg 333.00 59.70 Td (With LUT feed-forward) Tj ET
 q [5 3] 0 d 1.20 w 0.420 0.447 0.502 RG 317.00 50.00 m 329.00 50.00 l S Q
 BT /F1 6.2 Tf 0.294 0.333 0.388 rg 333.00 47.70 Td (No feed-forward \(~0.00-0.01\)) Tj ET
-BT /F1 6.8 Tf 0.216 0.255 0.318 rg 64.30 8.00 Td (Physical error rate p \(1Q/2Q depolarizing + measurement bit-flip + reset noise; local simulation, HARDWARE-UNVALIDATED\)) Tj ET
+BT /F1 6.8 Tf 0.216 0.255 0.318 rg 83.00 8.00 Td (Physical error rate p \(1Q/2Q depolarizing + measurement bit-flip + reset depolarizing; HARDWARE-UNVALIDATED\)) Tj ET
 endstream
 endobj
 9 0 obj
@@ -157,10 +157,10 @@ xref
 0000000371 00000 n 
 0000000444 00000 n 
 0000000501 00000 n 
-0000012232 00000 n 
-0000012414 00000 n 
+0000012221 00000 n 
+0000012403 00000 n 
 trailer
 << /Size 11 /Root 10 0 R >>
 startxref
-12464
+12453
 %%EOF

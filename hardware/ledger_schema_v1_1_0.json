@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/quantum-osiris/osiris-qec/blob/v1.1.0/hardware/ledger_schema_v1_1_0.json",
+  "title": "OSIRIS-QEC v1.1.0 RFC 8785 Execution Ledger Entry Schema",
+  "description": "Canonical JSON (RFC 8785) write-ahead and completion record schema for OSIRIS-QEC executions.",
+  "type": "object",
+  "required": [
+    "execution_id",
+    "stage",
+    "target",
+    "prev_sha256",
+    "entry_sha256"
+  ],
+  "properties": {
+    "execution_id": {
+      "type": "string",
+      "minLength": 6
+    },
+    "stage": {
+      "type": "string",
+      "enum": [
+        "pre_submit",
+        "completed",
+        "dry_run_completed",
+        "dry_run_validated",
+        "aborted_hash_mismatch",
+        "failed"
+      ]
+    },
+    "target": {
+      "type": "string",
+      "enum": ["selene", "h2-1"]
+    },
+    "shots": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "precompile_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "const": "b86aeabd70eecb7f5fbca5d0e1688e06d71dc358fd9fbaaab7fd8e4f9634230b"
+    },
+    "isa_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "const": "02d5cb72849f9b473c022e68023486fdecc8c9f7fc3da9a9a9299c3482f31062"
+    },
+    "manifest_version": {
+      "type": "string"
+    },
+    "optimisation_level": {
+      "type": "integer",
+      "const": 0
+    },
+    "qnexus_version": {
+      "type": "string",
+      "const": "0.51.4"
+    },
+    "raw_bitstrings": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "syndrome_trajectories": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "raw_fidelity": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    "postselected_fidelity": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    "wilson_lower_bound": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    "pass": {
+      "type": "boolean"
+    },
+    "timestamp": {
+      "type": "string"
+    },
+    "prev_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "entry_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "additionalProperties": true
+}

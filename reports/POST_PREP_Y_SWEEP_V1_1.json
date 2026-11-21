@@ -1,0 +1,267 @@
+{
+  "osiris_qec_version": "1.1.0",
+  "sweep": "post_preparation_pauli_Y_data_qubits_0_to_15",
+  "total_qubits": 16,
+  "detected_count": 16,
+  "undetected_count": 0,
+  "logical_fidelity": 0.0,
+  "all_preserved": false,
+  "records": [
+    {
+      "qubit": 0,
+      "syndrome_detected": true,
+      "logical_state_preserved": false,
+      "x_syndrome": "01000010",
+      "z_syndrome": "10000001",
+      "x_syndrome_plaquettes": [
+        1,
+        6
+      ],
+      "z_syndrome_plaquettes": [
+        0,
+        7
+      ],
+      "logical_fidelity": 0.0
+    },
+    {
+      "qubit": 1,
+      "syndrome_detected": true,
+      "logical_state_preserved": false,
+      "x_syndrome": "10000010",
+      "z_syndrome": "10000010",
+      "x_syndrome_plaquettes": [
+        0,
+        6
+      ],
+      "z_syndrome_plaquettes": [
+        0,
+        6
+      ],
+      "logical_fidelity": 0.0
+    },
+    {
+      "qubit": 2,
+      "syndrome_detected": true,
+      "logical_state_preserved": false,
+      "x_syndrome": "10000001",
+      "z_syndrome": "01000010",
+      "x_syndrome_plaquettes": [
+        0,
+        7
+      ],
+      "z_syndrome_plaquettes": [
+        1,
+        6
+      ],
+      "logical_fidelity": 0.0
+    },
+    {
+      "qubit": 3,
+      "syndrome_detected": true,
+      "logical_state_preserved": false,
+      "x_syndrome": "01000001",
+      "z_syndrome": "01000001",
+      "x_syndrome_plaquettes": [
+        1,
+        7
+      ],
+      "z_syndrome_plaquettes": [
+        1,
+        7
+      ],
+      "logical_fidelity": 0.0
+    },
+    {
+      "qubit": 4,
+      "syndrome_detected": true,
+      "logical_state_preserved": false,
+      "x_syndrome": "01100000",
+      "z_syndrome": "10010000",
+      "x_syndrome_plaquettes": [
+        1,
+        2
+      ],
+      "z_syndrome_plaquettes": [
+        0,
+        3
+      ],
+      "logical_fidelity": 0.0
+    },
+    {
+      "qubit": 5,
+      "syndrome_detected": true,
+      "logical_state_preserved": false,
+      "x_syndrome": "10100000",
+      "z_syndrome": "10100000",
+      "x_syndrome_plaquettes": [
+        0,
+        2
+      ],
+      "z_syndrome_plaquettes": [
+        0,
+        2
+      ],
+      "logical_fidelity": 0.0
+    },
+    {
+      "qubit": 6,
+      "syndrome_detected": true,
+      "logical_state_preserved": false,
+      "x_syndrome": "10010000",
+      "z_syndrome": "01100000",
+      "x_syndrome_plaquettes": [
+        0,
+        3
+      ],
+      "z_syndrome_plaquettes": [
+        1,
+        2
+      ],
+      "logical_fidelity": 0.0
+    },
+    {
+      "qubit": 7,
+      "syndrome_detected": true,
+      "logical_state_preserved": false,
+      "x_syndrome": "01010000",
+      "z_syndrome": "01010000",
+      "x_syndrome_plaquettes": [
+        1,
+        3
+      ],
+      "z_syndrome_plaquettes": [
+        1,
+        3
+      ],
+      "logical_fidelity": 0.0
+    },
+    {
+      "qubit": 8,
+      "syndrome_detected": true,
+      "logical_state_preserved": false,
+      "x_syndrome": "00100100",
+      "z_syndrome": "00011000",
+      "x_syndrome_plaquettes": [
+        2,
+        5
+      ],
+      "z_syndrome_plaquettes": [
+        3,
+        4
+      ],
+      "logical_fidelity": 0.0
+    },
+    {
+      "qubit": 9,
+      "syndrome_detected": true,
+      "logical_state_preserved": false,
+      "x_syndrome": "00101000",
+      "z_syndrome": "00101000",
+      "x_syndrome_plaquettes": [
+        2,
+        4
+      ],
+      "z_syndrome_plaquettes": [
+        2,
+        4
+      ],
+      "logical_fidelity": 0.0
+    },
+    {
+      "qubit": 10,
+      "syndrome_detected": true,
+      "logical_state_preserved": false,
+      "x_syndrome": "00011000",
+      "z_syndrome": "00100100",
+      "x_syndrome_plaquettes": [
+        3,
+        4
+      ],
+      "z_syndrome_plaquettes": [
+        2,
+        5
+      ],
+      "logical_fidelity": 0.0
+    },
+    {
+      "qubit": 11,
+      "syndrome_detected": true,
+      "logical_state_preserved": false,
+      "x_syndrome": "00010100",
+      "z_syndrome": "00010100",
+      "x_syndrome_plaquettes": [
+        3,
+        5
+      ],
+      "z_syndrome_plaquettes": [
+        3,
+        5
+      ],
+      "logical_fidelity": 0.0
+    },
+    {
+      "qubit": 12,
+      "syndrome_detected": true,
+      "logical_state_preserved": false,
+      "x_syndrome": "00000110",
+      "z_syndrome": "00001001",
+      "x_syndrome_plaquettes": [
+        5,
+        6
+      ],
+      "z_syndrome_plaquettes": [
+        4,
+        7
+      ],
+      "logical_fidelity": 0.0
+    },
+    {
+      "qubit": 13,
+      "syndrome_detected": true,
+      "logical_state_preserved": false,
+      "x_syndrome": "00001010",
+      "z_syndrome": "00001010",
+      "x_syndrome_plaquettes": [
+        4,
+        6
+      ],
+      "z_syndrome_plaquettes": [
+        4,
+        6
+      ],
+      "logical_fidelity": 0.0
+    },
+    {
+      "qubit": 14,
+      "syndrome_detected": true,
+      "logical_state_preserved": false,
+      "x_syndrome": "00001001",
+      "z_syndrome": "00000110",
+      "x_syndrome_plaquettes": [
+        4,
+        7
+      ],
+      "z_syndrome_plaquettes": [
+        5,
+        6
+      ],
+      "logical_fidelity": 0.0
+    },
+    {
+      "qubit": 15,
+      "syndrome_detected": true,
+      "logical_state_preserved": false,
+      "x_syndrome": "00000101",
+      "z_syndrome": "00000101",
+      "x_syndrome_plaquettes": [
+        5,
+        7
+      ],
+      "z_syndrome_plaquettes": [
+        5,
+        7
+      ],
+      "logical_fidelity": 0.0
+    }
+  ]
+}

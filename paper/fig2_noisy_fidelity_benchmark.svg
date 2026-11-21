@@ -111,5 +111,5 @@
 <text x="333.00" y="148.30" font-family="Helvetica, Arial, sans-serif" font-size="6.3" font-weight="bold" fill="#059669" text-anchor="start">With LUT feed-forward</text>
 <line x1="317.00" y1="158.00" x2="329.00" y2="158.00" stroke="#6b7280" stroke-width="1.20" stroke-dasharray="5,3"/>
 <text x="333.00" y="160.30" font-family="Helvetica, Arial, sans-serif" font-size="6.2" font-weight="normal" fill="#4b5563" text-anchor="start">No feed-forward (~0.00-0.01)</text>
-<text x="270.00" y="200.00" font-family="Helvetica, Arial, sans-serif" font-size="6.8" font-weight="normal" fill="#374151" text-anchor="middle">Physical error rate p (1Q/2Q depolarizing + measurement bit-flip + reset noise; local simulation, HARDWARE-UNVALIDATED)</text>
+<text x="270.00" y="200.00" font-family="Helvetica, Arial, sans-serif" font-size="6.8" font-weight="normal" fill="#374151" text-anchor="middle">Physical error rate p (1Q/2Q depolarizing + measurement bit-flip + reset depolarizing; HARDWARE-UNVALIDATED)</text>
 </svg>

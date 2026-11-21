@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="540" height="208" viewBox="0 0 540 208">
 <rect x="0" y="0" width="540" height="208" fill="#ffffff"/>
-<text x="270.00" y="15.00" font-family="Helvetica, Arial, sans-serif" font-size="9.4" font-weight="bold" fill="#111827" text-anchor="middle">Pre- vs. Post-Preparation Error Injection Taxonomy &amp; Pre-Registered Quantinuum H2 Gate</text>
-<text x="154.00" y="29.00" font-family="Helvetica, Arial, sans-serif" font-size="7.8" font-weight="bold" fill="#111827" text-anchor="middle">(a) Single-Qubit Pauli Injection (Pre vs. Post)</text>
+<text x="270.00" y="15.00" font-family="Helvetica, Arial, sans-serif" font-size="9.2" font-weight="bold" fill="#111827" text-anchor="middle">Pre/Post-Prep Fault Taxonomy (Incl. 16/16 Y Sweep) &amp; Hash-Locked H2 Gate (opt_level=0)</text>
+<text x="154.00" y="29.00" font-family="Helvetica, Arial, sans-serif" font-size="7.6" font-weight="bold" fill="#111827" text-anchor="middle">(a) Pauli Injection (Pre vs. Post, 16/16 Y Sweep)</text>
 <rect x="42.00" y="36.00" width="224.00" height="138.00" fill="#fafafa" stroke="#374151" stroke-width="0.90"/>
 <line x1="42.00" y1="174.00" x2="266.00" y2="174.00" stroke="#e5e7eb" stroke-width="0.70" stroke-dasharray="5,3"/>
 <text x="38.00" y="176.50" font-family="monospace" font-size="6.4" font-weight="normal" fill="#111827" text-anchor="end">0%</text>
@@ -32,10 +32,10 @@
 <text x="96.00" y="51.00" font-family="Helvetica, Arial, sans-serif" font-size="5.9" font-weight="normal" fill="#111827" text-anchor="start">X-Syndrome Detected</text>
 <rect x="86.00" y="55.00" width="7.00" height="5.50" fill="#059669" stroke="#065f46" stroke-width="0.60"/>
 <text x="96.00" y="60.00" font-family="Helvetica, Arial, sans-serif" font-size="5.9" font-weight="normal" fill="#111827" text-anchor="start">Codespace Corrected</text>
-<text x="154.00" y="198.00" font-family="Helvetica, Arial, sans-serif" font-size="6.4" font-weight="normal" fill="#374151" text-anchor="middle">Post-prep Z detected (16/16) but 0/16 corrected (not a QEC memory).</text>
-<text x="404.00" y="29.00" font-family="Helvetica, Arial, sans-serif" font-size="7.8" font-weight="bold" fill="#111827" text-anchor="middle">(b) Frozen H2-1 ISA &amp; 95% Wilson Gate (&gt;0.99)</text>
+<text x="154.00" y="198.00" font-family="Helvetica, Arial, sans-serif" font-size="6.3" font-weight="normal" fill="#374151" text-anchor="middle">Post-prep Z (16/16) &amp; Y (16/16) detected, 0/32 corrected.</text>
+<text x="404.00" y="29.00" font-family="Helvetica, Arial, sans-serif" font-size="7.8" font-weight="bold" fill="#111827" text-anchor="middle">(b) Hash-Locked H2-1 ISA &amp; 95% Wilson Gate</text>
 <rect x="284.00" y="36.00" width="240.00" height="152.00" fill="#f8fafc" stroke="#334155" stroke-width="0.90"/>
-<text x="292.00" y="49.00" font-family="monospace" font-size="6.6" font-weight="bold" fill="#0f172a" text-anchor="start">Offline H2-1 ISA (depth 19, 20/56Q, 28/4000C):</text>
+<text x="292.00" y="49.00" font-family="monospace" font-size="6.5" font-weight="bold" fill="#0f172a" text-anchor="start">Frozen H2-1 ISA (depth 19, opt_level=0 lock):</text>
 <text x="292.00" y="60.00" font-family="monospace" font-size="6.2" font-weight="normal" fill="#1e40af" text-anchor="start">ZZPhase:32 PhasedX:72 Rz:20 Cond:20 Meas:24 Rst:8</text>
 <line x1="290.00" y1="66.00" x2="518.00" y2="66.00" stroke="#cbd5e1" stroke-width="0.80"/>
 <text x="292.00" y="77.00" font-family="monospace" font-size="6.3" font-weight="bold" fill="#111827" text-anchor="start">Shots/Basis   Min Pass (k)   Max Fail   Wilson LCB</text>
@@ -45,6 +45,6 @@
 <text x="292.00" y="132.50" font-family="monospace" font-size="6.3" font-weight="normal" fill="#047857" text-anchor="start">5000          4964           36         0.9900</text>
 <text x="292.00" y="147.00" font-family="monospace" font-size="6.3" font-weight="normal" fill="#047857" text-anchor="start">10000         9920           80         0.9900</text>
 <line x1="290.00" y1="162.00" x2="518.00" y2="162.00" stroke="#cbd5e1" stroke-width="0.80"/>
-<text x="292.00" y="173.00" font-family="monospace" font-size="6.3" font-weight="bold" fill="#92400e" text-anchor="start">Path: qnexus 0.51.4 (H2-1SC -&gt; H2-1E -&gt; H2-1)</text>
-<text x="292.00" y="183.00" font-family="monospace" font-size="6.2" font-weight="normal" fill="#b91c1c" text-anchor="start">Status: PREPARED_LOCALLY__NOT_SUBMITTED</text>
+<text x="292.00" y="173.00" font-family="monospace" font-size="6.1" font-weight="bold" fill="#92400e" text-anchor="start">osiris qec: SHA-256 pre/post lock + RFC8785 WAL</text>
+<text x="292.00" y="183.00" font-family="monospace" font-size="6.1" font-weight="normal" fill="#b91c1c" text-anchor="start">Status: HARDWARE-UNVALIDATED (fail-closed gate)</text>
 </svg>

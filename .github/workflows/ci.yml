@@ -1,0 +1,41 @@
+name: OSIRIS-QEC v1.1.0 CI
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up uv & Python 3.13
+        uses: astral-sh/setup-uv@v4
+        with:
+          python-version: "3.13"
+
+      - name: Install package and verification dependencies
+        run: |
+          uv venv .venv
+          uv pip install --python .venv/bin/python -e ".[quantinuum,verification]" pytest-cov
+
+      - name: Gate 1 — Verify frozen v1.0.0 and v1.1.0 artifact hashes
+        run: |
+          .venv/bin/osiris qec verify --manifest hardware/experiment_manifest_v1_0_0.json
+          .venv/bin/osiris qec verify --manifest hardware/experiment_manifest_v1_1_0.json --strict
+
+      - name: Gate 2 — Full pytest suite (zero skips, zero xfails, coverage)
+        run: |
+          .venv/bin/pytest --cov=osiris_qec --cov=osiris_cli -q
+
+      - name: Gate 3 — Selene local dry-run & RFC 8785 ledger verification
+        run: |
+          .venv/bin/osiris qec run --target selene --shots 1000 --manifest hardware/experiment_manifest_v1_1_0.json --ledger /tmp/ci_ledger
+          for f in /tmp/ci_ledger/run-*.json; do
+            .venv/bin/osiris qec ledger verify "$f"
+            .venv/bin/osiris qec ledger show "$f" --summary
+          done

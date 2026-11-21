@@ -1,15 +1,18 @@
 #!/usr/bin/env python3
 """
-generate_paper_assets.py — Deterministic vector SVG + PDF 1.4 generator for the
-OSIRIS QEC 20-qubit Wen-plaquette feed-forward state-preparation package.
+generate_paper_assets.py (v1.1.0) — Deterministic vector SVG + PDF 1.4 generator
+for OSIRIS-QEC v1.1.0 (Hardened Compiler Passes, 16/16 Post-Prep Y-Sweep, RFC 8785
+Write-Ahead Ledger, and Provenance-Locked Quantinuum H2 Execution Protocol).
 
 Reads exact computed values from:
   - `reports/QEC_BENCHMARK_RESULTS.json`
   - `reports/ERROR_CORRECTION_MATRIX.json`
   - `reports/POST_PREP_INJECTION.json`
-  - `hardware/experiment_manifest.json`
+  - `reports/POST_PREP_Y_SWEEP_V1_1.json`
+  - `hardware/experiment_manifest_v1_0_0.json`
+  - `hardware/experiment_manifest_v1_1_0.json`
   - `submission/CLAIMS_AND_EVIDENCE.json`
-Zero hardcoded simulation outputs; preserves HARDWARE-UNVALIDATED status verbatim.
+Preserves `HARDWARE-UNVALIDATED` status and immutable v1.0.0 hashes verbatim.
 """
 
 from __future__ import annotations
@@ -21,12 +24,16 @@ import math
 from pathlib import Path
 from typing import Any, Dict, List, Sequence, Tuple
 
+V100_DOI = "10.5281/zenodo.24406733"
+CONCEPT_DOI = "10.5281/zenodo.24406732"
+
 
 def _pdf_escape(text: str) -> str:
     return (
         text.replace("\\", "\\\\")
         .replace("(", "\\(")
         .replace(")", "\\)")
+        .replace("`", "")
         .replace("±", "+/-")
         .replace("≥", ">=")
         .replace("≤", "<=")
@@ -89,7 +96,7 @@ class VectorCanvas:
             self.pdf.append(f"{fr:.3f} {fg:.3f} {fb:.3f} rg {x:.2f} {py:.2f} {w:.2f} {h:.2f} re f")
         elif stroke:
             sr, sg, sb = self._rgb(stroke)
-            self.pdf.append(f"{lw:.2f} w {sr:.3f} {sg:.3f} {sb:.3f} RG {x:.2f} {py:.2f} {w:.2f} {h:.2f} re S")
+            self.pdf.append(f"{lw:.2f} w {sr:.3f} {sg:.3f} RG {x:.2f} {py:.2f} {w:.2f} {h:.2f} re S")
 
     def line(
         self,
@@ -224,18 +231,16 @@ def build_pdf_document(pages: Sequence[Tuple[float, float, bytes]]) -> bytes:
 
 
 def make_fig1_torus_and_lut() -> VectorCanvas:
-    """(a) 4x4 periodic Wen-plaquette checkerboard lattice + (b) 7-entry Round-2 LUT."""
     c = VectorCanvas(540, 206)
     c.text(
         270,
         15,
-        "4x4 Toroidal Wen-Plaquette CSS Code ([[16, 2, 4]]) & Two-Round Feed-Forward LUT",
-        size=9.6,
+        "4x4 Toroidal Wen-Plaquette CSS Code ([[16, 2, 4]]: 16 Data + 4 Recycled Ancillas) & LUT",
+        size=9.3,
         bold=True,
         anchor="middle",
     )
 
-    # Panel (a): 4x4 Checkerboard lattice (periodic wrap shown on right/bottom)
     gx, gy, cell = 34.0, 36.0, 34.0
     c.text(gx + 2 * cell, 28, "(a) Checkerboard Torus (q_{4r+c})", size=8.2, bold=True, anchor="middle")
     r1_plaq = {4, 6, 12, 14}
@@ -249,17 +254,11 @@ def make_fig1_torus_and_lut() -> VectorCanvas:
             y0 = gy + r * cell
             is_x = ((r + col) % 2 == 1)
             if idx in r1_plaq:
-                fill = "#dbeafe"
-                lbl = f"X{idx} (R1)"
-                tcol = "#1d4ed8"
+                fill, lbl, tcol = "#dbeafe", f"X{idx} (R1)", "#1d4ed8"
             elif idx in r2_plaq:
-                fill = "#dcfce7"
-                lbl = f"X{idx} (R2)"
-                tcol = "#047857"
+                fill, lbl, tcol = "#dcfce7", f"X{idx} (R2)", "#047857"
             else:
-                fill = "#f3f4f6"
-                lbl = f"Z{idx}"
-                tcol = "#4b5563"
+                fill, lbl, tcol = "#f3f4f6", f"Z{idx}", "#4b5563"
             is_wrap = (r == 3 or col == 3)
             c.rect(x0, y0, cell, cell, fill=fill, stroke="#64748b", lw=0.7 if not is_wrap else 0.9)
             c.text(x0 + 0.5 * cell, y0 + 0.56 * cell, lbl, size=5.9 if is_x else 6.2, bold=is_x, color=tcol, anchor="middle", mono=True)
@@ -280,7 +279,6 @@ def make_fig1_torus_and_lut() -> VectorCanvas:
     c.circle(gx + 124, 183.5, 4.0, fill="#fef3c7", stroke="#b45309", lw=1.0)
     c.text(gx + 131, 186, "R1 cond-Z", size=6.5)
 
-    # Panel (b): Round-2 4-bit LUT table (BE syndrome -> LE condition_value -> Z targets)
     tx, ty, tw, th = 208.0, 34.0, 316.0, 154.0
     c.text(tx + 0.5 * tw, 28, "(b) Round-2 Syndrome LUT (Ancillas A1, A3, A9, A11 -> c4_2nd)", size=8.2, bold=True, anchor="middle")
     c.rect(tx, ty, tw, th, fill="#fafafa", stroke="#334155", lw=0.9)
@@ -315,7 +313,7 @@ def make_fig1_torus_and_lut() -> VectorCanvas:
     c.text(
         tx + 8,
         ty + th - 6,
-        "Torus parity identity prod_{p in X} S_p = I => all 128 reachable branches even.",
+        "4 recycled ancillas (24 Meas, 8 Reset) do not add logical distance.",
         size=6.3,
         color="#334155",
         mono=True,
@@ -353,7 +351,6 @@ def summarize_benchmark(bench: Dict[str, Any]) -> List[Dict[str, float]]:
 
 
 def make_fig2_benchmark(summary: Sequence[Dict[str, float]]) -> VectorCanvas:
-    """Dual-panel noisy state-preparation benchmark (seeds 11, 22, 33; 180 shots/point)."""
     c = VectorCanvas(540, 208)
     c.text(
         270,
@@ -418,7 +415,7 @@ def make_fig2_benchmark(summary: Sequence[Dict[str, float]]) -> VectorCanvas:
     c.text(
         270,
         200,
-        "Physical error rate p (1Q/2Q depolarizing + measurement bit-flip + reset noise; local simulation, HARDWARE-UNVALIDATED)",
+        "Physical error rate p (1Q/2Q depolarizing + measurement bit-flip + reset depolarizing; HARDWARE-UNVALIDATED)",
         size=6.8,
         color="#374151",
         anchor="middle",
@@ -429,20 +426,19 @@ def make_fig2_benchmark(summary: Sequence[Dict[str, float]]) -> VectorCanvas:
 def make_fig3_taxonomy_and_gate(
     err_matrix: Sequence[Dict[str, Any]],
     post_prep: Sequence[Dict[str, Any]],
-    manifest: Dict[str, Any],
+    y_sweep_v11: Dict[str, Any],
+    manifest_v10: Dict[str, Any],
 ) -> VectorCanvas:
-    """(a) Pre- vs Post-Preparation Pauli injection outcomes; (b) H2-1 ISA & 95% Wilson gate."""
     c = VectorCanvas(540, 208)
     c.text(
         270,
         15,
-        "Pre- vs. Post-Preparation Error Injection Taxonomy & Pre-Registered Quantinuum H2 Gate",
-        size=9.4,
+        "Pre/Post-Prep Fault Taxonomy (Incl. 16/16 Y Sweep) & Hash-Locked H2 Gate (opt_level=0)",
+        size=9.2,
         bold=True,
         anchor="middle",
     )
 
-    # Compute exact fractions from JSON artifacts
     w1_pre = {
         p: [r for r in err_matrix if r.get("pauli") == p and len(r.get("qubits", [])) == 1 and max(r["qubits"]) < 16]
         for p in ("Z", "X", "Y")
@@ -453,16 +449,15 @@ def make_fig3_taxonomy_and_gate(
 
     post_z = [r for r in post_prep if r["error"].startswith("Z on data") and "AFTER" in r["error"]]
     post_x = [r for r in post_prep if r["error"].startswith("X on data") and "AFTER" in r["error"]]
-    post_y = [r for r in post_prep if r["error"].startswith("Y on data") and "AFTER" in r["error"]]
 
     post_z_det = sum(1.0 for r in post_z if r["detected"]) / max(len(post_z), 1)
     post_z_cor = sum(1.0 for r in post_z if r["corrected"]) / max(len(post_z), 1)
     post_x_det = sum(1.0 for r in post_x if r["detected"]) / max(len(post_x), 1)
-    post_y_det = sum(1.0 for r in post_y if r["detected"]) / max(len(post_y), 1)
+    post_y_det = float(y_sweep_v11["detected_count"]) / float(y_sweep_v11["total_qubits"])
+    post_y_cor = 1.0 if y_sweep_v11["all_preserved"] else 0.0
 
-    # Panel (a): Grouped bar comparison
     ax0, ay0, aw, ah = 42.0, 36.0, 224.0, 138.0
-    c.text(ax0 + 0.5 * aw, 29, "(a) Single-Qubit Pauli Injection (Pre vs. Post)", size=7.8, bold=True, anchor="middle")
+    c.text(ax0 + 0.5 * aw, 29, "(a) Pauli Injection (Pre vs. Post, 16/16 Y Sweep)", size=7.6, bold=True, anchor="middle")
     c.rect(ax0, ay0, aw, ah, fill="#fafafa", stroke="#374151", lw=0.9)
     for tv in (0.0, 0.5, 1.0):
         yy = ay0 + ah * (1.0 - tv)
@@ -475,7 +470,7 @@ def make_fig3_taxonomy_and_gate(
         ("Pre Y", pre_y_corr, pre_y_corr),
         ("Post Z", post_z_det, post_z_cor),
         ("Post X", post_x_det, 0.0),
-        ("Post Y", post_y_det, 0.0),
+        ("Post Y", post_y_det, post_y_cor),
     ]
     slot = aw / len(bars)
     for idx, (lbl, det_v, cor_v) in enumerate(bars):
@@ -491,15 +486,14 @@ def make_fig3_taxonomy_and_gate(
     c.text(ax0 + 54, ay0 + 15.0, "X-Syndrome Detected", size=5.9)
     c.rect(ax0 + 44, ay0 + 19, 7, 5.5, fill="#059669", stroke="#065f46", lw=0.6)
     c.text(ax0 + 54, ay0 + 24.0, "Codespace Corrected", size=5.9)
-    c.text(ax0 + 0.5 * aw, 198, "Post-prep Z detected (16/16) but 0/16 corrected (not a QEC memory).", size=6.4, color="#374151", anchor="middle")
+    c.text(ax0 + 0.5 * aw, 198, "Post-prep Z (16/16) & Y (16/16) detected, 0/32 corrected.", size=6.3, color="#374151", anchor="middle")
 
-    # Panel (b): Frozen H2-1 ISA + Wilson 95% lower bound > 0.99 gate
     bx0, by0, bw, bh = 284.0, 36.0, 240.0, 152.0
-    c.text(bx0 + 0.5 * bw, 29, "(b) Frozen H2-1 ISA & 95% Wilson Gate (>0.99)", size=7.8, bold=True, anchor="middle")
+    c.text(bx0 + 0.5 * bw, 29, "(b) Hash-Locked H2-1 ISA & 95% Wilson Gate", size=7.8, bold=True, anchor="middle")
     c.rect(bx0, by0, bw, bh, fill="#f8fafc", stroke="#334155", lw=0.9)
 
-    gates = manifest["circuits"][0]["gate_counts_after_compile"]
-    c.text(bx0 + 8, by0 + 13, f"Offline H2-1 ISA (depth {manifest['circuits'][0]['depth_after_compile']}, 20/56Q, 28/4000C):", size=6.6, bold=True, color="#0f172a", mono=True)
+    gates = manifest_v10["circuits"][0]["gate_counts_after_compile"]
+    c.text(bx0 + 8, by0 + 13, f"Frozen H2-1 ISA (depth {manifest_v10['circuits'][0]['depth_after_compile']}, opt_level=0 lock):", size=6.5, bold=True, color="#0f172a", mono=True)
     c.text(
         bx0 + 8,
         by0 + 24,
@@ -522,8 +516,8 @@ def make_fig3_taxonomy_and_gate(
         c.text(bx0 + 8, ry, f"{n:<11d}   {k_min:<12d}   {f_max:<8d}   {lcb}", size=6.3, color="#047857", mono=True)
 
     c.line(bx0 + 6, by0 + 126, bx0 + bw - 6, by0 + 126, color="#cbd5e1", lw=0.8)
-    c.text(bx0 + 8, by0 + 137, "Path: qnexus 0.51.4 (H2-1SC -> H2-1E -> H2-1)", size=6.3, bold=True, color="#92400e", mono=True)
-    c.text(bx0 + 8, by0 + 147, "Status: PREPARED_LOCALLY__NOT_SUBMITTED", size=6.2, color="#b91c1c", mono=True)
+    c.text(bx0 + 8, by0 + 137, "osiris qec: SHA-256 pre/post lock + RFC8785 WAL", size=6.1, bold=True, color="#92400e", mono=True)
+    c.text(bx0 + 8, by0 + 147, "Status: HARDWARE-UNVALIDATED (fail-closed gate)", size=6.1, color="#b91c1c", mono=True)
     return c
 
 
@@ -538,21 +532,20 @@ def embed_canvas(cmds: List[str], fig: VectorCanvas, x: float, y_top: float, tar
 
 
 def build_preprint_pdf(
-    doi: str,
+    doi_v110: str,
     repo_url: str,
-    manifest: Dict[str, Any],
+    manifest_v11: Dict[str, Any],
     bench_summary: Sequence[Dict[str, Any]],
     claims_doc: Dict[str, Any],
     fig1: VectorCanvas,
     fig2: VectorCanvas,
     fig3: VectorCanvas,
 ) -> bytes:
-    """Render a verified 4-page US-Letter (612 x 792 pt) academic preprint PDF."""
     W, H = 612.0, 792.0
-    pre_sha = manifest["circuits"][0]["pre_compile_sha256"]
-    h2_sha = manifest["circuits"][0]["h2_compiled_sha256"]
+    pre_sha = manifest_v11["precompile_sha256"]
+    h2_sha = manifest_v11["isa_sha256"]
 
-    def wrap_paragraph(text: str, max_chars: int = 96) -> List[str]:
+    def wrap_paragraph(text: str, max_chars: int = 98) -> List[str]:
         words = text.split()
         lines: List[str] = []
         cur = ""
@@ -574,8 +567,8 @@ def build_preprint_pdf(
         y: float,
         lines: Sequence[str],
         font: str = "/F4",
-        size: float = 9.5,
-        leading: float = 12.4,
+        size: float = 9.0,
+        leading: float = 11.4,
         rgb: Tuple[float, float, float] = (0.07, 0.09, 0.15),
     ) -> float:
         r, g, b = rgb
@@ -586,9 +579,9 @@ def build_preprint_pdf(
         return y
 
     def draw_footer(cmds: List[str], page_no: int) -> None:
-        cmds.append(f"0.82 0.85 0.89 RG 0.6 w 50 32 m 562 32 l S")
-        footer = f"OSIRIS QEC Wen-Plaquette Package v1.0.0  |  DOI: {doi}  |  HARDWARE-UNVALIDATED  |  Page {page_no} of 4"
-        cmds.append(f"BT /F3 6.8 Tf 0.35 0.39 0.45 rg 50 21 Td ({_pdf_escape(footer)}) Tj ET")
+        cmds.append("0.82 0.85 0.89 RG 0.6 w 50 32 m 562 32 l S")
+        footer = f"OSIRIS-QEC v1.1.0  |  DOI: {doi_v110} (v1.0.0: {V100_DOI})  |  HARDWARE-UNVALIDATED  |  Page {page_no} of 4"
+        cmds.append(f"BT /F3 6.5 Tf 0.35 0.39 0.45 rg 50 21 Td ({_pdf_escape(footer)}) Tj ET")
 
     # ---------------- PAGE 1 ----------------
     p1: List[str] = ["1 1 1 rg 0 0 612 792 re f"]
@@ -598,31 +591,31 @@ def build_preprint_pdf(
         50,
         y,
         [
-            "Compiler-Contract Enforcement, Exact 256-Branch Verification,",
-            "Pre/Post-Preparation Error Taxonomy, and Pre-Registered Quantinuum H2",
-            "Protocol for 20-Qubit Toroidal Wen-Plaquette Feed-Forward Preparation",
+            "Hardened Compiler Passes, Exact 256-Branch & 16/16 Fault-Taxonomy",
+            "Verification, RFC 8785 Execution Ledger, and Hash-Locked Quantinuum H2",
+            "Dispatch for 20-Qubit Toroidal Wen-Plaquette Feed-Forward Preparation",
         ],
         font="/F5",
-        size=12.4,
-        leading=15.2,
+        size=12.1,
+        leading=15.0,
     )
     y += 3
+    short_repo = repo_url.replace("https://", "")
     y = draw_lines(
         p1,
         50,
         y,
         [
-            "Devin Phillip Davis  |  Agile Defense Systems LLC  |  November 20, 2026  |  Release v1.0.0",
-            f"Zenodo DOI: {doi}  |  GitHub: {repo_url} (tag v1.0.0)",
-            f"Frozen Pre-Compile SHA-256: {pre_sha[:32]}...  |  H2-1 ISA SHA-256: {h2_sha[:32]}...",
+            "Devin Phillip Davis  |  Agile Defense Systems LLC  |  November 21, 2026  |  Release v1.1.0",
+            f"v1.1.0 DOI: {doi_v110}  |  v1.0.0 Baseline: {V100_DOI}  |  {short_repo}",
+            f"Locked Pre-Compile SHA-256: {pre_sha[:28]}...  |  H2-1 ISA SHA-256: {h2_sha[:28]}...",
         ],
         font="/F3",
-        size=7.2,
-        leading=9.8,
+        size=6.6,
+        leading=9.6,
         rgb=(0.18, 0.22, 0.30),
     )
     y += 3
-    # Status + Provenance Callout Box
     box_top = y
     box_h = 39.0
     p1.append(f"0.99 0.97 0.92 rg 0.72 0.33 0.04 RG 0.9 w 50 {H - box_top - box_h:.2f} 512 {box_h:.2f} re B")
@@ -631,12 +624,12 @@ def build_preprint_pdf(
         57,
         box_top + 10,
         [
-            "STATUS: HARDWARE-UNVALIDATED. All executed evidence is exact 20-qubit statevector enumeration, dual-basis Qiskit Aer",
-            "C++ simulation, and offline pytket-quantinuum H2-1 ISA compilation; zero provider jobs have been submitted.",
-            "PROVENANCE: Underlying 4x4 Wen-plaquette 2-round LUT protocol is prior art (Iqbal et al., arXiv:2302.01917 & Quantinuum tutorial).",
+            "STATUS: HARDWARE-UNVALIDATED. Preregistered artifact lock enforced: pre-compile and H2-1 ISA SHA-256 hashes are verified",
+            "pre-flight and post-compile (optimisation_level=0); any mismatch invalidates the run and aborts submission (EXIT 1).",
+            "PROVENANCE: 4x4 Wen-plaquette 2-round LUT protocol is prior art (Iqbal et al., arXiv:2302.01917 & Quantinuum tutorial).",
         ],
         font="/F2",
-        size=6.8,
+        size=6.7,
         leading=9.6,
         rgb=(0.55, 0.18, 0.04),
     )
@@ -644,34 +637,29 @@ def build_preprint_pdf(
 
     y = draw_lines(p1, 50, y, ["Abstract"], font="/F5", size=10.0, leading=12.4)
     abstract_txt = (
-        "We present a rigorously verified, reproducible compiler-pass and pre-registration package for preparing a fixed "
-        "logical state of the [[16, 2, 4]] four-by-four periodic Wen-plaquette CSS code on 20 qubits (16 data + 4 reused "
-        "ancillas, 28 classical bits) using two rounds of mid-circuit X-stabilizer extraction and classical feed-forward "
-        "(four single-bit conditional Z gates followed by a seven-entry four-bit lookup table). Building upon the "
-        "established Quantinuum H-series preparation protocol (arXiv:2302.01917), this work contributes: (i) a corrected "
-        "pytket CustomPass (WenPlaquetteFeedForwardPass) enforcing a strict preparation-only contract that rejects non-empty "
-        "input circuits rather than silently discarding upstream operations; (ii) an independent GF(2) symplectic derivation "
-        "confirming pairwise commutation, rank 14 (k=2), and exhaustive weight <= 3 distance d=4; (iii) exact non-sampled "
-        "enumeration of all 256 measurement branches showing 128 reachable even-parity branches landing in the +1 codespace "
-        "(worst stabilizer expectation 0.9999999999999942) with branch-independent state fidelity 0.9999999999999885, "
-        "cross-checked in both X and Z destructive readout bases on Qiskit Aer; (iv) a strict separation between "
-        "pre-preparation Z errors (16/16 corrected) and post-preparation Z/X/Y faults (0% corrected, refuting quantum-memory "
-        "overclaims); and (v) offline Quantinuum H2-1 ISA compilation (depth 19, 32 ZZPhase) paired with a statistically "
-        "strict 95% Wilson lower-confidence-bound (> 0.99 per basis) execution protocol via qnexus 0.51.4."
+        "We present OSIRIS-QEC v1.1.0, a provenance-locked compiler, verification, and hardware-dispatch package for "
+        "preparing a fixed logical state of the [[16, 2, 4]] four-by-four periodic Wen-plaquette CSS code on 20 qubits "
+        "(16 logical-lattice data qubits + 4 recycled syndrome ancillas executing 24 mid-circuit Measure and 8 Reset "
+        "operations; ancillas do not contribute to code distance). Preserving the frozen v1.0.0 circuit artifacts "
+        "(DOI 10.5281/zenodo.24406733) bit-for-bit, v1.1.0 introduces: (i) hardened register-collision rejection across "
+        "{q, qr, quantum, c, creg, cl, classical} and metadata normalization (name, phase, metadata) guaranteeing zero "
+        "hash drift; (ii) expansion of post-preparation Pauli-Y fault injection to all 16/16 data qubits alongside "
+        "exhaustive 256-branch enumeration and dual-basis Qiskit Aer cross-checks; (iii) the osiris qec CLI supporting "
+        "local Selene validation and fail-closed Quantinuum H2-1 dispatch via qnexus 0.51.4 (optimisation_level=0, "
+        "pre-upload and post-compile SHA-256 verification, bounded exponential backoff retries); and (iv) an atomic "
+        "RFC 8785 canonical JSON write-ahead execution ledger enforcing the 95% Wilson lower bound > 0.99 per basis."
     )
     y = draw_lines(p1, 50, y, wrap_paragraph(abstract_txt, 98), font="/F4", size=9.0, leading=11.3)
     y += 6
 
-    y = draw_lines(p1, 50, y, ["1. Provenance, Compiler-Pass Contract, and Toroidal Lattice Specification"], font="/F5", size=9.9, leading=12.4)
+    y = draw_lines(p1, 50, y, ["1. Hardware Allocation, Hardened Pass Contract, and Metadata Determinism"], font="/F5", size=9.9, leading=12.4)
     sec1_txt = (
-        "On a 4x4 periodic lattice (q_{r,c} = 4r + c), checkerboard weight-4 plaquettes assign Z stabilizers to even (r+c) "
-        "and X stabilizers to odd (r+c) (Fig. 1a). Starting from |0>^{16} (already +1 on all eight Z plaquettes), Round 1 "
-        "measures X plaquettes {4, 6, 12, 14} into c0_1st..c3_1st on ancillas q[16..19], applying conditional Z on {5, 7, 13, 15} "
-        "and resetting q[16..19]. Round 2 measures X plaquettes {1, 3, 9, 11} into 4-bit register c4_2nd and applies a 7-entry "
-        "LUT (Fig. 1b) whose big-endian syndrome keys map to bit-reversed little-endian integers for pytket condition_bits. "
-        "Baseline audit revealed that the vendored pass (dnalang_wen_plaquette_pass.py) overwrote non-empty input circuits; "
-        "our remediated WenPlaquetteFeedForwardPass raises ValueError on non-empty inputs or conflicting q-registers while "
-        "matching the baseline SHA-256 bit-for-bit on empty inputs."
+        "Sixteen vertex data qubits q[0..15] on a 4x4 torus encode [[16, 2, 4]] (checkerboard Z plaquettes on even r+c, "
+        "X plaquettes on odd r+c; Fig. 1a), while four ancillas q[16..19] are recycled across Round 1 {4, 6, 12, 14} and "
+        "Round 2 {1, 3, 9, 11} via mid-circuit Reset without increasing code distance. WenPlaquetteFeedForwardPass and "
+        "build_wen_plaquette() reject non-empty circuits and colliding quantum/classical register names with ValueError "
+        "before transformation, normalize circuit.name, circuit.phase, and circuit.metadata prior to SHA-256 hashing, "
+        "and preserve exact bit-for-bit hash equality between v1.0.0 and v1.1.0 on empty inputs."
     )
     y = draw_lines(p1, 50, y, wrap_paragraph(sec1_txt, 98), font="/F4", size=9.0, leading=11.3)
     y += 5
@@ -683,8 +671,8 @@ def build_preprint_pdf(
         50,
         y,
         [
-            "Figure 1: (a) 4x4 toroidal Wen-plaquette CSS layout (16 data qubits, k=2, d=4) showing Round-1/Round-2 X-plaquettes and",
-            "Round-1 conditional-Z targets. (b) Independently audited 7-entry Round-2 LUT with BE->LE pytket condition encoding.",
+            "Figure 1: (a) [[16, 2, 4]] toroidal Wen-plaquette lattice (16 data qubits + 4 recycled ancillas, 24 Measure, 8 Reset).",
+            "(b) Audited 7-entry Round-2 LUT with BE->LE pytket condition encoding and zero Round-1 plaquette disturbance.",
         ],
         font="/F6",
         size=8.0,
@@ -702,25 +690,19 @@ def build_preprint_pdf(
         y2,
         ["2. Exact 256-Branch Statevector Verification and Dual-Basis Aer Cross-Checks"],
         font="/F5",
-        size=10.2,
-        leading=13.5,
+        size=10.0,
+        leading=13.0,
     )
     sec2_txt = (
-        "Rather than relying solely on Monte Carlo shot sampling, qec_math.py and qec_verify.py derive the stabilizer group "
-        "directly from the periodic lattice geometry without consulting the pass lookup tables. Symplectic inner-product "
-        "checks over all 120 generator pairs confirm pairwise commutation; GF(2) Gaussian elimination yields rank 14 "
-        "(k = 16 - 14 = 2 encoded logical qubits); and exhaustive enumeration over all 3-qubit Pauli operators (weight 1..3) "
-        "finds zero nontrivial centralizer elements outside the stabilizer group, establishing exact distance d = 4 with "
-        "weight-4 non-contractible row/column logical strings (Z_L_row0, Z_L_col0, X_L_row0, X_L_col0). Negative tests "
-        "confirm the independent verifier immediately flags a corrupted LUT entry, invalid stabilizer support, or BE/LE "
-        "endianness reversal. Exhaustive statevector branch enumeration evaluates all 2^8 = 256 mid-circuit outcome "
-        "trajectories: exactly 128 even-Round-2-parity trajectories have nonzero probability (1/128 each), 128 odd-parity "
-        "trajectories have exact zero amplitude (by prod_{p in X} S_p = I on the torus), and all 128 reachable branches "
-        "achieve +1 expectation across all 16 X and Z stabilizers (worst expectation 0.9999999999999942). Pairwise state "
-        "overlaps across distinct syndrome branches equal 0.9999999999999885, proving deterministic preparation of the "
-        "fixed logical state |00>_L (Z_L_row0 = +1, Z_L_col0 = +1, <X_L> = 0). Because a single destructive readout "
-        "verifies only one Pauli sector, structural and C++ Qiskit AerBackend cross-checks validate both measurement_setting='X' "
-        "(512 shots, 0 X-plaquette parity violations) and measurement_setting='Z' (256 shots, 0 Z-plaquette violations)."
+        "Independent lattice derivation (qec_math.py, qec_verify.py) confirms pairwise commutation across all 120 "
+        "generator pairs, GF(2) rank 14 (k = 2), and zero nontrivial centralizer operators of weight <= 3 (exact d = 4). "
+        "Negative tests verify detection of corrupted LUT entries, invalid stabilizer supports, and BE/LE endianness "
+        "mismatches. Exhaustive non-sampled enumeration of all 2^8 = 256 mid-circuit outcome trajectories proves 128 "
+        "reachable even-parity branches (1/128 probability each) land in the +1 codespace (worst stabilizer expectation "
+        "0.9999999999999942, branch-to-branch fidelity 0.9999999999999885 to fixed |00>_L) while 128 odd-parity branches "
+        "have exact zero amplitude. Dual destructive readout runs on C++ Qiskit AerBackend confirm 0/512 X-basis and "
+        "0/256 Z-basis plaquette parity violations, complemented in v1.1.0 by deterministic Selene local dry-run "
+        "validation (`osiris qec run --target selene`) exercising Reset semantics and all 8 even Round-2 LUT branches."
     )
     y2 = draw_lines(p2, 50, y2, wrap_paragraph(sec2_txt, 98), font="/F4", size=9.0, leading=11.4)
     y2 += 7
@@ -735,13 +717,12 @@ def build_preprint_pdf(
         leading=13.0,
     )
     sec3_txt = (
-        "To establish pre-submission reference expectations prior to device execution, benchmarks/qec_noise_benchmark.py "
-        "simulates circuit-level noise injecting single-qubit depolarizing error p after every 1Q gate, two-qubit "
-        "depolarizing error p after every CX, classical bit-flip p on each recorded measurement bit, and depolarizing "
-        "error p after each ancilla Reset across deterministic seeds {11, 22, 33} (60 trajectories/seed = 180 trajectories per "
-        "(p, mode) cell). Figure 2 and Table I compare full LUT feed-forward against an identical circuit with conditional "
-        "Z corrections disabled (no-feed-forward baseline). At p = 1e-3 (comparable to trapped-ion two-qubit infidelity), "
-        "LUT feed-forward maintains mean logical fidelity 0.9056 (codespace rate 0.9333) versus 0.0056 without feed-forward."
+        "benchmarks/qec_noise_benchmark.py evaluates circuit-level noise injecting single-qubit depolarizing error p "
+        "after every 1Q gate, two-qubit depolarizing error p after every CX, classical bit-flip p on each recorded "
+        "measurement bit, and depolarizing error p after each ancilla Reset across seeds {11, 22, 33} (60 trajectories "
+        "per seed = 180 trajectories per (p, mode) cell). Figure 2 and Table I contrast LUT feed-forward against the "
+        "no-feed-forward baseline: at p = 1e-3, LUT feed-forward achieves mean logical fidelity 0.9056 (codespace rate "
+        "0.9333) versus 0.0056 without feed-forward."
     )
     y2 = draw_lines(p2, 50, y2, wrap_paragraph(sec3_txt, 98), font="/F4", size=9.0, leading=11.4)
     y2 += 5
@@ -787,21 +768,19 @@ def build_preprint_pdf(
         p3,
         50,
         y3,
-        ["4. Pre- vs. Post-Preparation Error Injection Taxonomy (State Preparation != QEC Memory)"],
+        ["4. Complete 16/16 Pre- & Post-Preparation Fault Taxonomy (Preparation != Memory)"],
         font="/F5",
         size=10.0,
         leading=13.0,
     )
     sec4_txt = (
-        "A central methodological contribution of this package is preventing conflation between fault-sensitive state "
-        "preparation and post-preparation quantum error correction. In pre-preparation injection (tests/test_error_injection.py, "
-        "reports/ERROR_CORRECTION_MATRIX.json), single-qubit Z faults applied prior to Round 1 on any of the 16 data qubits "
-        "are corrected 16/16 times (fidelity 1.0000 to |00>_L), as are ancilla Z faults and tested weight-2 Z pairs, whereas "
-        "pre-preparation X and Y faults flip Z-type stabilizers that are never measured and thus escape detection (0/32 "
-        "corrected). Crucially, in post-preparation injection (tests/test_post_prep_injection.py, reports/POST_PREP_INJECTION.json), "
-        "a single Z fault applied after Round-2 feed-forward produces a nonzero X-syndrome across all 16 data qubits "
-        "(detectable in destructive X readout) yet is never actively corrected (fidelity < 0.001) because no syndrome round "
-        "follows preparation; post-preparation X faults remain completely invisible to X-basis readout (Fig. 3a, Table II)."
+        "OSIRIS-QEC strictly separates pre-preparation fault tolerance from post-preparation memory claims. Weight-1 Z "
+        "faults injected before Round 1 on any of the 16 data qubits are corrected 16/16 times (fidelity 1.0000), whereas "
+        "pre-preparation X and Y faults flip unmeasured Z stabilizers (0/32 corrected). In v1.1.0, post-preparation Y-fault "
+        "validation is expanded from 3 representative qubits to a complete 16/16 sweep across q[0..15] "
+        "(tests/test_y_error_sweep.py, reports/POST_PREP_Y_SWEEP_V1_1.json): every post-preparation Y fault excites "
+        "exactly two X-plaquettes and two unmeasured Z-plaquettes (16/16 partially detected via X readout, 0/16 corrected, "
+        "logical fidelity 0.0000), matching post-preparation Z faults (16/16 detected, 0/16 corrected; Fig. 3a, Table II)."
     )
     y3 = draw_lines(p3, 50, y3, wrap_paragraph(sec4_txt, 98), font="/F4", size=9.0, leading=11.4)
     y3 += 5
@@ -813,8 +792,8 @@ def build_preprint_pdf(
         50,
         y3,
         [
-            "Figure 3: (a) Empirical comparison of single-qubit Z/X/Y injection before vs. after preparation (48 pre-prep + 23 post-prep",
-            "records). (b) Offline H2-1 ISA compilation summary and pre-registered 95% Wilson lower-confidence-bound (>0.99) gate.",
+            "Figure 3: (a) Single-qubit Z/X/Y injection before vs. after preparation including the complete 16/16 post-prep Y sweep.",
+            "(b) Hash-locked H2-1 ISA compilation profile (optimisation_level=0) and frozen 95% Wilson (>0.99) acceptance thresholds.",
         ],
         font="/F6",
         size=8.0,
@@ -823,15 +802,15 @@ def build_preprint_pdf(
     y3 += 7
 
     table2 = [
-        "Table II: Pre-Preparation vs. Post-Preparation Error Classification (reports/POST_PREP_INJECTION.json)",
+        "Table II: Pre- vs. Post-Preparation Fault Classification (POST_PREP_INJECTION.json & POST_PREP_Y_SWEEP_V1_1.json)",
         "------------------------------------------------------------------------------------------------------------",
         "Fault Class & Timing          Cases   X-Syndrome Detected   Codespace Corrected   Operational Classification",
         "------------------------------------------------------------------------------------------------------------",
         "Weight-1 Z BEFORE prep         16     16 / 16 (100%)        16 / 16 (fid = 1.0)   Corrected by 2-round LUT",
         "Weight-1 X or Y BEFORE prep    32      0 / 32 (Z unmeas.)    0 / 32 (fid = 0.0)   Undetected / uncorrected",
-        "Weight-1 Z AFTER prep          16     16 / 16 (nonzero X)    0 / 16 (fid < 1e-3)  Detectable, NOT corrected",
-        "Weight-1 X AFTER prep           3      0 / 3  (X synd = 0)   0 / 3  (leaves code) Undetected (Z unmeasured)",
-        "Weight-1 Y AFTER prep           3      3 / 3  (partial X)    0 / 3  (leaves code) Partially detected only",
+        "Weight-1 Z AFTER prep          16     16 / 16 (2 X-plaq)     0 / 16 (fid < 1e-3)  Detectable, NOT corrected",
+        "Weight-1 X AFTER prep           3      0 / 3  (X synd = 0)   0 / 3  (2 Z-plaq)    Undetected (Z unmeasured)",
+        "Weight-1 Y AFTER prep (v1.1)   16     16 / 16 (2 X-plaq)     0 / 16 (fid = 0.0)   Partially detected, 0% corr",
         "------------------------------------------------------------------------------------------------------------",
     ]
     y3 = draw_lines(p3, 50, y3, table2, font="/F3", size=7.2, leading=9.6)
@@ -841,20 +820,17 @@ def build_preprint_pdf(
         p3,
         50,
         y3,
-        ["5. Offline Quantinuum H2-1 ISA Compilation and Pre-Registered qnexus 0.51.4 Gate"],
+        ["5. Fail-Closed Hash Gate, QNexus opt_level=0 Lock, and RFC 8785 Write-Ahead Ledger"],
         font="/F5",
         size=10.0,
         leading=12.8,
     )
     sec5_txt = (
-        "Pre-compile emitted circuit WenPlaquetteFeedForwardPass(measurement_setting='X') comprises 20 qubits, 28 classical "
-        "bits, depth 16, and 132 pre-barrier operations (64 H, 32 CX, 8 Measure, 8 Reset, 20 Conditional-Z; SHA-256 "
-        f"{pre_sha[:24]}...). Offline compilation via pytket-quantinuum 0.59.3 (QuantinuumAPIOffline, optimisation_level=2) "
-        "rebases cleanly to the 56-qubit H2-1 native gate set at depth 19: 32 ZZPhase, 72 PhasedX, 20 Rz, 20 Conditional, "
-        f"24 Measure, 8 Reset, and 1 Barrier (SHA-256 {h2_sha[:24]}...). Because the legacy Quantinuum API and "
-        "pytket-quantinuum job-submission endpoints are retired, hardware/submit_h2_1sc.py targets Quantinuum Nexus "
-        "(qnexus 0.51.4: login_with_credentials -> QuantinuumConfig(device_name='H2-1SC'|'H2-1E'|'H2-1') -> "
-        "start_compile_job / start_execute_job), enforcing a cryptographic hash-freeze check prior to upload."
+        "Before any QNexus upload (`osiris qec run --target h2-1`), osiris_cli verifies both the pre-compile SHA-256 "
+        f"({pre_sha[:20]}...) and offline H2-1 ISA SHA-256 ({h2_sha[:20]}..., depth 19, 32 ZZPhase), flushes an RFC 8785 "
+        "canonical JSON `pre_submit` entry (with SHA-256 hash chaining and fsync) to `ledger/run-<id>.json`, compiles on "
+        "Quantinuum Nexus (`qnexus 0.51.4`) under `optimisation_level=0` (`no_opt=True`), and re-verifies the returned "
+        "compiled circuit SHA-256 prior to `start_execute_job`—aborting fail-closed (`EXIT 1`) on any drift."
     )
     y3 = draw_lines(p3, 50, y3, wrap_paragraph(sec5_txt, 98), font="/F4", size=9.0, leading=11.3)
     assert y3 <= 752, f"Page 3 overflow: {y3}"
@@ -864,17 +840,18 @@ def build_preprint_pdf(
     p4: List[str] = ["1 1 1 rg 0 0 612 792 re f"]
     y4 = 46.0
     table3 = [
-        "Table III: Pre-Registered Statistical Acceptance Gate (95% Wilson Lower Bound > 0.99, z = 1.959964, Per Basis)",
+        "Table III: Frozen Statistical Acceptance Gate (95% Wilson Lower Bound > 0.99, z = 1.959964, Per Basis)",
         "------------------------------------------------------------------------------------------------------------",
         "Target Stage      Device   Shots / Basis (X & Z indep.)   Min Passing Shots   Max Parity Violations   Cost",
         "------------------------------------------------------------------------------------------------------------",
-        "Gate 1 (Syntax)   H2-1SC   1 (compile + syntax check)     Pass compilation    0 syntax errors         0 HQC",
+        "Local Dry-Run     Selene   1,000 (deterministic local)    1,000 (LB=0.9962)   0 (Reset + LUT check)   0 HQC",
+        "Gate 1 (Syntax)   H2-1SC   1 (compile + ISA hash check)   ISA SHA-256 exact   0 syntax/hash errors    0 HQC",
         "Gate 2 (Emul.)    H2-1E    1,000 / 2,000 / 5,000 / 10k    997 / 1989 / 4964   3 / 11 / 36 (80 @ 10k)  HQC",
-        "Gate 3 (QPU)      H2-1     512 / 1,000 / 10,000           512 / 997 / 9,920   0 / 3 / 80              HQC",
+        "Gate 3 (QPU)      H2-1     512 / 1,000 / 5,000 / 10,000   512 / 997 / 4,964   0 / 3 / 36 (80 @ 10k)   HQC",
         "------------------------------------------------------------------------------------------------------------",
     ]
-    y4 = draw_lines(p4, 50, y4, table3, font="/F3", size=7.2, leading=10.2)
-    y4 += 10
+    y4 = draw_lines(p4, 50, y4, table3, font="/F3", size=7.1, leading=9.9)
+    y4 += 9
 
     n_ver = sum(1 for c_item in claims_doc["claims"] if c_item["status"] == "VERIFIED")
     n_ref = sum(1 for c_item in claims_doc["claims"] if c_item["status"] == "REFUTED")
@@ -886,61 +863,57 @@ def build_preprint_pdf(
         y4,
         [f"6. Audited Claim Matrix ({len(claims_doc['claims'])} Claims: {n_ver} VERIFIED, {n_ref} REFUTED, {n_blk} BLOCKED/UNVERIFIED)"],
         font="/F5",
-        size=10.2,
-        leading=13.5,
+        size=10.0,
+        leading=13.0,
     )
     sec6_bullets = [
-        "* VERIFIED (15 claims): Preparation-only CustomPass contract (ValueError on non-empty input); bit-for-bit equality",
-        "  with baseline on empty input; independent 4x4 checkerboard symplectic derivation (commuting, rank 14, k=2, d=4);",
-        "  7-entry LUT syndrome consistency and BE->LE condition_bits mapping; exact 128/128 reachable codespace landing",
-        "  (worst <S> = 0.9999999999999942, branch overlap 0.9999999999999885); dual-basis Qiskit Aer C++ cross-checks",
-        "  (X: 512/512, Z: 256/256); weight-1 pre-prep Z correction (16/16); noisy simulation curve; offline H2-1 ISA",
-        "  compile; qnexus 0.51.4 API path audit; 95% Wilson threshold derivation; negative mutation-detection tests.",
-        "* EXPLICITLY REFUTED OVERCLAIMS (5 claims): Novelty of the underlying 2-round LUT protocol (prior art:",
-        "  arXiv:2302.01917); X/Y data error detection/correction (0/32, Z stabilizers unmeasured); post-preparation error",
-        "  correction (0/16 corrected); fault-tolerant quantum memory; arbitrary logical state or superposition encoding",
-        "  (circuit prepares only fixed |00>_L; dynamical-decoupling fields in provenance capsule are inert metadata).",
-        "* UNVERIFIED / BLOCKED (2 claims): Quantum advantage over classical baselines (none claimed); live Quantinuum",
-        "  H2-1SC / H2-1E / H2-1 execution (frozen hashes ready; blocked solely on out-of-band qnx login & HQC budget).",
+        "* VERIFIED: Preparation-only & register-collision pass contract; metadata normalization & v1.0.0==v1.1.0 SHA-256",
+        "  parity; independent 4x4 checkerboard symplectic derivation ([[16, 2, 4]]); 7-entry LUT & BE->LE condition_bits;",
+        "  exact 128/128 reachable codespace landing (worst <S> = 0.9999999999999942); dual-basis Aer C++ cross-checks;",
+        "  16/16 pre-prep Z correction; 16/16 post-prep Z & 16/16 post-prep Y fault taxonomy; Selene local runner; RFC 8785",
+        "  hash-chained write-ahead ledger; fail-closed QNexus opt_level=0 pre/post-compile hash gate & mock API retry suite.",
+        "* EXPLICITLY REFUTED OVERCLAIMS: Novelty of the underlying 2-round LUT protocol (prior art: arXiv:2302.01917);",
+        "  X/Y data error correction (0/32); post-preparation error correction (0/16 Z, 0/16 Y); fault-tolerant QEC memory;",
+        "  arbitrary logical state encoding (prepares fixed |00>_L only; DD capsule fields are inert metadata).",
+        "* UNVERIFIED / BLOCKED: Quantum advantage (none claimed); live Quantinuum H2-1SC/H2-1E/H2-1 QPU execution",
+        "  (hash-locked CLI & manifests verified; blocked solely on out-of-band QNexus credentials & HQC allocation).",
     ]
-    y4 = draw_lines(p4, 50, y4, sec6_bullets, font="/F4", size=9.0, leading=11.9)
-    y4 += 10
+    y4 = draw_lines(p4, 50, y4, sec6_bullets, font="/F4", size=8.9, leading=11.6)
+    y4 += 9
 
     y4 = draw_lines(
         p4,
         50,
         y4,
-        ["7. Deterministic Reproducibility and Offline Verification Commands"],
+        ["7. Reference CLI Verification & Reproducibility Workflow (v1.1.0)"],
         font="/F5",
-        size=10.2,
-        leading=13.5,
+        size=10.0,
+        leading=13.0,
     )
     repro_lines = [
-        "Environment: Python 3.14.6, pytket 2.18.5, pytket-qiskit 0.79.0, pytket-quantinuum 0.59.3, qnexus 0.51.4,",
-        "             qiskit 2.6.2, qiskit-aer 0.18.4, numpy 2.5.5, pytest 9.2.0.",
-        "  pytest tests/ -q                                   # 33 passed (contract, 256-branch, Aer X/Z, pre/post injection)",
-        "  python audit_baseline.py && python logical_validation.py && python verify_independent.py",
-        "  python benchmarks/qec_noise_benchmark.py           # reproduces reports/QEC_BENCHMARK_RESULTS.json",
-        "  python hardware/quantinuum_h2.py                   # verifies frozen pre-compile & H2-1 ISA SHA-256 hashes",
-        "  sha256sum -c paper/SHA256SUMS.txt                  # verifies cryptographic integrity of complete release bundle",
+        "  osiris qec verify --manifest hardware/experiment_manifest_v1_0_0.json",
+        "  osiris qec verify --manifest hardware/experiment_manifest_v1_1_0.json --strict",
+        "  pytest -q                                          # full regression + 16/16 Y-sweep + hash-lock + mock QNexus",
+        "  osiris qec run --target selene --shots 1000 --manifest hardware/experiment_manifest_v1_1_0.json",
+        "  osiris qec ledger verify ledger/run-*.json && sha256sum -c paper/SHA256SUMS.txt",
     ]
-    y4 = draw_lines(p4, 50, y4, repro_lines, font="/F3", size=7.4, leading=10.8)
-    y4 += 10
+    y4 = draw_lines(p4, 50, y4, repro_lines, font="/F3", size=7.2, leading=10.4)
+    y4 += 9
 
-    y4 = draw_lines(p4, 50, y4, ["References"], font="/F5", size=10.0, leading=13.0)
+    y4 = draw_lines(p4, 50, y4, ["References"], font="/F5", size=9.9, leading=12.6)
     refs = [
         "[1] M. Iqbal et al., 'Topological Order from Measurements and Feed-Forward on a Trapped Ion Quantum Computer,'",
         "    Commun. Phys. 7, 205 (2024); arXiv:2302.01917.",
         "[2] Quantinuum, 'Topological Order from Measurements and Feed-Forward' (Official H-Series Documentation Tutorial).",
-        "[3] X.-G. Wen, 'Quantum Orders in an Exact Soluble Model,' Phys. Rev. Lett. 90, 016803 (2003).",
-        "[4] A. Yu. Kitaev, 'Fault-tolerant quantum computation by anyons,' Ann. Phys. 303, 2-30 (2003).",
-        "[5] S. Sivarajah et al., 't|ket>: a retargetable compiler for NISQ devices,' Quantum Sci. Technol. 6, 014003 (2020).",
-        "[6] E. B. Wilson, 'Probable inference, the law of succession, and statistical inference,' J. Am. Stat. Assoc. 22, 209 (1927).",
-        "[7] D. P. Davis, 'Sub-Threshold Multi-Round Repetition-Code Logical Error Scaling... (OSIRIS-QEC-001),' Zenodo",
-        "    doi:10.5281/zenodo.24293756 (2026).",
+        "[3] X.-G. Wen, Phys. Rev. Lett. 90, 016803 (2003); A. Yu. Kitaev, Ann. Phys. 303, 2-30 (2003).",
+        "[4] S. Sivarajah et al., 't|ket>: a retargetable compiler for NISQ devices,' Quantum Sci. Technol. 6, 014003 (2020).",
+        "[5] A. Rundgren, B. Jordan, and S. Erdtman, 'JSON Canonicalization Scheme (JCS),' IETF RFC 8785 (2020).",
+        "[6] E. B. Wilson, J. Am. Stat. Assoc. 22, 209 (1927).",
+        f"[7] D. P. Davis, OSIRIS-QEC v1.0.0 Baseline Archive, Zenodo doi:{V100_DOI} (2026); OSIRIS-QEC-001,",
+        "    Zenodo doi:10.5281/zenodo.24293756 (2026).",
     ]
-    y4 = draw_lines(p4, 50, y4, refs, font="/F4", size=8.4, leading=11.0)
-    assert y4 <= 765, f"Page 4 overflow: {y4}"
+    y4 = draw_lines(p4, 50, y4, refs, font="/F4", size=8.3, leading=10.7)
+    assert y4 <= 752, f"Page 4 overflow: {y4}"
     draw_footer(p4, 4)
 
     return build_pdf_document(
@@ -953,9 +926,9 @@ def build_preprint_pdf(
     )
 
 
-def build_latex_source(doi: str, repo_url: str, manifest: Dict[str, Any], bench_summary: Sequence[Dict[str, Any]]) -> str:
-    pre_sha = manifest["circuits"][0]["pre_compile_sha256"]
-    h2_sha = manifest["circuits"][0]["h2_compiled_sha256"]
+def build_latex_source(doi_v110: str, repo_url: str, manifest_v11: Dict[str, Any], bench_summary: Sequence[Dict[str, Any]]) -> str:
+    pre_sha = manifest_v11["precompile_sha256"]
+    h2_sha = manifest_v11["isa_sha256"]
     rows_tex = "\n".join(
         f"{r['p']:.4g} & {int(r['shots'])} & ${r['ff_fid']:.4f} \\pm {r['ff_fid_ci95']:.4f}$ & "
         f"${r['ff_corr']:.4f} \\pm {r['ff_corr_ci95']:.4f}$ & ${r['noff_fid']:.4f}$ \\\\"
@@ -964,34 +937,34 @@ def build_latex_source(doi: str, repo_url: str, manifest: Dict[str, Any], bench_
     return f"""\\documentclass[10pt,twocolumn]{{article}}
 \\usepackage[margin=0.72in]{{geometry}}
 \\usepackage{{amsmath,amssymb,booktabs,graphicx,hyperref}}
-\\title{{\\textbf{{Compiler-Contract Enforcement, Exact 256-Branch Verification, Pre/Post-Preparation Error Taxonomy, and Pre-Registered Quantinuum H2 Protocol for 20-Qubit Toroidal Wen-Plaquette Feed-Forward Preparation}}}}
-\\author{{Devin Phillip Davis\\\\Agile Defense Systems LLC\\\\\\texttt{{DOI: {doi}}} \\quad \\texttt{{{repo_url}}}}}
-\\date{{November 20, 2026 --- Version 1.0.0 (\\textbf{{STATUS: HARDWARE-UNVALIDATED}})}}
+\\title{{\\textbf{{Hardened Compiler Passes, Exact 256-Branch \\& 16/16 Fault-Taxonomy Verification, RFC 8785 Execution Ledger, and Hash-Locked Quantinuum H2 Dispatch for 20-Qubit Toroidal Wen-Plaquette Feed-Forward Preparation}}}}
+\\author{{Devin Phillip Davis\\\\Agile Defense Systems LLC\\\\\\texttt{{v1.1.0 DOI: {doi_v110}}} \\quad \\texttt{{v1.0.0 DOI: {V100_DOI}}} \\quad \\texttt{{{repo_url}}}}}
+\\date{{November 21, 2026 --- Version 1.1.0 (\\textbf{{STATUS: HARDWARE-UNVALIDATED}})}}
 
 \\begin{{document}}
 \\maketitle
 
 \\begin{{abstract}}
-\\noindent\\textbf{{Status: HARDWARE-UNVALIDATED}} (exact local simulation, dual-basis Qiskit Aer cross-checks, and offline Quantinuum H2-1 ISA compilation only; zero provider jobs submitted). Building upon the prior-art $4\\times 4$ toroidal Wen-plaquette two-round measurement and lookup-table (LUT) feed-forward preparation protocol of Iqbal \\emph{{et al.}} (arXiv:2302.01917) and Quantinuum's official tutorial, we present a rigorously verified \\texttt{{pytket}} \\texttt{{CustomPass}} package (\\texttt{{WenPlaquetteFeedForwardPass}}), independent $\\mathrm{{GF}}(2)$ symplectic code verification ($[[16,2,4]]$), exhaustive non-sampled enumeration of all $256$ mid-circuit measurement branches ($128$ reachable even-parity branches landing in the $+1$ codespace with worst stabilizer expectation $0.9999999999999942$ and branch-independent fidelity $0.9999999999999885$), an explicit pre- vs.\\ post-preparation Pauli injection taxonomy proving state preparation is not equated with post-preparation quantum memory, reproducible Monte Carlo noise benchmarks, and a frozen Quantinuum H2 / \\texttt{{qnexus}} 0.51.4 execution protocol governed by a per-basis $95\\%$ Wilson lower-confidence-bound ($>0.99$) gate.
+\\noindent\\textbf{{Status: HARDWARE-UNVALIDATED.}} Compilation and execution use a preregistered artifact lock: the pre-compile SHA-256 (\\texttt{{{pre_sha[:20]}...}}) and Quantinuum H2-1 ISA SHA-256 (\\texttt{{{h2_sha[:20]}...}}) are verified immediately prior to execution and post-compile under \\texttt{{optimisation\\_level=0}}; any mismatch invalidates the run and aborts submission. Building upon the prior-art $4\\times 4$ toroidal Wen-plaquette two-round LUT protocol of Iqbal \\emph{{et al.}} (arXiv:2302.01917), OSIRIS-QEC v1.1.0 preserves the immutable v1.0.0 baseline (\\texttt{{{V100_DOI}}}) while adding strict register-collision protection, metadata normalization, a complete $16/16$ post-preparation Pauli-$Y$ sweep, an IETF RFC~8785 hash-chained write-ahead execution ledger, and the \\texttt{{osiris qec}} CLI for Selene validation and hash-locked Quantinuum H2-1 dispatch.
 \\end{{abstract}}
 
-\\section{{Provenance, Pass Contract, and Code Specification}}
-The $4\\times 4$ periodic checkerboard lattice maps vertex $(r,c)$ to $q_{{4r+c}}$ ($r,c\\in\\{{0,1,2,3\\}}$), assigning weight-$4$ $Z$ plaquettes to $(r+c)$ even and $X$ plaquettes to $(r+c)$ odd (Fig.~\\ref{{fig:torus}}). Independent symplectic verification (\\texttt{{qec\\_math.py}}) confirms pairwise commutation across all $120$ generator pairs, $\\mathrm{{GF}}(2)$ rank $14$ ($k=2$), and zero nontrivial logical operators of weight $\\le 3$ ($d=4$). Our remediated \\texttt{{WenPlaquetteFeedForwardPass}} enforces a strict preparation-only contract (raising \\texttt{{ValueError}} on non-empty input circuits) while matching the baseline SHA-256 (\\texttt{{{pre_sha[:24]}...}}) on empty inputs.
+\\section{{Hardware Allocation and Pass Hardening}}
+Sixteen data qubits $q[0..15]$ implement the $[[16,2,4]]$ toroidal Wen-plaquette encoding, while $4$ ancilla qubits $q[16..19]$ are recycled via mid-circuit \\texttt{{Reset}} ($24$ \\texttt{{Measure}}, $8$ \\texttt{{Reset}} total; ancillas do not contribute to logical code distance; Fig.~\\ref{{fig:torus}}). \\texttt{{WenPlaquetteFeedForwardPass}} and \\texttt{{build\\_wen\\_plaquette}} reject non-empty inputs and colliding \\texttt{{q/qr/quantum/c/creg/cl/classical}} registers while normalizing mutable metadata so v1.0.0 and v1.1.0 circuit hashes match bit-for-bit.
 
 \\begin{{figure}}[t]
 \\centering
 \\includegraphics[width=\\columnwidth]{{fig1_torus_checkerboard_lut.pdf}}
-\\caption{{$4\\times 4$ toroidal Wen-plaquette layout and $7$-entry Round-2 LUT (BE syndrome $\\to$ LE \\texttt{{pytket}} condition integer).}}
+\\caption{{$[[16,2,4]]$ toroidal layout ($16$ data + $4$ recycled ancillas) and $7$-entry Round-2 LUT.}}
 \\label{{fig:torus}}
 \\end{{figure}}
 
-\\section{{Exact 256-Branch Verification and Noise Benchmark}}
-Exhaustive trajectory enumeration confirms $128$ reachable branches (probability $1/128$ each) and $128$ zero-probability odd-parity branches ($\\prod_{{p\\in X}} S_p = I$), preparing fixed $|00\\rangle_L$ ($Z_{{L,\\mathrm{{row}}0}}=Z_{{L,\\mathrm{{col}}0}}=+1$, $\\langle X_L\\rangle=0$). Dual-basis C++ \\texttt{{AerBackend}} runs yield $0/512$ ($X$-basis) and $0/256$ ($Z$-basis) parity violations. Table~\\ref{{tab:bench}} and Fig.~\\ref{{fig:bench}} summarize noisy trajectories across seeds $\\{{11,22,33\\}}$.
+\\section{{Exact Verification and Noise Benchmark}}
+Exhaustive $256$-branch enumeration confirms $128/128$ reachable even-parity branches land in $+1$ codespace (worst $\\langle S\\rangle = 0.9999999999999942$), cross-checked in $X$ ($512/512$) and $Z$ ($256/256$) bases on Qiskit Aer and via \\texttt{{osiris qec run --target selene}}. Table~\\ref{{tab:bench}} and Fig.~\\ref{{fig:bench}} report noisy trajectories.
 
 \\begin{{figure}}[t]
 \\centering
 \\includegraphics[width=\\columnwidth]{{fig2_noisy_fidelity_benchmark.pdf}}
-\\caption{{Simulated depolarizing + readout/reset noise benchmark ($180$ shots/point) with and without LUT feed-forward.}}
+\\caption{{Simulated depolarizing + readout/reset noise benchmark ($180$ shots/point).}}
 \\label{{fig:bench}}
 \\end{{figure}}
 
@@ -1009,78 +982,61 @@ $p$ & Shots & FF Fidelity & FF Codespace & No-FF Fid. \\\\
 \\end{{tabular}}
 \\end{{table}}
 
-\\section{{Pre/Post-Preparation Error Taxonomy and H2 Gate}}
-Pre-preparation weight-$1$ $Z$ errors are corrected $16/16$ times, whereas post-preparation $Z$ faults flip $X$-syndromes ($16/16$ detectable) without correction ($0/16$, fidelity $<10^{{-3}}$; Fig.~\\ref{{fig:gate}}), confirming this single-shot preparation circuit is not a QEC memory. Offline \\texttt{{QuantinuumAPIOffline}} H2-1 compilation yields depth $19$ and $32$ \\texttt{{ZZPhase}} gates (SHA-256 \\texttt{{{h2_sha[:24]}...}}), frozen for \\texttt{{qnexus}} 0.51.4 execution under a $95\\%$ Wilson lower bound $>0.99$ ($512/512$, $997/1000$, $1989/2000$, $4964/5000$, $9920/10000$).
+\\section{{16/16 Post-Prep Fault Taxonomy \\& Hash-Locked H2 Gate}}
+Expanding post-preparation $Y$-fault injection to all $16/16$ data qubits confirms $16/16$ partial $X$-syndrome detection with $0/16$ preservation ($F_L=0.0$; Fig.~\\ref{{fig:gate}}). \\texttt{{osiris qec}} enforces RFC~8785 write-ahead ledgering, \\texttt{{optimisation\\_level=0}}, post-compile ISA hash verification, and the $95\\%$ Wilson lower bound $>0.99$.
 
 \\begin{{figure}}[t]
 \\centering
 \\includegraphics[width=\\columnwidth]{{fig3_error_taxonomy_and_wilson_gate.pdf}}
-\\caption{{Pre- vs.\\ post-preparation Pauli injection taxonomy and frozen Quantinuum H2 Wilson ($>0.99$) acceptance gate.}}
+\\caption{{$16/16$ pre/post-prep Pauli taxonomy and hash-locked Quantinuum H2 Wilson ($>0.99$) gate.}}
 \\label{{fig:gate}}
 \\end{{figure}}
 
 \\begin{{thebibliography}}{{9}}
 \\bibitem{{Iqbal2024}} M. Iqbal \\emph{{et al.}}, Commun.\\ Phys.\\ \\textbf{{7}}, 205 (2024); arXiv:2302.01917.
 \\bibitem{{Wen2003}} X.-G. Wen, Phys.\\ Rev.\\ Lett.\\ \\textbf{{90}}, 016803 (2003).
-\\bibitem{{Kitaev2003}} A. Yu. Kitaev, Ann.\\ Phys.\\ \\textbf{{303}}, 2--30 (2003).
-\\bibitem{{Sivarajah2020}} S. Sivarajah \\emph{{et al.}}, Quantum Sci.\\ Technol.\\ \\textbf{{6}}, 014003 (2020).
+\\bibitem{{RFC8785}} A. Rundgren \\emph{{et al.}}, IETF RFC 8785 (2020).
 \\bibitem{{Wilson1927}} E. B. Wilson, J.\\ Am.\\ Stat.\\ Assoc.\\ \\textbf{{22}}, 209--212 (1927).
-\\bibitem{{DavisQEC001}} D. P. Davis, OSIRIS-QEC-001, Zenodo \\texttt{{10.5281/zenodo.24293756}} (2026).
+\\bibitem{{DavisV100}} D. P. Davis, OSIRIS-QEC v1.0.0, Zenodo \\texttt{{{V100_DOI}}} (2026).
 \\end{{thebibliography}}
 \\end{{document}}
 """
 
 
-def write_repo_metadata(root: Path, doi: str, repo_url: str, manifest: Dict[str, Any]) -> None:
-    pre_sha = manifest["circuits"][0]["pre_compile_sha256"]
-    h2_sha = manifest["circuits"][0]["h2_compiled_sha256"]
+def write_synchronized_docs(root: Path, doi_v110: str, repo_url: str, manifest_v11: Dict[str, Any]) -> None:
+    pre_sha = manifest_v11["precompile_sha256"]
+    h2_sha = manifest_v11["isa_sha256"]
 
     (root / ".gitignore").write_text(
-        "__pycache__/\n*.py[cod]\n.pytest_cache/\n.env\n.env.*\n*.tar.gz\n",
-        encoding="utf-8",
-    )
-
-    (root / "LICENSE").write_text(
-        """                                 Apache License
-                           Version 2.0, January 2004
-                        http://www.apache.org/licenses/
-
-   Copyright 2026 Devin Phillip Davis (Agile Defense Systems LLC)
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
-
-   Note: The accompanying manuscript, figures, and documentation in `paper/`,
-   `reports/`, and `submission/` are additionally made available under the
-   Creative Commons Attribution 4.0 International License (CC BY 4.0).
-""",
+        "__pycache__/\n*.py[cod]\n.pytest_cache/\n.coverage\nhtmlcov/\n*.egg-info/\nbuild/\ndist/\nledger/\n.env\n.env.*\n*.tar.gz\n",
         encoding="utf-8",
     )
 
     (root / "CITATION.cff").write_text(
         f"""cff-version: 1.2.0
-message: "If you use this package, verification suite, or preprint, please cite it as below."
+message: "If you use OSIRIS-QEC, its verification suite, or preprint, please cite it as below."
 authors:
   - family-names: "Davis"
     given-names: "Devin Phillip"
     affiliation: "Agile Defense Systems LLC"
-title: "Compiler-Contract Enforcement, Exact 256-Branch Verification, Pre/Post-Preparation Error Taxonomy, and Pre-Registered Quantinuum H2 Protocol for 20-Qubit Toroidal Wen-Plaquette Feed-Forward Preparation"
-version: 1.0.0
-doi: "{doi}"
-date-released: 2026-11-20
+title: "Hardened Compiler Passes, Exact 256-Branch & 16/16 Fault-Taxonomy Verification, RFC 8785 Execution Ledger, and Hash-Locked Quantinuum H2 Dispatch for 20-Qubit Toroidal Wen-Plaquette Feed-Forward Preparation"
+version: 1.1.0
+doi: "{doi_v110}"
+date-released: 2026-11-21
 url: "{repo_url}"
 repository-code: "{repo_url}"
 license: Apache-2.0
 type: software
+identifiers:
+  - type: doi
+    value: "{doi_v110}"
+    description: "Zenodo v1.1.0 Version DOI"
+  - type: doi
+    value: "{V100_DOI}"
+    description: "Frozen v1.0.0 Baseline Evidence DOI"
+  - type: doi
+    value: "{CONCEPT_DOI}"
+    description: "Zenodo Concept DOI (all versions)"
 keywords:
   - quantum error correction
   - Wen-plaquette code
@@ -1089,6 +1045,7 @@ keywords:
   - classical feed-forward
   - pytket
   - Quantinuum H2
+  - RFC 8785 canonical JSON
   - pre-registered quantum experiment
 """,
         encoding="utf-8",
@@ -1096,22 +1053,17 @@ keywords:
 
     zenodo_meta = {
         "title": (
-            "Compiler-Contract Enforcement, Exact 256-Branch Verification, Pre/Post-Preparation "
-            "Error Taxonomy, and Pre-Registered Quantinuum H2 Protocol for 20-Qubit Toroidal "
-            "Wen-Plaquette Feed-Forward Preparation"
+            "Hardened Compiler Passes, Exact 256-Branch & 16/16 Fault-Taxonomy Verification, "
+            "RFC 8785 Execution Ledger, and Hash-Locked Quantinuum H2 Dispatch for 20-Qubit "
+            "Toroidal Wen-Plaquette Feed-Forward Preparation (OSIRIS-QEC v1.1.0)"
         ),
         "upload_type": "publication",
         "publication_type": "preprint",
-        "publication_date": "2026-11-20",
-        "version": "1.0.0",
+        "publication_date": "2026-11-21",
+        "version": "1.1.0",
         "license": "cc-by-4.0",
         "access_right": "open",
-        "creators": [
-            {
-                "name": "Davis, Devin Phillip",
-                "affiliation": "Agile Defense Systems LLC",
-            }
-        ],
+        "creators": [{"name": "Davis, Devin Phillip", "affiliation": "Agile Defense Systems LLC"}],
         "keywords": [
             "quantum error correction",
             "Wen-plaquette code",
@@ -1120,123 +1072,166 @@ keywords:
             "classical feed-forward",
             "pytket CustomPass",
             "Quantinuum H2",
+            "RFC 8785",
             "pre-registered quantum protocol",
             "OSIRIS-QEC",
         ],
         "related_identifiers": [
-            {
-                "identifier": f"{repo_url}/tree/v1.0.0",
-                "relation": "isSupplementTo",
-                "scheme": "url",
-            },
-            {
-                "identifier": "arXiv:2302.01917",
-                "relation": "cites",
-                "scheme": "arxiv",
-            },
-            {
-                "identifier": "10.5281/zenodo.24293756",
-                "relation": "references",
-                "scheme": "doi",
-            },
+            {"identifier": f"{repo_url}/tree/v1.1.0", "relation": "isSupplementTo", "scheme": "url"},
+            {"identifier": V100_DOI, "relation": "isNewVersionOf", "scheme": "doi"},
+            {"identifier": "arXiv:2302.01917", "relation": "cites", "scheme": "arxiv"},
+            {"identifier": "10.5281/zenodo.24293756", "relation": "references", "scheme": "doi"},
         ],
         "notes": (
-            f"STATUS: HARDWARE-UNVALIDATED (local exact simulation, dual-basis Qiskit Aer cross-checks, "
-            f"and offline Quantinuum H2-1 ISA compilation; zero hardware jobs submitted). "
-            f"Frozen pre-compile SHA-256: {pre_sha}. Frozen H2-1 compiled SHA-256: {h2_sha}."
+            f"STATUS: HARDWARE-UNVALIDATED. Preserves frozen v1.0.0 hashes verbatim "
+            f"(pre-compile SHA-256: {pre_sha}; H2-1 ISA SHA-256: {h2_sha}; v1.0.0 DOI: {V100_DOI})."
         ),
     }
     (root / ".zenodo.json").write_text(json.dumps(zenodo_meta, indent=2) + "\n", encoding="utf-8")
 
-    readme_path = root / "README.md"
-    readme_txt = readme_path.read_text(encoding="utf-8")
-    badge_line = f"[![DOI](https://zenodo.org/badge/DOI/{doi}.svg)](https://doi.org/{doi})"
-    if badge_line not in readme_txt:
-        header = "# OSIRIS Quantum QEC — Wen-Plaquette Feed-Forward Preparation Package\n"
-        addition = (
-            f"{header}\n"
-            f"{badge_line} "
-            f"[![Release](https://img.shields.io/badge/release-v1.0.0-blue)]({repo_url}/releases/tag/v1.0.0) "
-            f"![Status](https://img.shields.io/badge/status-HARDWARE--UNVALIDATED-amber)\n\n"
-            f"- **Preprint & Evidence Archive (Zenodo):** <https://doi.org/{doi}>\n"
-            f"- **Standalone Manuscript:** [`paper/wen_plaquette_feedforward_qec_v1.pdf`](paper/wen_plaquette_feedforward_qec_v1.pdf) "
-            f"([LaTeX source](paper/wen_plaquette_feedforward_qec_v1.tex), [`SHA256SUMS.txt`](paper/SHA256SUMS.txt))\n"
-            f"- **Scope & Provenance:** Prior-art 4x4 Wen-plaquette 2-round LUT protocol credited to Iqbal et al. (`arXiv:2302.01917`) "
-            f"and Quantinuum's feed-forward tutorial; this package provides the contract-enforced `pytket` `CustomPass`, exact 256-branch "
-            f"statevector verification, pre/post-preparation error taxonomy (`33/33` tests passing), reproducible noise benchmarks, and "
-            f"frozen Quantinuum H2 / `qnexus` 0.51.4 protocol (**HARDWARE-UNVALIDATED** — no provider jobs submitted).\n"
-        )
-        if readme_txt.startswith(header):
-            readme_txt = addition + readme_txt[len(header):]
-            readme_path.write_text(readme_txt, encoding="utf-8")
+    readme_content = f"""# OSIRIS Quantum QEC — Wen-Plaquette Feed-Forward Preparation & Hash-Locked H2 Dispatch (`v1.1.0`)
+
+[![DOI](https://zenodo.org/badge/DOI/{doi_v110}.svg)](https://doi.org/{doi_v110}) [![Baseline v1.0.0 DOI](https://img.shields.io/badge/v1.0.0_baseline-{V100_DOI.replace('/', '%2F')}-blue)](https://doi.org/{V100_DOI}) [![Release](https://img.shields.io/badge/release-v1.1.0-blue)]({repo_url}/releases/tag/v1.1.0) ![Status](https://img.shields.io/badge/status-HARDWARE--UNVALIDATED-amber)
+
+Rigorously tested, provenance-locked package built around a 20-qubit toroidal Wen-plaquette syndrome-measurement + lookup-table (LUT) feed-forward state-preparation circuit, implemented as a hardened `pytket` `CustomPass` with an RFC 8785 write-ahead execution ledger and fail-closed `osiris qec` CLI for local Selene validation and Quantinuum H2-1 dispatch.
+
+- **Zenodo `v1.1.0` Preprint & Archive:** <https://doi.org/{doi_v110}> (Concept DOI: <https://doi.org/{CONCEPT_DOI}>; immutable `v1.0.0` baseline: <https://doi.org/{V100_DOI}>)
+- **Standalone `v1.1.0` Manuscript:** [`paper/wen_plaquette_feedforward_qec_v1_1.pdf`](paper/wen_plaquette_feedforward_qec_v1_1.pdf) ([LaTeX source](paper/wen_plaquette_feedforward_qec_v1_1.tex), [`SHA256SUMS.txt`](paper/SHA256SUMS.txt))
+- **Provenance:** Prior-art 4x4 Wen-plaquette 2-round LUT protocol credited to Iqbal *et al.* (`arXiv:2302.01917`) and Quantinuum's feed-forward tutorial; this package provides the contract-hardened `pytket` `CustomPass`, independent GF(2) symplectic derivation, exact 256-branch verification, complete 16/16 pre/post-prep fault taxonomy, RFC 8785 write-ahead ledger, and hash-locked Quantinuum H2 / `qnexus 0.51.4` dispatch (**`HARDWARE-UNVALIDATED`** — no live provider jobs submitted).
+
+## Hardware Allocation & Preregistered Artifact Lock
+
+- **Logical Lattice (`16` data qubits):** `q[0..15]` implement the `[[16, 2, 4]]` periodic checkerboard Wen-plaquette encoding (`k = 2` logical qubits, exact distance `d = 4`).
+- **Syndrome Resources (`4` ancilla qubits):** `q[16..19]` are reused across two X-stabilizer extraction rounds via mid-circuit recycle (observed operations across full circuit: **`24 Measure`**, **`8 Reset`**, **`20 Conditional`**). **Ancilla qubits do not contribute to logical code distance.**
+- **Preregistered Artifact Lock:** Compilation and execution use a preregistered artifact lock. The pre-compile circuit SHA-256 (`{pre_sha}`) and Quantinuum H2-1 ISA SHA-256 (`{h2_sha}`, depth `19`, `32 ZZPhase`) are verified immediately prior to execution and re-verified post-compile under `optimisation_level=0`. Any mismatch invalidates the run and aborts submission (`EXIT 1`, fail closed).
+
+## Layout
+
+```
+qec/
+├── wen_plaquette_pass.py               # v1.1.0 hardened pass (register collision & metadata lock)
+├── dnalang_wen_plaquette_pass.py       # vendored ORIGINAL baseline (untouched, for comparison)
+├── osiris_qec/                         # canonical package namespace + 16/16 post-prep Y-sweep
+├── osiris_cli/
+│   ├── qec_runner.py                   # `osiris qec {{verify,run,manifest,ledger}}` CLI
+│   ├── ledger.py                       # RFC 8785 canonical JSON + SHA-256 hash-chained WAL
+│   └── qnexus_client.py                # hash-locked qnexus 0.51.4 transport + backoff retries
+├── qec_math.py                         # independent lattice derivation: stabilizers, rank, distance
+├── qec_sim.py                          # exact 20-qubit statevector simulator (mid-circuit meas., FF)
+├── qec_verify.py                       # 256-branch enumeration, dual-basis Aer cross-check
+├── hardware/
+│   ├── experiment_manifest_v1_0_0.json # immutable v1.0.0 baseline manifest
+│   ├── experiment_manifest_v1_1_0.json # v1.1.0 hash-locked & compiler-locked manifest
+│   ├── ledger_schema_v1_1_0.json       # JSON Schema for RFC 8785 execution ledger entries
+│   └── hashlock_policy_v1_1_0.md       # fail-closed pre/post-compile hash-lock specification
+├── tests/                              # 33 baseline tests + 16/16 Y-sweep + hash-lock + mock QNexus
+├── reports/                            # audit, benchmark, 16/16 fault-taxonomy & verification JSON/MD
+├── paper/                              # standalone 4-page preprint PDF, LaTeX, SVG/PDF figures & sums
+└── submission/                         # technical report, protocol, reproducibility & Zenodo receipts
+```
+
+## Reference CLI Usage (`osiris qec`)
+
+```bash
+# 1. Validate frozen v1.0.0 and v1.1.0 artifact hashes (fail-closed exit 1 on mismatch)
+osiris qec verify --manifest hardware/experiment_manifest_v1_0_0.json
+osiris qec verify --manifest hardware/experiment_manifest_v1_1_0.json --strict
+
+# 2. Inspect manifest hashes
+osiris qec manifest --file hardware/experiment_manifest_v1_1_0.json --show-hashes
+
+# 3. Local Selene validation (verifies Reset, LUT branches, syndromes & RFC 8785 WAL; zero hardware calls)
+osiris qec run --target selene --shots 1000 --manifest hardware/experiment_manifest_v1_1_0.json
+
+# 4. Verify & summarize RFC 8785 hash-chained execution ledger
+osiris qec ledger verify ledger/run-*.json
+osiris qec ledger show ledger/run-*.json --summary
+
+# 5. Authorized Quantinuum H2-1 submission (requires out-of-band QNEXUS_TOKEN / `qnx login`)
+osiris qec run --target h2-1 --shots 5000 --manifest hardware/experiment_manifest_v1_1_0.json
+
+# 6. Full automated regression & verification suite
+pytest -q
+```
+
+No credentials are stored or committed anywhere in this repository; see [`SECURITY_REVIEW.md`](SECURITY_REVIEW.md) and [`CHANGELOG.md`](CHANGELOG.md).
+"""
+    (root / "README.md").write_text(readme_content, encoding="utf-8")
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", type=Path, default=Path("/home/osiris/qec"))
-    parser.add_argument("--doi", required=True)
+    parser.add_argument("--doi", required=True, help="v1.1.0 Zenodo DOI")
     parser.add_argument("--repo-url", default="https://github.com/quantum-osiris/osiris-qec")
     args = parser.parse_args()
 
-    root: Path = args.root.resolve()
+    root = args.root.resolve()
     paper_dir = root / "paper"
     paper_dir.mkdir(parents=True, exist_ok=True)
 
     bench = json.loads((root / "reports" / "QEC_BENCHMARK_RESULTS.json").read_text(encoding="utf-8"))
     err_matrix = json.loads((root / "reports" / "ERROR_CORRECTION_MATRIX.json").read_text(encoding="utf-8"))
     post_prep = json.loads((root / "reports" / "POST_PREP_INJECTION.json").read_text(encoding="utf-8"))
-    manifest = json.loads((root / "hardware" / "experiment_manifest.json").read_text(encoding="utf-8"))
+    y_sweep_v11 = json.loads((root / "reports" / "POST_PREP_Y_SWEEP_V1_1.json").read_text(encoding="utf-8"))
+    manifest_v10 = json.loads((root / "hardware" / "experiment_manifest_v1_0_0.json").read_text(encoding="utf-8"))
+    manifest_v11 = json.loads((root / "hardware" / "experiment_manifest_v1_1_0.json").read_text(encoding="utf-8"))
     claims_doc = json.loads((root / "submission" / "CLAIMS_AND_EVIDENCE.json").read_text(encoding="utf-8"))
 
     bench_summary = summarize_benchmark(bench)
     fig1 = make_fig1_torus_and_lut()
     fig2 = make_fig2_benchmark(bench_summary)
-    fig3 = make_fig3_taxonomy_and_gate(err_matrix, post_prep, manifest)
+    fig3 = make_fig3_taxonomy_and_gate(err_matrix, post_prep, y_sweep_v11, manifest_v10)
 
     fig1.save(paper_dir / "fig1_torus_checkerboard_lut")
     fig2.save(paper_dir / "fig2_noisy_fidelity_benchmark")
     fig3.save(paper_dir / "fig3_error_taxonomy_and_wilson_gate")
 
     pdf_bytes = build_preprint_pdf(
-        doi=args.doi,
+        doi_v110=args.doi,
         repo_url=args.repo_url,
-        manifest=manifest,
+        manifest_v11=manifest_v11,
         bench_summary=bench_summary,
         claims_doc=claims_doc,
         fig1=fig1,
         fig2=fig2,
         fig3=fig3,
     )
-    pdf_path = paper_dir / "wen_plaquette_feedforward_qec_v1.pdf"
-    pdf_path.write_bytes(pdf_bytes)
+    pdf_v11_path = paper_dir / "wen_plaquette_feedforward_qec_v1_1.pdf"
+    pdf_v11_path.write_bytes(pdf_bytes)
 
-    tex_path = paper_dir / "wen_plaquette_feedforward_qec_v1.tex"
-    tex_path.write_text(build_latex_source(args.doi, args.repo_url, manifest, bench_summary), encoding="utf-8")
+    tex_v11_path = paper_dir / "wen_plaquette_feedforward_qec_v1_1.tex"
+    tex_v11_path.write_text(build_latex_source(args.doi, args.repo_url, manifest_v11, bench_summary), encoding="utf-8")
 
-    write_repo_metadata(root, args.doi, args.repo_url, manifest)
+    write_synchronized_docs(root, args.doi, args.repo_url, manifest_v11)
 
     tracked_for_sums = [
-        paper_dir / "wen_plaquette_feedforward_qec_v1.pdf",
-        paper_dir / "wen_plaquette_feedforward_qec_v1.tex",
+        pdf_v11_path,
+        tex_v11_path,
         paper_dir / "fig1_torus_checkerboard_lut.pdf",
         paper_dir / "fig2_noisy_fidelity_benchmark.pdf",
         paper_dir / "fig3_error_taxonomy_and_wilson_gate.pdf",
         root / "wen_plaquette_pass.py",
         root / "dnalang_wen_plaquette_pass.py",
+        root / "osiris_qec" / "wen_plaquette_pass.py",
+        root / "osiris_cli" / "qec_runner.py",
+        root / "osiris_cli" / "ledger.py",
+        root / "osiris_cli" / "qnexus_client.py",
         root / "qec_math.py",
         root / "qec_sim.py",
         root / "qec_verify.py",
-        root / "hardware" / "experiment_manifest.json",
-        root / "hardware" / "quantinuum_h2.py",
-        root / "hardware" / "submit_h2_1sc.py",
+        root / "hardware" / "experiment_manifest_v1_0_0.json",
+        root / "hardware" / "experiment_manifest_v1_1_0.json",
+        root / "hardware" / "ledger_schema_v1_1_0.json",
+        root / "hardware" / "hashlock_policy_v1_1_0.md",
         root / "reports" / "QEC_BENCHMARK_RESULTS.json",
-        root / "reports" / "QEC_BENCHMARK_RESULTS.png",
         root / "reports" / "ERROR_CORRECTION_MATRIX.json",
         root / "reports" / "POST_PREP_INJECTION.json",
+        root / "reports" / "POST_PREP_Y_SWEEP_V1_1.json",
         root / "submission" / "CLAIMS_AND_EVIDENCE.json",
-        root / "submission" / "TECHNICAL_REPORT.md",
         root / "submission" / "EXPERIMENT_PROTOCOL.md",
-        root / "submission" / "REPRODUCIBILITY.md",
+        root / "CHANGELOG.md",
+        root / "SECURITY_REVIEW.md",
     ]
     sums_lines = [
         f"{hashlib.sha256(p.read_bytes()).hexdigest()}  {p.relative_to(root).as_posix()}"
@@ -1244,8 +1239,8 @@ def main() -> None:
     ]
     (paper_dir / "SHA256SUMS.txt").write_text("\n".join(sums_lines) + "\n", encoding="utf-8")
     print(
-        f"Built 4-page PDF ({len(pdf_bytes):,} bytes), LaTeX source, 3 SVG+PDF vector figures, "
-        f"metadata files, and SHA256SUMS.txt ({len(tracked_for_sums)} entries)."
+        f"Built v1.1.0 4-page PDF ({len(pdf_bytes):,} bytes), LaTeX, 3 SVG+PDF figures, "
+        f"synchronized docs, and SHA256SUMS.txt ({len(tracked_for_sums)} entries)."
     )
 
 

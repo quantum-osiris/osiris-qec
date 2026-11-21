@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="540" height="206" viewBox="0 0 540 206">
 <rect x="0" y="0" width="540" height="206" fill="#ffffff"/>
-<text x="270.00" y="15.00" font-family="Helvetica, Arial, sans-serif" font-size="9.6" font-weight="bold" fill="#111827" text-anchor="middle">4x4 Toroidal Wen-Plaquette CSS Code ([[16, 2, 4]]) &amp; Two-Round Feed-Forward LUT</text>
+<text x="270.00" y="15.00" font-family="Helvetica, Arial, sans-serif" font-size="9.3" font-weight="bold" fill="#111827" text-anchor="middle">4x4 Toroidal Wen-Plaquette CSS Code ([[16, 2, 4]]: 16 Data + 4 Recycled Ancillas) &amp; LUT</text>
 <text x="102.00" y="28.00" font-family="Helvetica, Arial, sans-serif" font-size="8.2" font-weight="bold" fill="#111827" text-anchor="middle">(a) Checkerboard Torus (q_{4r+c})</text>
 <rect x="34.00" y="36.00" width="34.00" height="34.00" fill="#f3f4f6" stroke="#64748b" stroke-width="0.70"/>
 <text x="51.00" y="55.04" font-family="monospace" font-size="6.2" font-weight="normal" fill="#4b5563" text-anchor="middle">Z0</text>
@@ -110,5 +110,5 @@
 <text x="266.00" y="161.20" font-family="monospace" font-size="6.4" font-weight="normal" fill="#1e40af" text-anchor="start">15 (0b1111)</text>
 <text x="332.00" y="161.20" font-family="monospace" font-size="6.5" font-weight="normal" fill="#047857" text-anchor="start">Z on q[2, 3, 14, 15]</text>
 <text x="446.00" y="161.20" font-family="monospace" font-size="6.5" font-weight="normal" fill="#374151" text-anchor="start">None (0/4)</text>
-<text x="216.00" y="182.00" font-family="monospace" font-size="6.3" font-weight="normal" fill="#334155" text-anchor="start">Torus parity identity prod_{p in X} S_p = I =&gt; all 128 reachable branches even.</text>
+<text x="216.00" y="182.00" font-family="monospace" font-size="6.3" font-weight="normal" fill="#334155" text-anchor="start">4 recycled ancillas (24 Meas, 8 Reset) do not add logical distance.</text>
 </svg>
