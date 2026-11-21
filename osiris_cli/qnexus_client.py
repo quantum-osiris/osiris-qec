@@ -6,12 +6,14 @@ backoff retries for transient transport errors.
 
 from __future__ import annotations
 
+import email.utils
 import importlib.metadata
 import os
+import random
 import time
 from collections import Counter
 from datetime import datetime, timezone
-from typing import Any, Callable, Dict, List, Tuple, TypeVar
+from typing import Any, Callable, Dict, List, Optional, Tuple, TypeVar
 
 from pytket import Circuit, OpType
 
@@ -143,6 +145,38 @@ def _is_transient_exception(exc: BaseException) -> bool:
     return any(tok in msg for tok in retry_tokens)
 
 
+def _extract_retry_after_seconds(exc: BaseException, max_delay: float = 60.0) -> Optional[float]:
+    """Extract HTTP `Retry-After` delay (delta-seconds or RFC 7231 HTTP-date) if present."""
+    headers = getattr(exc, "headers", None)
+    if headers is None and hasattr(exc, "response"):
+        headers = getattr(getattr(exc, "response", None), "headers", None)
+    if not headers or not hasattr(headers, "items"):
+        return None
+
+    raw_val: Optional[str] = None
+    for k, v in headers.items():
+        if str(k).lower() == "retry-after":
+            raw_val = str(v).strip()
+            break
+    if not raw_val:
+        return None
+
+    try:
+        secs = float(raw_val)
+        return max(0.0, min(max_delay, secs))
+    except ValueError:
+        pass
+
+    try:
+        dt = email.utils.parsedate_to_datetime(raw_val)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        delta = (dt - datetime.now(timezone.utc)).total_seconds()
+        return max(0.0, min(max_delay, delta))
+    except Exception:
+        return None
+
+
 def with_qnexus_retries(
     operation_name: str,
     fn: Callable[[], T],
@@ -150,12 +184,16 @@ def with_qnexus_retries(
     max_retries: int = 3,
     base_delay: float = 0.5,
     backoff_factor: float = 2.0,
+    max_delay: float = 60.0,
+    jitter_ratio: float = 0.25,
+    rng_fn: Callable[[], float] = random.random,
     sleep_fn: Callable[[float], None] = time.sleep,
 ) -> T:
     """
-    Execute `fn()` with bounded exponential backoff on transient transport/gateway
-    failures. Fail-closed integrity errors (`HashMismatchError`, `ManifestError`)
-    and auth errors (`401`/`403`) abort immediately without retry.
+    Execute `fn()` with bounded exponential backoff, `Retry-After` header support,
+    and randomized jitter to prevent thundering-herd retries on congested gateways.
+    Fail-closed integrity errors (`HashMismatchError`, `ManifestError`) and auth
+    errors (`401`/`403`) abort immediately without retry.
     """
     attempt = 0
     while True:
@@ -169,7 +207,16 @@ def with_qnexus_retries(
                     f"QNexus {operation_name} failed after {attempt + 1} attempt(s): "
                     f"{type(exc).__name__}: {exc}"
                 ) from exc
-            delay = base_delay * (backoff_factor ** attempt)
+
+            retry_after = _extract_retry_after_seconds(exc, max_delay=max_delay)
+            if retry_after is not None:
+                # Respect server Retry-After plus a small positive desynchronization jitter (0..10%)
+                delay = min(max_delay, retry_after * (1.0 + 0.10 * max(0.0, min(1.0, rng_fn()))))
+            else:
+                exp_delay = min(max_delay, base_delay * (backoff_factor ** attempt))
+                jitter_mult = 1.0 + jitter_ratio * (2.0 * max(0.0, min(1.0, rng_fn())) - 1.0)
+                delay = max(0.0, exp_delay * jitter_mult)
+
             sleep_fn(delay)
             attempt += 1
 

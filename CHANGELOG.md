@@ -1,28 +1,27 @@
 # Changelog
 
-All notable changes to `osiris-qec` are documented in this file.
+All notable changes to `osiris-qec` (`OSIRIS-QEC-002`) are documented in this file.
+
+## [1.1.1] - 2026-11-21
+
+### Fixed & Hardened (Post-v1.1.0 Engineering Review)
+- **Strict Normative RFC 8785 Serializer (`osiris_cli/ledger.py`, `pyproject.toml`):**
+  - Pinned Trail of Bits' `rfc8785>=0.1.4` as a mandatory core dependency and removed any custom/stdlib JSON fallback so every ledger entry canonicalizes identically across compliant third-party JCS verifiers (`1.0 -> 1`, `-0.0 -> 0`, IEEE-754 shortest round-trip floats, UTF-16 code-unit key ordering, and safe-integer `±(2^53-1)` domain enforcement).
+  - Added normative IETF RFC 8785 Section 3.2.2.3 & Section 3.2.3 test vectors (`test_hash_lock.py`).
+- **Gateway Congestion Resilience & Timestamp Hygiene (`osiris_cli/qnexus_client.py`):**
+  - Added HTTP `Retry-After` header parsing (both delta-seconds and RFC 7231 HTTP-date) plus bounded randomized jitter (`jitter_ratio=0.25`) to `with_qnexus_retries` to prevent thundering-herd collisions on rate-limited or congested gateways.
+  - Added an automated AST/source regression test (`test_no_deprecated_utcnow_in_repository`) guaranteeing zero deprecated naive `datetime.utcnow()` calls across the codebase.
+- **Abstract Framing & Naming Unification (`OSIRIS-QEC-002` inside `osiris-qec`):**
+  - Elevated the `16/16` post-preparation Pauli-Y/Z negative result (`16/16` detected via X-syndrome, **`0/16` preserve logical state**; *state preparation != QEC memory*) to the opening sentences of the Abstract across the PDF manuscript, LaTeX source, `README.md`, and `arXiv` cover package.
+  - Unified protocol naming to **`OSIRIS-QEC-002`** within package `osiris-qec` (`hardware/experiment_manifest_v1_1_1.json`), explicitly distinguishing it from companion study **`OSIRIS-QEC-001`** (1D heavy-hex superconducting repetition codes, `10.5281/zenodo.24293756`), and corrected phrasing drift (`"Compilation and execution enforce a preregistered artifact lock"`).
+- **`arXiv` (`quant-ph`) Submission Package:**
+  - Added `submission/ARXIV_SUBMISSION.md` and self-contained `osiris-qec-v1.1.1-arxiv-quant-ph.tar.gz` (`ms.tex` + vector PDF figures).
+  - Frozen circuit hashes (`b86aeabd...` and `02d5cb72...`) and prior Zenodo DOIs (`v1.0.0`: `10.5281/zenodo.24406733`; `v1.1.0`: `10.5281/zenodo.24421051`) remain 100% immutable.
 
 ## [1.1.0] - 2026-11-21
 
-### Preserved Immutable Baseline (`v1.0.0`)
-- Frozen pre-compile circuit SHA-256 (`b86aeabd70eecb7f5fbca5d0e1688e06d71dc358fd9fbaaab7fd8e4f9634230b`) and Quantinuum H2-1 ISA SHA-256 (`02d5cb72849f9b473c022e68023486fdecc8c9f7fc3da9a9a9299c3482f31062`, depth `19`, `32 ZZPhase`) remain bit-for-bit unchanged.
-- Archived immutable v1.0.0 manifest in `hardware/experiment_manifest_v1_0_0.json` linked to Zenodo DOI `10.5281/zenodo.24406733` (`ac668e4`).
-
-### Added
-- **Compiler Pass Hardening (`wen_plaquette_pass.py`, `osiris_qec/`):**
-  - Extended register-collision protection rejecting `qr`, `quantum`, `c`, `creg`, `cl`, `classical`, and conflicting `q` / stage registers with `ValueError` prior to transformation; added `build_wen_plaquette()` functional builder with strict register isolation.
-  - Added `normalize_circuit_metadata()` normalizing `circuit.name`, `circuit.phase`, and `circuit.metadata` before SHA-256 hashing while attaching `{"osiris_qec_version": "1.1.0", "compiler_lock": true, "hash_locked": true}`.
-- **Full 16/16 Post-Preparation Y-Error Sweep (`tests/test_y_error_sweep.py`, `reports/POST_PREP_Y_SWEEP_V1_1.json`):**
-  - Expanded post-preparation Pauli-Y fault injection from 3 representative qubits `(0, 5, 15)` to all `16/16` data qubits `0..15`, recording deterministic X/Z syndromes and `0.0` logical state preservation.
-- **OSIRIS-CLI QEC Command Family (`osiris_cli/qec_runner.py`):**
-  - Implemented `osiris qec verify`, `osiris qec run --target {selene,h2-1}`, `osiris qec manifest`, and `osiris qec ledger {verify,show}` (plus `pyproject.toml` `osiris` console entrypoint).
-- **RFC 8785 Write-Ahead Execution Ledger (`osiris_cli/ledger.py`, `hardware/ledger_schema_v1_1_0.json`):**
-  - Strict RFC 8785 (JCS) canonical JSON serializer with IEEE-754 number formatting, UTF-16BE key sorting, atomic `fsync` write-ahead `pre_submit` logging, and `prev_sha256` -> `entry_sha256` hash chaining.
-- **Provenance-Locked QNexus 0.51.4 Client (`osiris_cli/qnexus_client.py`, `hardware/hashlock_policy_v1_1_0.md`):**
-  - Enforces `optimisation_level=0`, pre-upload SHA-256 verification, post-compile ISA SHA-256 verification prior to `start_execute_job` (fail-closed exit `1`), and bounded exponential backoff retries on transient HTTP `429`/`502`/`503`/`504` and transport errors.
-- **Documentation, Security Review & CI:**
-  - Added `SECURITY_REVIEW.md`, `hardware/experiment_manifest_v1_1_0.json`, `.github/workflows/ci.yml`, synchronized `README.md`, `submission/EXPERIMENT_PROTOCOL.md`, and updated `paper/` v1.1.0 manuscript & figures.
+- Added register-collision hardening (`q`, `qr`, `quantum`, `c`, `creg`, `cl`, `classical`), metadata normalization, full `16/16` post-preparation Y-error sweep (`reports/POST_PREP_Y_SWEEP_V1_1.json`), `osiris qec` CLI (`verify`, `run`, `manifest`, `ledger`), write-ahead ledgering, and `qnexus 0.51.4` `optimisation_level=0` pre/post-compile hash-lock enforcement (`10.5281/zenodo.24421051`).
 
 ## [1.0.0] - 2026-11-20
 
-- Initial public release and Zenodo publication (`10.5281/zenodo.24406733`) of the 20-qubit toroidal Wen-plaquette feed-forward preparation `pytket` `CustomPass`, independent GF(2) symplectic verifier (`[[16, 2, 4]]`), exact 256-branch statevector enumerator, dual-basis Qiskit Aer cross-checks, pre/post-prep fault taxonomy (`33/33` tests), noise benchmark, and frozen H2-1 ISA manifest (**HARDWARE-UNVALIDATED**).
+- Initial public release and Zenodo publication (`10.5281/zenodo.24406733`, `ac668e4`) of the 20-qubit toroidal Wen-plaquette feed-forward preparation `pytket` `CustomPass`, independent GF(2) symplectic verifier (`[[16, 2, 4]]`), exact 256-branch enumerator, dual-basis Qiskit Aer cross-checks, noise benchmark, and frozen H2-1 ISA manifest (**HARDWARE-UNVALIDATED**).

@@ -1,9 +1,9 @@
 {
-  "title": "Hardened Compiler Passes, Exact 256-Branch & 16/16 Fault-Taxonomy Verification, RFC 8785 Execution Ledger, and Hash-Locked Quantinuum H2 Dispatch for 20-Qubit Toroidal Wen-Plaquette Feed-Forward Preparation (OSIRIS-QEC v1.1.0)",
+  "title": "State Preparation Is Not Quantum Memory: Exact 256-Branch Verification, 16/16 Post-Preparation Fault Taxonomy, Strict RFC 8785 Provenance, and Hash-Locked Quantinuum H2 Dispatch for [[16, 2, 4]] Wen-Plaquette Codes (OSIRIS-QEC-002, osiris-qec v1.1.1)",
   "upload_type": "publication",
   "publication_type": "preprint",
   "publication_date": "2026-11-21",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "license": "cc-by-4.0",
   "access_right": "open",
   "creators": [
@@ -21,18 +21,22 @@
     "pytket CustomPass",
     "Quantinuum H2",
     "RFC 8785",
-    "pre-registered quantum protocol",
-    "OSIRIS-QEC"
+    "OSIRIS-QEC-002"
   ],
   "related_identifiers": [
     {
-      "identifier": "https://github.com/quantum-osiris/osiris-qec/tree/v1.1.0",
+      "identifier": "https://github.com/quantum-osiris/osiris-qec/tree/v1.1.1",
       "relation": "isSupplementTo",
       "scheme": "url"
     },
     {
-      "identifier": "10.5281/zenodo.24406733",
+      "identifier": "10.5281/zenodo.24421051",
       "relation": "isNewVersionOf",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.5281/zenodo.24406733",
+      "relation": "references",
       "scheme": "doi"
     },
     {
@@ -46,5 +50,5 @@
       "scheme": "doi"
     }
   ],
-  "notes": "STATUS: HARDWARE-UNVALIDATED. Preserves frozen v1.0.0 hashes verbatim (pre-compile SHA-256: b86aeabd70eecb7f5fbca5d0e1688e06d71dc358fd9fbaaab7fd8e4f9634230b; H2-1 ISA SHA-256: 02d5cb72849f9b473c022e68023486fdecc8c9f7fc3da9a9a9299c3482f31062; v1.0.0 DOI: 10.5281/zenodo.24406733)."
+  "notes": "Benchmark OSIRIS-QEC-002 (package osiris-qec v1.1.1). STATUS: HARDWARE-UNVALIDATED. Preserves frozen v1.0.0 hashes verbatim (pre-compile SHA-256: b86aeabd70eecb7f5fbca5d0e1688e06d71dc358fd9fbaaab7fd8e4f9634230b; H2-1 ISA SHA-256: 02d5cb72849f9b473c022e68023486fdecc8c9f7fc3da9a9a9299c3482f31062)."
 }

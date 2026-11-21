@@ -171,23 +171,49 @@ def test_hash_gate_rejects_unlocked_or_nonzero_opt_manifest() -> None:
 
 def test_rfc8785_canonicalization_is_stable_and_compliant() -> None:
     payload_a = {
-        "z_key": [1, -0.0, 0.0, 1e-6, 1e-7],
+        "z_key": [1, 1.0, -0.0, 0.0, 0.9964, 1e-6, 1e-7, 1e30, 333333333.33333329],
         "a_key": "line\nbreak\tand\"quote\"",
         "nested": {"b": True, "a": None, "c": False},
     }
     payload_b = {
         "nested": {"c": False, "b": True, "a": None},
         "a_key": "line\nbreak\tand\"quote\"",
-        "z_key": [1, 0.0, 0.0, 0.000001, 1e-7],
+        "z_key": [1, 1, 0, 0, 0.9964, 0.000001, 1e-7, 1e30, 333333333.3333333],
     }
     canon_a = canonicalize(payload_a)
     canon_b = canonicalize(payload_b)
     assert canon_a == canon_b
     assert sha256_hex(canon_a) == sha256_hex(canon_b)
-    assert canonical_json({"neg_zero": -0.0}) == '{"neg_zero":0}'
+    # Normative RFC 8785 Section 3.2.2.3 IEEE-754 checks (`1.0 -> 1`, `-0.0 -> 0`)
+    assert canonical_json({"one_float": 1.0, "neg_zero": -0.0, "fid": 0.9964}) == '{"fid":0.9964,"neg_zero":0,"one_float":1}'
 
-    with pytest.raises(LedgerError, match="non-finite"):
+    # Normative RFC 8785 Section 3.2.3 UTF-16 code-unit sorting (surrogate pair U+1F600 sorts BEFORE U+FB33!)
+    utf16_sorted = canonical_json({"\ufb33": "hebrew", "😀": "emoji", "\u20ac": "euro", "\n": "nl"})
+    assert list(utf16_sorted.split('":'))[0].startswith('{"\\n')
+    assert utf16_sorted.index("emoji") < utf16_sorted.index("hebrew")
+
+    with pytest.raises(LedgerError):
         canonical_json({"bad": float("nan")})
+    with pytest.raises(LedgerError):
+        canonical_json({"unsafe_int": 2**53})
+
+
+def test_no_deprecated_utcnow_in_repository() -> None:
+    bad_token = "datetime." + "utcnow"
+    for py_file in ROOT.rglob("*.py"):
+        if ".git" in py_file.parts or "__pycache__" in py_file.parts or "tests" in py_file.parts:
+            continue
+        text = py_file.read_text(encoding="utf-8")
+        assert bad_token not in text, f"Deprecated {bad_token}() found in {py_file}"
+
+
+def test_v1_1_1_manifest_protocol_naming_consistency() -> None:
+    m_v111 = load_manifest(ROOT / "hardware" / "experiment_manifest_v1_1_1.json")
+    assert m_v111["manifest_version"] == "1.1.1"
+    assert m_v111["package"] == "osiris-qec"
+    assert m_v111["protocol"] == "OSIRIS-QEC-002"
+    assert m_v111["precompile_sha256"] == EXPECTED_PRECOMPILE
+    assert m_v111["isa_sha256"] == EXPECTED_ISA
 
 
 def test_ledger_append_and_tamper_detection(tmp_path: Path) -> None:

@@ -22,11 +22,11 @@ endobj
 << /Type /Pages /Kids [9 0 R] /Count 1 >>
 endobj
 8 0 obj
-<< /Length 10797 >>
+<< /Length 10798 >>
 stream
 1 1 1 rg
 0 0 540.00 206.00 re f
-BT /F2 9.3 Tf 0.067 0.094 0.153 rg 50.66 191.00 Td (4x4 Toroidal Wen-Plaquette CSS Code \([[16, 2, 4]]: 16 Data + 4 Recycled Ancillas\) & LUT) Tj ET
+BT /F2 9.2 Tf 0.067 0.094 0.153 rg 50.58 191.00 Td (OSIRIS-QEC-002: [[16, 2, 4]] Toroidal Wen-Plaquette Code \(16 Data + 4 Recycled Ancillas\)) Tj ET
 BT /F2 8.2 Tf 0.067 0.094 0.153 rg 21.60 178.00 Td (\(a\) Checkerboard Torus \(q_{4r+c}\)) Tj ET
 0.70 w 0.953 0.957 0.965 rg 0.392 0.455 0.545 RG 34.00 136.00 34.00 34.00 re B
 BT /F3 6.2 Tf 0.294 0.333 0.388 rg 47.28 150.96 Td (Z0) Tj ET
@@ -156,10 +156,10 @@ xref
 0000000371 00000 n 
 0000000444 00000 n 
 0000000501 00000 n 
-0000011350 00000 n 
-0000011532 00000 n 
+0000011351 00000 n 
+0000011533 00000 n 
 trailer
 << /Size 11 /Root 10 0 R >>
 startxref
-11582
+11583
 %%EOF

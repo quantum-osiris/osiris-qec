@@ -1,6 +1,7 @@
 """
-osiris_cli.ledger — RFC 8785 (JSON Canonicalization Scheme) write-ahead execution
-ledger with SHA-256 hash chaining and Wilson 95% lower-confidence-bound scoring.
+osiris_cli.ledger — Strict IETF RFC 8785 (JSON Canonicalization Scheme) write-ahead
+execution ledger pinned to the normative `rfc8785` implementation (no fallback,
+fail closed), with SHA-256 hash chaining and Wilson 95% lower-bound scoring.
 """
 
 from __future__ import annotations
@@ -14,133 +15,33 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List
 
+import rfc8785
+
 GENESIS_PREV_SHA256 = "0" * 64
 WILSON_Z_95 = 1.959963984540054
+RFC8785_SERIALIZER_ID = f"rfc8785=={getattr(rfc8785, '__version__', '0.1.4')}"
 
 
 class LedgerError(RuntimeError):
-    """Raised when ledger serialization, hash integrity, or chain verification fails."""
+    """Raised when RFC 8785 canonicalization, hash integrity, or chain verification fails."""
 
 
-def _utf16_sort_key(s: str) -> bytes:
-    """RFC 8785 Section 3.2.3: sort object member names by UTF-16BE code units."""
-    return s.encode("utf-16-be")
-
-
-def _rfc8785_escape_string(s: str) -> str:
-    """RFC 8785 Section 3.2.2.2: minimal JSON string escaping."""
-    out: List[str] = ['"']
-    for ch in s:
-        code = ord(ch)
-        if ch == '"':
-            out.append('\\"')
-        elif ch == "\\":
-            out.append("\\\\")
-        elif code == 0x08:
-            out.append("\\b")
-        elif code == 0x09:
-            out.append("\\t")
-        elif code == 0x0A:
-            out.append("\\n")
-        elif code == 0x0C:
-            out.append("\\f")
-        elif code == 0x0D:
-            out.append("\\r")
-        elif code < 0x20:
-            out.append(f"\\u{code:04x}")
-        else:
-            out.append(ch)
-    out.append('"')
-    return "".join(out)
-
-
-def _rfc8785_format_number(val: int | float) -> str:
-    """RFC 8785 Section 3.2.2.3: IEEE-754 / ECMAScript NumberToString serialization."""
-    if isinstance(val, bool):
-        return "true" if val else "false"
-    if isinstance(val, int):
-        return str(val)
-    if not math.isfinite(val):
-        raise LedgerError(f"RFC 8785 forbids non-finite IEEE-754 number: {val!r}")
-    if val == 0.0:
-        return "0"
-
-    sign = "-" if val < 0 else ""
-    aval = abs(val)
-
-    # Shortest round-trip decimal representation via Python's Ryū/David-Gay repr
-    s = repr(aval)
-    if "e" in s or "E" in s:
-        mant, exp_str = s.lower().split("e")
-        exp = int(exp_str)
-        digits = mant.replace(".", "")
-        dot_pos = mant.index(".") if "." in mant else len(mant)
-        k = len(digits)
-        n = exp + dot_pos
-    else:
-        if "." in s:
-            int_part, frac_part = s.split(".")
-            raw_digits = (int_part + frac_part).lstrip("0")
-            digits = raw_digits.rstrip("0") or "0"
-            if int_part != "0":
-                n = len(int_part)
-            else:
-                leading_zeros = len(frac_part) - len(frac_part.lstrip("0"))
-                n = -leading_zeros
-            k = len(digits)
-        else:
-            digits = s.rstrip("0") or "0"
-            n = len(s)
-            k = len(digits)
-
-    # ECMAScript 7.1.12.1 formatting branches
-    if k <= n <= 21:
-        return sign + digits + ("0" * (n - k))
-    if 0 < n < k and n <= 21:
-        return sign + digits[:n] + "." + digits[n:]
-    if -6 < n <= 0:
-        return sign + "0." + ("0" * (-n)) + digits
-    exp_out = n - 1
-    exp_sign = "+" if exp_out >= 0 else "-"
-    if k == 1:
-        return f"{sign}{digits}e{exp_sign}{abs(exp_out)}"
-    return f"{sign}{digits[0]}.{digits[1:]}e{exp_sign}{abs(exp_out)}"
-
-
-def _rfc8785_serialize(value: Any) -> str:
-    if value is None:
-        return "null"
-    if value is True:
-        return "true"
-    if value is False:
-        return "false"
-    if isinstance(value, (int, float)):
-        return _rfc8785_format_number(value)
-    if isinstance(value, str):
-        return _rfc8785_escape_string(value)
-    if isinstance(value, (list, tuple)):
-        return "[" + ",".join(_rfc8785_serialize(item) for item in value) + "]"
-    if isinstance(value, dict):
-        for k in value.keys():
-            if not isinstance(k, str):
-                raise LedgerError(f"RFC 8785 requires string object keys, got {type(k).__name__}")
-        sorted_items = sorted(value.items(), key=lambda kv: _utf16_sort_key(kv[0]))
-        return "{" + ",".join(
-            f"{_rfc8785_escape_string(k)}:{_rfc8785_serialize(v)}" for k, v in sorted_items
-        ) + "}"
-    raise LedgerError(f"Unsupported type for RFC 8785 canonicalization: {type(value).__name__}")
+def canonicalize(payload: Dict[str, Any]) -> bytes:
+    """
+    Serialize `payload` to UTF-8 encoded IETF RFC 8785 (JCS) canonical JSON bytes
+    using the pinned `rfc8785` library exclusively (no stdlib `json.dumps` fallback).
+    """
+    if not isinstance(payload, dict):
+        raise LedgerError("Ledger payload must be a JSON object (dict).")
+    try:
+        return rfc8785.dumps(payload)
+    except Exception as exc:
+        raise LedgerError(f"RFC 8785 canonicalization failed ({type(exc).__name__}): {exc}") from exc
 
 
 def canonical_json(payload: Dict[str, Any]) -> str:
     """Serialize `payload` to strict RFC 8785 (JCS) canonical JSON text."""
-    if not isinstance(payload, dict):
-        raise LedgerError("Ledger payload must be a JSON object (dict).")
-    return _rfc8785_serialize(payload)
-
-
-def canonicalize(payload: Dict[str, Any]) -> bytes:
-    """Return UTF-8 encoded RFC 8785 canonical JSON bytes for `payload`."""
-    return canonical_json(payload).encode("utf-8")
+    return canonicalize(payload).decode("utf-8")
 
 
 def sha256_hex(data: bytes | str) -> str:
@@ -183,8 +84,9 @@ def _last_entry_hash(ledger_file: Path) -> str:
 
 def append_ledger(ledger_file: Path | str, payload: Dict[str, Any]) -> Dict[str, Any]:
     """
-    Canonicalize `payload` under RFC 8785, bind `prev_sha256` and `entry_sha256`,
-    and append atomically (with fsync) to `ledger_file` as a single canonical JSON line.
+    Canonicalize `payload` under strict RFC 8785 (`rfc8785.dumps`), bind
+    `prev_sha256` and `entry_sha256`, and append atomically (with `os.fsync`)
+    to `ledger_file` as a single canonical JSON line.
     """
     path = Path(ledger_file)
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -215,15 +117,17 @@ def create_pre_submit_entry(
     """Create a write-ahead `pre_submit` record prior to local or QNexus execution."""
     return {
         "execution_id": execution_id or uuid.uuid4().hex[:8],
+        "protocol": str(manifest.get("protocol", "OSIRIS-QEC-002")),
         "stage": "pre_submit",
         "target": target,
         "shots": int(shots),
         "precompile_sha256": manifest["precompile_sha256"],
         "isa_sha256": manifest["isa_sha256"],
-        "manifest_version": str(manifest.get("manifest_version", "1.1.0")),
+        "manifest_version": str(manifest.get("manifest_version", "1.1.1")),
         "optimisation_level": int(manifest.get("optimisation_level", 0)),
         "qnexus_version": str(manifest.get("qnexus_version", "0.51.4")),
-        "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "jcs_serializer": RFC8785_SERIALIZER_ID,
+        "timestamp": datetime.now(timezone.utc).isoformat(timespec="seconds"),
     }
 
 
@@ -242,21 +146,23 @@ def create_completed_entry(
     """Build a post-execution record chained to `pre_entry`."""
     rec: Dict[str, Any] = {
         "execution_id": pre_entry["execution_id"],
+        "protocol": pre_entry.get("protocol", "OSIRIS-QEC-002"),
         "stage": stage,
         "target": pre_entry["target"],
         "shots": int(pre_entry["shots"]),
         "precompile_sha256": pre_entry["precompile_sha256"],
         "isa_sha256": pre_entry["isa_sha256"],
-        "manifest_version": pre_entry.get("manifest_version", "1.1.0"),
+        "manifest_version": pre_entry.get("manifest_version", "1.1.1"),
         "optimisation_level": int(pre_entry.get("optimisation_level", 0)),
         "qnexus_version": pre_entry.get("qnexus_version", "0.51.4"),
+        "jcs_serializer": RFC8785_SERIALIZER_ID,
         "raw_bitstrings": list(raw_bitstrings or []),
         "syndrome_trajectories": list(syndrome_trajectories or []),
         "raw_fidelity": round(float(raw_fidelity), 6),
         "postselected_fidelity": round(float(postselected_fidelity), 6),
         "wilson_lower_bound": round(float(wilson_lower_bound), 6),
         "pass": bool(passed),
-        "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "timestamp": datetime.now(timezone.utc).isoformat(timespec="seconds"),
     }
     if extra:
         rec.update(extra)
@@ -287,7 +193,7 @@ def read_ledger(ledger_file: Path | str) -> List[Dict[str, Any]]:
 def verify_ledger_file(ledger_file: Path | str) -> Dict[str, Any]:
     """
     Verify every line in `ledger_file` for:
-      1. Byte-exact RFC 8785 canonical JSON form
+      1. Byte-exact IETF RFC 8785 canonical JSON form (`rfc8785.dumps`)
       2. Valid `entry_sha256` over payload
       3. Unbroken `prev_sha256` hash chain starting from `GENESIS_PREV_SHA256`
     """
@@ -336,6 +242,7 @@ def verify_ledger_file(ledger_file: Path | str) -> Dict[str, Any]:
         "ledger_file": str(path),
         "entry_count": len(entries),
         "head_sha256": expected_prev,
+        "jcs_serializer": RFC8785_SERIALIZER_ID,
         "rfc8785_valid": True,
         "sha256_valid": True,
         "chain_valid": True,

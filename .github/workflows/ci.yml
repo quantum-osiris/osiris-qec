@@ -1,4 +1,4 @@
-name: OSIRIS-QEC v1.1.0 CI
+name: OSIRIS-QEC v1.1.1 CI
 
 on:
   push:
@@ -23,18 +23,19 @@ jobs:
           uv venv .venv
           uv pip install --python .venv/bin/python -e ".[quantinuum,verification]" pytest-cov
 
-      - name: Gate 1 — Verify frozen v1.0.0 and v1.1.0 artifact hashes
+      - name: Gate 1 — Verify frozen v1.0.0, v1.1.0, and v1.1.1 artifact hashes
         run: |
           .venv/bin/osiris qec verify --manifest hardware/experiment_manifest_v1_0_0.json
           .venv/bin/osiris qec verify --manifest hardware/experiment_manifest_v1_1_0.json --strict
+          .venv/bin/osiris qec verify --manifest hardware/experiment_manifest_v1_1_1.json --strict
 
       - name: Gate 2 — Full pytest suite (zero skips, zero xfails, coverage)
         run: |
           .venv/bin/pytest --cov=osiris_qec --cov=osiris_cli -q
 
-      - name: Gate 3 — Selene local dry-run & RFC 8785 ledger verification
+      - name: Gate 3 — Selene local dry-run & strict RFC 8785 ledger verification
         run: |
-          .venv/bin/osiris qec run --target selene --shots 1000 --manifest hardware/experiment_manifest_v1_1_0.json --ledger /tmp/ci_ledger
+          .venv/bin/osiris qec run --target selene --shots 1000 --manifest hardware/experiment_manifest_v1_1_1.json --ledger /tmp/ci_ledger
           for f in /tmp/ci_ledger/run-*.json; do
             .venv/bin/osiris qec ledger verify "$f"
             .venv/bin/osiris qec ledger show "$f" --summary

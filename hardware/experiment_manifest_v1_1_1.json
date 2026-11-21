@@ -1,0 +1,42 @@
+{
+  "manifest_version": "1.1.1",
+  "package": "osiris-qec",
+  "protocol": "OSIRIS-QEC-002",
+  "status": "PREPARED_LOCALLY__HASH_LOCKED__NOT_SUBMITTED",
+  "code_family": "[[16,2,4]] Toroidal Wen-Plaquette",
+  "topology": {
+    "data_qubits": 16,
+    "reusable_ancilla_qubits": 4,
+    "total_qubits": 20,
+    "classical_bits": 28,
+    "measure_ops": 24,
+    "reset_ops": 8,
+    "conditional_ops": 20,
+    "lut_entries": 7
+  },
+  "precompile_sha256": "b86aeabd70eecb7f5fbca5d0e1688e06d71dc358fd9fbaaab7fd8e4f9634230b",
+  "isa_sha256": "02d5cb72849f9b473c022e68023486fdecc8c9f7fc3da9a9a9299c3482f31062",
+  "depth": 19,
+  "zzphase_count": 32,
+  "qnexus_version": "0.51.4",
+  "jcs_serializer": "rfc8785==0.1.4",
+  "optimisation_level": 0,
+  "hash_lock": true,
+  "compiler_lock": true,
+  "wilson_thresholds_95_gt_0_99": {
+    "512": 512,
+    "1000": 997,
+    "2000": 1989,
+    "5000": 4964,
+    "10000": 9920
+  },
+  "provenance_chain": {
+    "baseline_release": "v1.0.0",
+    "baseline_commit": "ac668e4",
+    "baseline_zenodo_doi": "10.5281/zenodo.24406733",
+    "v1_1_0_zenodo_doi": "10.5281/zenodo.24421051",
+    "concept_zenodo_doi": "10.5281/zenodo.24406732",
+    "companion_repetition_code_study": "OSIRIS-QEC-001 (10.5281/zenodo.24293756)",
+    "prior_art_protocol": "arXiv:2302.01917 (Iqbal et al., Quantinuum H1) & Quantinuum feed-forward tutorial"
+  }
+}

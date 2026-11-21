@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="540" height="208" viewBox="0 0 540 208">
 <rect x="0" y="0" width="540" height="208" fill="#ffffff"/>
-<text x="270.00" y="15.00" font-family="Helvetica, Arial, sans-serif" font-size="9.5" font-weight="bold" fill="#111827" text-anchor="middle">Simulated Depolarizing + Readout/Reset Noise Benchmark (Seeds 11, 22, 33; 180 Shots/Point)</text>
+<text x="270.00" y="15.00" font-family="Helvetica, Arial, sans-serif" font-size="9.2" font-weight="bold" fill="#111827" text-anchor="middle">OSIRIS-QEC-002: Depolarizing + Readout/Reset Noise Benchmark (Seeds 11, 22, 33; 180 Shots/Point)</text>
 <text x="154.00" y="29.00" font-family="Helvetica, Arial, sans-serif" font-size="7.8" font-weight="bold" fill="#111827" text-anchor="middle">(a) Logical State Fidelity vs. Physical Error Rate p</text>
 <rect x="46.00" y="36.00" width="216.00" height="142.00" fill="#fafafa" stroke="#374151" stroke-width="0.90"/>
 <line x1="46.00" y1="178.00" x2="262.00" y2="178.00" stroke="#e5e7eb" stroke-width="0.70" stroke-dasharray="5,3"/>

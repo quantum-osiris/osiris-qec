@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 """
-publish_wen_plaquette_to_zenodo.py (v1.1.0) — Uploads and publishes OSIRIS-QEC
-v1.1.0 (manuscript, vector figures, immutable v1.0.0 + hash-locked v1.1.0
-manifests, RFC 8785 ledger schema, 16/16 Y-sweep report, and full reproducibility
-bundle) as a linked Zenodo version preserving v1.0.0 (`10.5281/zenodo.24406733`).
-
-Reads `ZENODO_API_TOKEN` from `/home/osiris/osiris-ide/.env` or environment
-without ever printing or logging credentials.
+publish_wen_plaquette_to_zenodo.py (v1.1.1 / OSIRIS-QEC-002) — Uploads and
+publishes OSIRIS-QEC v1.1.1 (manuscript, vector figures, arXiv `quant-ph`
+submission tarball, manifests, strict `rfc8785` schema, 16/16 Y-sweep report,
+and full reproducibility archive) as a linked Zenodo version preserving both
+v1.0.0 (`10.5281/zenodo.24406733`) and v1.1.0 (`10.5281/zenodo.24421051`).
 """
 
 from __future__ import annotations
@@ -14,6 +12,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import time
 import urllib.error
 import urllib.request
 from pathlib import Path
@@ -21,6 +20,7 @@ from typing import Any, Dict, Tuple
 
 API_BASE = "https://zenodo.org/api/deposit/depositions"
 V100_DOI = "10.5281/zenodo.24406733"
+V110_DOI = "10.5281/zenodo.24421051"
 
 
 def _get_token() -> str:
@@ -47,7 +47,6 @@ def _call(
     raw: bytes | None = None,
     ctype: str | None = "application/json",
 ) -> Tuple[int, Dict[str, Any]]:
-    import time
     body = raw if raw is not None else (json.dumps(data).encode("utf-8") if data is not None else None)
     headers = {"Authorization": f"Bearer {token}"}
     if ctype and body is not None:
@@ -75,17 +74,17 @@ def _call(
     raise RuntimeError(f"Unreachable retry loop for {url}")
 
 
-def build_metadata(repo_url: str, manifest_v11: Dict[str, Any]) -> Dict[str, Any]:
-    pre_sha = manifest_v11["precompile_sha256"]
-    h2_sha = manifest_v11["isa_sha256"]
+def build_metadata(repo_url: str, manifest_v111: Dict[str, Any]) -> Dict[str, Any]:
+    pre_sha = manifest_v111["precompile_sha256"]
+    h2_sha = manifest_v111["isa_sha256"]
     return {
         "upload_type": "publication",
         "publication_type": "preprint",
         "publication_date": "2026-11-21",
         "title": (
-            "Hardened Compiler Passes, Exact 256-Branch & 16/16 Fault-Taxonomy Verification, "
-            "RFC 8785 Execution Ledger, and Hash-Locked Quantinuum H2 Dispatch for 20-Qubit "
-            "Toroidal Wen-Plaquette Feed-Forward Preparation (OSIRIS-QEC v1.1.0)"
+            "State Preparation Is Not Quantum Memory: Exact 256-Branch Verification, 16/16 "
+            "Post-Preparation Fault Taxonomy, Strict RFC 8785 Provenance, and Hash-Locked "
+            "Quantinuum H2 Dispatch for [[16, 2, 4]] Wen-Plaquette Codes (OSIRIS-QEC-002, osiris-qec v1.1.1)"
         ),
         "creators": [
             {
@@ -94,36 +93,38 @@ def build_metadata(repo_url: str, manifest_v11: Dict[str, Any]) -> Dict[str, Any
             }
         ],
         "description": (
-            "<p><strong>Status: HARDWARE-UNVALIDATED</strong> (exact local 20-qubit statevector enumeration, "
-            "dual-basis Qiskit Aer C++ simulation, Selene local dry-run validation, 16/16 pre/post-preparation "
-            "fault taxonomy, and offline <code>pytket-quantinuum</code> H2-1 ISA compilation; zero provider jobs "
-            "have been submitted).</p>"
-            "<p><strong>Preregistered Artifact Lock:</strong> Compilation and execution enforce a fail-closed "
-            f"cryptographic lock verifying pre-compile SHA-256 (<code>{pre_sha}</code>) and Quantinuum H2-1 ISA "
-            f"SHA-256 (<code>{h2_sha}</code>, depth <code>19</code>, <code>32 ZZPhase</code>) both pre-flight and "
-            "post-compile under <code>optimisation_level=0</code>, preserving the immutable v1.0.0 baseline "
-            f"(<code>{V100_DOI}</code>) bit-for-bit.</p>"
+            "<p><strong>Status: HARDWARE-UNVALIDATED</strong> (benchmark <code>OSIRIS-QEC-002</code>, package "
+            "<code>osiris-qec v1.1.1</code>; exact 20-qubit statevector enumeration, dual-basis Qiskit Aer C++ "
+            "simulation, Selene local dry-run validation, 16/16 pre/post-preparation fault taxonomy, and offline "
+            "<code>pytket-quantinuum</code> H2-1 ISA compilation; zero provider jobs submitted).</p>"
+            "<p><strong>Headline Scope Result (State Preparation &ne; QEC Memory):</strong> While weight-1 Pauli-"
+            "<code>Z</code> faults injected <em>before</em> preparation on the <code>[[16, 2, 4]]</code> periodic "
+            "Wen-plaquette circuit (16 data qubits + 4 recycled ancillas; prior art Iqbal <em>et al.</em>, "
+            "<code>arXiv:2302.01917</code>) are corrected 16/16 times (fidelity <code>1.0</code>), complete 16/16 "
+            "<em>post</em>-preparation Pauli-<code>Y</code> and Pauli-<code>Z</code> sweeps across all data qubits "
+            "<code>q[0..15]</code> excite nonzero X-syndromes (16/16 detected) yet preserve the encoded logical "
+            "state in <strong>0/16</strong> cases (<code>F_L = 0.0</code> for <code>Y</code>; <code>&lt; 10^-3</code> "
+            "for <code>Z</code>), and <code>X</code> faults escape detection because <code>Z</code> stabilizers are "
+            "never measured.</p>"
             "<ul>"
-            "<li><strong>Provenance &amp; Hardware Allocation:</strong> Underlying 4&times;4 toroidal Wen-plaquette "
-            "2-round LUT protocol credited to Iqbal <em>et al.</em> (<code>arXiv:2302.01917</code>) and Quantinuum's "
-            "official tutorial. Sixteen vertex qubits encode <code>[[16, 2, 4]]</code> while 4 recycled ancillas "
-            "execute mid-circuit syndrome checks (<code>24 Measure</code>, <code>8 Reset</code>; ancillas do not "
-            "contribute to logical code distance).</li>"
-            "<li><strong>v1.1.0 Compiler Hardening &amp; Metadata Determinism:</strong> Rejects colliding registers "
-            "(<code>q</code>, <code>qr</code>, <code>quantum</code>, <code>c</code>, <code>creg</code>, "
-            "<code>cl</code>, <code>classical</code>) and non-empty circuits with <code>ValueError</code>, and "
-            "normalizes <code>name</code>, <code>phase</code>, and <code>metadata</code> prior to hashing.</li>"
-            "<li><strong>Complete 16/16 Post-Preparation Y-Fault Sweep:</strong> Expands post-preparation Pauli-Y "
-            "injection across all 16 data qubits (<code>16/16</code> partially detected via X-syndrome, "
-            "<code>0/16</code> preserved, <code>F_L = 0.0</code>), confirming state preparation &ne; QEC memory.</li>"
-            "<li><strong><code>osiris qec</code> CLI, QNexus Retries &amp; RFC 8785 Write-Ahead Ledger:</strong> "
-            "Adds <code>osiris qec verify|run|manifest|ledger</code>, atomic IETF RFC 8785 hash-chained write-ahead "
-            "logging, bounded exponential backoff for transient gateway errors, and mock QNexus integration tests.</li>"
+            "<li><strong>v1.1.1 Normative RFC 8785 Pin:</strong> Write-ahead execution ledgering is pinned "
+            "exclusively to Trail of Bits' <code>rfc8785==0.1.4</code> JCS serializer with zero stdlib "
+            "<code>json.dumps</code> fallback, guaranteeing byte-exact IEEE-754 float canonicalization across "
+            "third-party verifiers.</li>"
+            "<li><strong>Gateway Congestion &amp; UTC Hygiene:</strong> <code>qnexus 0.51.4</code> transport honors "
+            "HTTP <code>Retry-After</code> headers and applies &plusmn;25% randomized backoff jitter while failing "
+            "closed immediately on integrity or <code>401</code>/<code>403</code> errors; all timestamps use "
+            "timezone-aware UTC.</li>"
+            "<li><strong>Preregistered Artifact Lock &amp; arXiv Bundle:</strong> Compilation and execution enforce "
+            f"pre-compile SHA-256 (<code>{pre_sha}</code>) and H2-1 ISA SHA-256 (<code>{h2_sha}</code>, depth 19, "
+            "32 <code>ZZPhase</code>) both pre-flight and post-compile under <code>optimisation_level=0</code>, "
+            "shipped alongside a ready-to-upload <code>arXiv</code> <code>quant-ph</code> TeX bundle "
+            "(<code>osiris-qec-v1.1.1-arxiv-quant-ph.tar.gz</code>).</li>"
             "</ul>"
         ),
         "access_right": "open",
         "license": "cc-by-4.0",
-        "version": "1.1.0",
+        "version": "1.1.1",
         "keywords": [
             "quantum error correction",
             "Wen-plaquette code",
@@ -133,30 +134,14 @@ def build_metadata(repo_url: str, manifest_v11: Dict[str, Any]) -> Dict[str, Any
             "pytket",
             "Quantinuum H2",
             "RFC 8785",
-            "pre-registered quantum experiment",
-            "OSIRIS-QEC",
+            "OSIRIS-QEC-002",
         ],
         "related_identifiers": [
-            {
-                "identifier": f"{repo_url}/tree/v1.1.0",
-                "relation": "isSupplementTo",
-                "scheme": "url",
-            },
-            {
-                "identifier": V100_DOI,
-                "relation": "isNewVersionOf",
-                "scheme": "doi",
-            },
-            {
-                "identifier": "arXiv:2302.01917",
-                "relation": "cites",
-                "scheme": "arxiv",
-            },
-            {
-                "identifier": "10.5281/zenodo.24293756",
-                "relation": "references",
-                "scheme": "doi",
-            },
+            {"identifier": f"{repo_url}/tree/v1.1.1", "relation": "isSupplementTo", "scheme": "url"},
+            {"identifier": V110_DOI, "relation": "isNewVersionOf", "scheme": "doi"},
+            {"identifier": V100_DOI, "relation": "references", "scheme": "doi"},
+            {"identifier": "arXiv:2302.01917", "relation": "cites", "scheme": "arxiv"},
+            {"identifier": "10.5281/zenodo.24293756", "relation": "references", "scheme": "doi"},
         ],
     }
 
@@ -166,6 +151,7 @@ def main() -> int:
     parser.add_argument("--root", type=Path, default=Path("/home/osiris/qec"))
     parser.add_argument("--deposition-id", type=int, required=True)
     parser.add_argument("--bundle", type=Path, required=True)
+    parser.add_argument("--arxiv-bundle", type=Path, default=Path("/tmp/osiris-qec-v1.1.1-arxiv-quant-ph.tar.gz"))
     parser.add_argument("--repo-url", default="https://github.com/quantum-osiris/osiris-qec")
     parser.add_argument("--draft-only", action="store_true")
     parser.add_argument("--publish", action="store_true")
@@ -175,18 +161,20 @@ def main() -> int:
 
     root = args.root.resolve()
     paper_dir = root / "paper"
-    manifest_v11 = json.loads((root / "hardware" / "experiment_manifest_v1_1_0.json").read_text(encoding="utf-8"))
+    manifest_v111 = json.loads((root / "hardware" / "experiment_manifest_v1_1_1.json").read_text(encoding="utf-8"))
 
     files = [
-        paper_dir / "wen_plaquette_feedforward_qec_v1_1.pdf",
-        paper_dir / "wen_plaquette_feedforward_qec_v1_1.tex",
+        paper_dir / "wen_plaquette_feedforward_qec_v1_1_1.pdf",
+        paper_dir / "wen_plaquette_feedforward_qec_v1_1_1.tex",
         paper_dir / "fig1_torus_checkerboard_lut.pdf",
         paper_dir / "fig2_noisy_fidelity_benchmark.pdf",
         paper_dir / "fig3_error_taxonomy_and_wilson_gate.pdf",
         paper_dir / "SHA256SUMS.txt",
+        args.arxiv_bundle.resolve(),
         args.bundle.resolve(),
         root / "hardware" / "experiment_manifest_v1_0_0.json",
         root / "hardware" / "experiment_manifest_v1_1_0.json",
+        root / "hardware" / "experiment_manifest_v1_1_1.json",
         root / "hardware" / "ledger_schema_v1_1_0.json",
         root / "hardware" / "hashlock_policy_v1_1_0.md",
         root / "reports" / "POST_PREP_Y_SWEEP_V1_1.json",
@@ -194,6 +182,7 @@ def main() -> int:
         root / "reports" / "ERROR_CORRECTION_MATRIX.json",
         root / "reports" / "QEC_BENCHMARK_RESULTS.json",
         root / "submission" / "EXPERIMENT_PROTOCOL.md",
+        root / "submission" / "ARXIV_SUBMISSION.md",
         root / "CHANGELOG.md",
         root / "SECURITY_REVIEW.md",
     ]
@@ -208,7 +197,7 @@ def main() -> int:
         raise RuntimeError(f"Failed to fetch Zenodo deposition {did} (HTTP {st}): {dep}")
 
     bucket = dep["links"]["bucket"]
-    st, meta_res = _call("PUT", f"{API_BASE}/{did}", token, data={"metadata": build_metadata(args.repo_url, manifest_v11)})
+    st, meta_res = _call("PUT", f"{API_BASE}/{did}", token, data={"metadata": build_metadata(args.repo_url, manifest_v111)})
     if st not in (200, 201):
         raise RuntimeError(f"Failed to set Zenodo metadata (HTTP {st}): {meta_res}")
 
@@ -242,24 +231,27 @@ def main() -> int:
 
     receipt = {
         "package": "osiris-qec",
-        "version": "1.1.0",
+        "protocol": "OSIRIS-QEC-002",
+        "version": "1.1.1",
         "status": "HARDWARE-UNVALIDATED",
         "baseline_v1_0_0_doi": V100_DOI,
+        "previous_v1_1_0_doi": V110_DOI,
         "record_id": pub.get("id"),
         "doi": pub.get("doi"),
         "conceptdoi": pub.get("conceptdoi"),
         "doi_url": pub.get("doi_url"),
         "record_html": (pub.get("links") or {}).get("record_html", f"https://zenodo.org/records/{pub.get('id')}"),
-        "github_release_url": f"{args.repo_url}/releases/tag/v1.1.0",
-        "precompile_sha256": manifest_v11["precompile_sha256"],
-        "isa_sha256": manifest_v11["isa_sha256"],
+        "github_release_url": f"{args.repo_url}/releases/tag/v1.1.1",
+        "precompile_sha256": manifest_v111["precompile_sha256"],
+        "isa_sha256": manifest_v111["isa_sha256"],
+        "jcs_serializer": "rfc8785==0.1.4",
         "optimisation_level": 0,
         "state": pub.get("state"),
         "submitted": pub.get("submitted"),
         "created": pub.get("created"),
         "uploaded_files": uploaded,
     }
-    receipt_out = root / "submission" / "zenodo_publication_receipt_v1_1_0.json"
+    receipt_out = root / "submission" / "zenodo_publication_receipt_v1_1_1.json"
     receipt_out.write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(receipt, indent=2))
     return 0

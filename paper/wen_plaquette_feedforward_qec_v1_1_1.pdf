@@ -1,0 +1,511 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+2 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Times-Roman >>
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Times-Bold >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Times-Italic >>
+endobj
+7 0 obj
+<< /Type /Pages /Kids [9 0 R 11 0 R 13 0 R 15 0 R] /Count 4 >>
+endobj
+8 0 obj
+<< /Length 16740 >>
+stream
+1 1 1 rg 0 0 612 792 re f
+BT /F5 12.0 Tf 0.070 0.090 0.150 rg 50.00 754.00 Td (State Preparation Is Not Quantum Memory: Exact 256-Branch Verification,) Tj ET
+BT /F5 12.0 Tf 0.070 0.090 0.150 rg 50.00 739.10 Td (16/16 Post-Preparation Fault Taxonomy, Strict RFC 8785 Provenance, and) Tj ET
+BT /F5 12.0 Tf 0.070 0.090 0.150 rg 50.00 724.20 Td (Hash-Locked Quantinuum H2 Dispatch for [[16, 2, 4]] Wen-Plaquette Codes) Tj ET
+BT /F3 6.5 Tf 0.180 0.220 0.300 rg 50.00 706.30 Td (Devin Phillip Davis  |  Agile Defense Systems LLC  |  November 21, 2026  |  OSIRIS-QEC-002 \(osiris-qec v1.1.1\)) Tj ET
+BT /F3 6.5 Tf 0.180 0.220 0.300 rg 50.00 696.70 Td (v1.1.1 DOI: 10.5281/zenodo.24424726  |  v1.0.0 Baseline: 10.5281/zenodo.24406733  |  github.com/quantum-osiris/osiris-qec) Tj ET
+BT /F3 6.5 Tf 0.180 0.220 0.300 rg 50.00 687.10 Td (Locked Pre-Compile SHA-256: b86aeabd70eecb7f5fbca5d0e168...  |  H2-1 ISA SHA-256: 02d5cb72849f9b473c022e680234...) Tj ET
+0.99 0.97 0.92 rg 0.72 0.33 0.04 RG 0.9 w 50 635.50 512 39.00 re B
+BT /F2 6.6 Tf 0.550 0.180 0.040 rg 57.00 664.50 Td (STATUS: HARDWARE-UNVALIDATED. Compilation and execution enforce a preregistered artifact lock: pre-compile and H2-1 ISA) Tj ET
+BT /F2 6.6 Tf 0.550 0.180 0.040 rg 57.00 655.00 Td (SHA-256 digests are verified pre-flight and post-compile \(optimisation_level=0\); any mismatch aborts submission \(EXIT 1\).) Tj ET
+BT /F2 6.6 Tf 0.550 0.180 0.040 rg 57.00 645.50 Td (PROVENANCE: Underlying 4x4 Wen-plaquette 2-round LUT protocol is prior art \(Iqbal et al., arXiv:2302.01917 & Quantinuum tutorial\).) Tj ET
+BT /F5 10.0 Tf 0.070 0.090 0.150 rg 50.00 625.50 Td (Abstract) Tj ET
+BT /F4 8.8 Tf 0.070 0.090 0.150 rg 50.00 613.30 Td (Fault-tolerant state preparation in a topological codespace is operationally distinct from a) Tj ET
+BT /F4 8.8 Tf 0.070 0.090 0.150 rg 50.00 602.30 Td (quantum error-correcting \(QEC\) memory. Studying the 20-qubit [[16, 2, 4]] periodic Wen-plaquette) Tj ET
+BT /F4 8.8 Tf 0.070 0.090 0.150 rg 50.00 591.30 Td (two-round measurement and 7-entry lookup-table \(LUT\) feed-forward circuit \(16 data qubits + 4) Tj ET
+BT /F4 8.8 Tf 0.070 0.090 0.150 rg 50.00 580.30 Td (recycled ancillas; prior art Iqbal et al., arXiv:2302.01917\), we demonstrate that while weight-1) Tj ET
+BT /F4 8.8 Tf 0.070 0.090 0.150 rg 50.00 569.30 Td (Pauli-Z faults injected before preparation are corrected 16/16 times \(logical fidelity 1.0\),) Tj ET
+BT /F4 8.8 Tf 0.070 0.090 0.150 rg 50.00 558.30 Td (complete 16/16 post-preparation Pauli-Y and Pauli-Z sweeps across all data qubits q[0..15] excite) Tj ET
+BT /F4 8.8 Tf 0.070 0.090 0.150 rg 50.00 547.30 Td (nonzero X-syndromes \(16/16 detected\) yet preserve the logical state in 0/16 cases \(logical fidelity) Tj ET
+BT /F4 8.8 Tf 0.070 0.090 0.150 rg 50.00 536.30 Td (0.0 for Y and < 1e-3 for Z\), and X faults escape detection entirely because Z stabilizers are never) Tj ET
+BT /F4 8.8 Tf 0.070 0.090 0.150 rg 50.00 525.30 Td (measured. Around this boundary \(benchmark OSIRIS-QEC-002, package osiris-qec v1.1.1\), we) Tj ET
+BT /F4 8.8 Tf 0.070 0.090 0.150 rg 50.00 514.30 Td (contribute: \(i\) a hardened pytket CustomPass rejecting colliding registers and normalizing circuit) Tj ET
+BT /F4 8.8 Tf 0.070 0.090 0.150 rg 50.00 503.30 Td (metadata while preserving the frozen v1.0.0 circuit SHA-256 \(10.5281/zenodo.24406733\) bit-for-bit;) Tj ET
+BT /F4 8.8 Tf 0.070 0.090 0.150 rg 50.00 492.30 Td (\(ii\) exact non-sampled verification of all 256 syndrome branches \(128 reachable even-parity) Tj ET
+BT /F4 8.8 Tf 0.070 0.090 0.150 rg 50.00 481.30 Td (branches landing in +1 codespace\) and dual-basis Qiskit Aer cross-checks; \(iii\) a strict IETF RFC) Tj ET
+BT /F4 8.8 Tf 0.070 0.090 0.150 rg 50.00 470.30 Td (8785 write-ahead ledger pinned exclusively to rfc8785==0.1.4; and \(iv\) fail-closed Quantinuum H2-1) Tj ET
+BT /F4 8.8 Tf 0.070 0.090 0.150 rg 50.00 459.30 Td (dispatch via qnexus 0.51.4 enforcing optimisation_level=0, post-compile ISA hash verification,) Tj ET
+BT /F4 8.8 Tf 0.070 0.090 0.150 rg 50.00 448.30 Td (Retry-After + jittered backoff, and a 95% Wilson lower bound > 0.99 per readout basis.) Tj ET
+BT /F5 9.8 Tf 0.070 0.090 0.150 rg 50.00 432.30 Td (1. Hardware Allocation, Hardened Pass Contract, and Metadata Determinism) Tj ET
+BT /F4 8.8 Tf 0.070 0.090 0.150 rg 50.00 420.20 Td (Sixteen vertex data qubits q[0..15] on a 4x4 torus encode [[16, 2, 4]] \(checkerboard Z plaquettes) Tj ET
+BT /F4 8.8 Tf 0.070 0.090 0.150 rg 50.00 409.20 Td (on even r+c, X plaquettes on odd r+c; Fig. 1a\), while four ancillas q[16..19] are recycled across) Tj ET
+BT /F4 8.8 Tf 0.070 0.090 0.150 rg 50.00 398.20 Td (Round 1 {4, 6, 12, 14} and Round 2 {1, 3, 9, 11} via mid-circuit Reset \(24 Measure, 8 Reset;) Tj ET
+BT /F4 8.8 Tf 0.070 0.090 0.150 rg 50.00 387.20 Td (ancillas do not contribute to code distance\). WenPlaquetteFeedForwardPass and build_wen_plaquette\(\)) Tj ET
+BT /F4 8.8 Tf 0.070 0.090 0.150 rg 50.00 376.20 Td (reject non-empty circuits and colliding {q, qr, quantum, c, creg, cl, classical} registers with) Tj ET
+BT /F4 8.8 Tf 0.070 0.090 0.150 rg 50.00 365.20 Td (ValueError before transformation, and normalize circuit.name, phase, and metadata prior to SHA-256) Tj ET
+BT /F4 8.8 Tf 0.070 0.090 0.150 rg 50.00 354.20 Td (hashing so v1.0.0, v1.1.0, and v1.1.1 circuit hashes match bit-for-bit.) Tj ET
+q 0.90741 0 0 0.90741 61.00 151.27 cm
+1 1 1 rg
+0 0 540.00 206.00 re f
+BT /F2 9.2 Tf 0.067 0.094 0.153 rg 50.58 191.00 Td (OSIRIS-QEC-002: [[16, 2, 4]] Toroidal Wen-Plaquette Code \(16 Data + 4 Recycled Ancillas\)) Tj ET
+BT /F2 8.2 Tf 0.067 0.094 0.153 rg 21.60 178.00 Td (\(a\) Checkerboard Torus \(q_{4r+c}\)) Tj ET
+0.70 w 0.953 0.957 0.965 rg 0.392 0.455 0.545 RG 34.00 136.00 34.00 34.00 re B
+BT /F3 6.2 Tf 0.294 0.333 0.388 rg 47.28 150.96 Td (Z0) Tj ET
+0.70 w 0.863 0.988 0.906 rg 0.392 0.455 0.545 RG 68.00 136.00 34.00 34.00 re B
+BT /F3 5.9 Tf 0.016 0.471 0.341 rg 69.07 150.96 Td (X1 \(R2\)) Tj ET
+0.70 w 0.953 0.957 0.965 rg 0.392 0.455 0.545 RG 102.00 136.00 34.00 34.00 re B
+BT /F3 6.2 Tf 0.294 0.333 0.388 rg 115.28 150.96 Td (Z2) Tj ET
+0.90 w 0.863 0.988 0.906 rg 0.392 0.455 0.545 RG 136.00 136.00 34.00 34.00 re B
+BT /F3 5.9 Tf 0.016 0.471 0.341 rg 137.07 150.96 Td (X3 \(R2\)) Tj ET
+0.70 w 0.859 0.918 0.996 rg 0.392 0.455 0.545 RG 34.00 102.00 34.00 34.00 re B
+BT /F3 5.9 Tf 0.114 0.306 0.847 rg 35.07 116.96 Td (X4 \(R1\)) Tj ET
+0.70 w 0.953 0.957 0.965 rg 0.392 0.455 0.545 RG 68.00 102.00 34.00 34.00 re B
+BT /F3 6.2 Tf 0.294 0.333 0.388 rg 81.28 116.96 Td (Z5) Tj ET
+0.70 w 0.859 0.918 0.996 rg 0.392 0.455 0.545 RG 102.00 102.00 34.00 34.00 re B
+BT /F3 5.9 Tf 0.114 0.306 0.847 rg 103.07 116.96 Td (X6 \(R1\)) Tj ET
+0.90 w 0.953 0.957 0.965 rg 0.392 0.455 0.545 RG 136.00 102.00 34.00 34.00 re B
+BT /F3 6.2 Tf 0.294 0.333 0.388 rg 149.28 116.96 Td (Z7) Tj ET
+0.70 w 0.953 0.957 0.965 rg 0.392 0.455 0.545 RG 34.00 68.00 34.00 34.00 re B
+BT /F3 6.2 Tf 0.294 0.333 0.388 rg 47.28 82.96 Td (Z8) Tj ET
+0.70 w 0.863 0.988 0.906 rg 0.392 0.455 0.545 RG 68.00 68.00 34.00 34.00 re B
+BT /F3 5.9 Tf 0.016 0.471 0.341 rg 69.07 82.96 Td (X9 \(R2\)) Tj ET
+0.70 w 0.953 0.957 0.965 rg 0.392 0.455 0.545 RG 102.00 68.00 34.00 34.00 re B
+BT /F3 6.2 Tf 0.294 0.333 0.388 rg 113.42 82.96 Td (Z10) Tj ET
+0.90 w 0.863 0.988 0.906 rg 0.392 0.455 0.545 RG 136.00 68.00 34.00 34.00 re B
+BT /F3 5.9 Tf 0.016 0.471 0.341 rg 135.30 82.96 Td (X11 \(R2\)) Tj ET
+0.90 w 0.859 0.918 0.996 rg 0.392 0.455 0.545 RG 34.00 34.00 34.00 34.00 re B
+BT /F3 5.9 Tf 0.114 0.306 0.847 rg 33.30 48.96 Td (X12 \(R1\)) Tj ET
+0.90 w 0.953 0.957 0.965 rg 0.392 0.455 0.545 RG 68.00 34.00 34.00 34.00 re B
+BT /F3 6.2 Tf 0.294 0.333 0.388 rg 79.42 48.96 Td (Z13) Tj ET
+0.90 w 0.859 0.918 0.996 rg 0.392 0.455 0.545 RG 102.00 34.00 34.00 34.00 re B
+BT /F3 5.9 Tf 0.114 0.306 0.847 rg 101.30 48.96 Td (X14 \(R1\)) Tj ET
+0.90 w 0.953 0.957 0.965 rg 0.392 0.455 0.545 RG 136.00 34.00 34.00 34.00 re B
+BT /F3 6.2 Tf 0.294 0.333 0.388 rg 147.42 48.96 Td (Z15) Tj ET
+q 1.20 w 1.000 1.000 1.000 rg 0.067 0.094 0.153 RG 40.20 170.00 m 40.20 173.42 37.42 176.20 34.00 176.20 c 30.58 176.20 27.80 173.42 27.80 170.00 c 27.80 166.58 30.58 163.80 34.00 163.80 c 37.42 163.80 40.20 166.58 40.20 170.00 c B Q
+BT /F3 5.8 Tf 0.067 0.094 0.153 rg 32.26 167.80 Td (0) Tj ET
+q 1.20 w 1.000 1.000 1.000 rg 0.067 0.094 0.153 RG 74.20 170.00 m 74.20 173.42 71.42 176.20 68.00 176.20 c 64.58 176.20 61.80 173.42 61.80 170.00 c 61.80 166.58 64.58 163.80 68.00 163.80 c 71.42 163.80 74.20 166.58 74.20 170.00 c B Q
+BT /F3 5.8 Tf 0.067 0.094 0.153 rg 66.26 167.80 Td (1) Tj ET
+q 1.20 w 1.000 1.000 1.000 rg 0.067 0.094 0.153 RG 108.20 170.00 m 108.20 173.42 105.42 176.20 102.00 176.20 c 98.58 176.20 95.80 173.42 95.80 170.00 c 95.80 166.58 98.58 163.80 102.00 163.80 c 105.42 163.80 108.20 166.58 108.20 170.00 c B Q
+BT /F3 5.8 Tf 0.067 0.094 0.153 rg 100.26 167.80 Td (2) Tj ET
+q 1.20 w 1.000 1.000 1.000 rg 0.067 0.094 0.153 RG 142.20 170.00 m 142.20 173.42 139.42 176.20 136.00 176.20 c 132.58 176.20 129.80 173.42 129.80 170.00 c 129.80 166.58 132.58 163.80 136.00 163.80 c 139.42 163.80 142.20 166.58 142.20 170.00 c B Q
+BT /F3 5.8 Tf 0.067 0.094 0.153 rg 134.26 167.80 Td (3) Tj ET
+q 1.20 w 1.000 1.000 1.000 rg 0.067 0.094 0.153 RG 40.20 136.00 m 40.20 139.42 37.42 142.20 34.00 142.20 c 30.58 142.20 27.80 139.42 27.80 136.00 c 27.80 132.58 30.58 129.80 34.00 129.80 c 37.42 129.80 40.20 132.58 40.20 136.00 c B Q
+BT /F3 5.8 Tf 0.067 0.094 0.153 rg 32.26 133.80 Td (4) Tj ET
+q 1.20 w 0.996 0.953 0.780 rg 0.706 0.325 0.035 RG 74.20 136.00 m 74.20 139.42 71.42 142.20 68.00 142.20 c 64.58 142.20 61.80 139.42 61.80 136.00 c 61.80 132.58 64.58 129.80 68.00 129.80 c 71.42 129.80 74.20 132.58 74.20 136.00 c B Q
+BT /F3 5.8 Tf 0.573 0.251 0.055 rg 66.26 133.80 Td (5) Tj ET
+q 1.20 w 1.000 1.000 1.000 rg 0.067 0.094 0.153 RG 108.20 136.00 m 108.20 139.42 105.42 142.20 102.00 142.20 c 98.58 142.20 95.80 139.42 95.80 136.00 c 95.80 132.58 98.58 129.80 102.00 129.80 c 105.42 129.80 108.20 132.58 108.20 136.00 c B Q
+BT /F3 5.8 Tf 0.067 0.094 0.153 rg 100.26 133.80 Td (6) Tj ET
+q 1.20 w 0.996 0.953 0.780 rg 0.706 0.325 0.035 RG 142.20 136.00 m 142.20 139.42 139.42 142.20 136.00 142.20 c 132.58 142.20 129.80 139.42 129.80 136.00 c 129.80 132.58 132.58 129.80 136.00 129.80 c 139.42 129.80 142.20 132.58 142.20 136.00 c B Q
+BT /F3 5.8 Tf 0.573 0.251 0.055 rg 134.26 133.80 Td (7) Tj ET
+q 1.20 w 1.000 1.000 1.000 rg 0.067 0.094 0.153 RG 40.20 102.00 m 40.20 105.42 37.42 108.20 34.00 108.20 c 30.58 108.20 27.80 105.42 27.80 102.00 c 27.80 98.58 30.58 95.80 34.00 95.80 c 37.42 95.80 40.20 98.58 40.20 102.00 c B Q
+BT /F3 5.8 Tf 0.067 0.094 0.153 rg 32.26 99.80 Td (8) Tj ET
+q 1.20 w 1.000 1.000 1.000 rg 0.067 0.094 0.153 RG 74.20 102.00 m 74.20 105.42 71.42 108.20 68.00 108.20 c 64.58 108.20 61.80 105.42 61.80 102.00 c 61.80 98.58 64.58 95.80 68.00 95.80 c 71.42 95.80 74.20 98.58 74.20 102.00 c B Q
+BT /F3 5.8 Tf 0.067 0.094 0.153 rg 66.26 99.80 Td (9) Tj ET
+q 1.20 w 1.000 1.000 1.000 rg 0.067 0.094 0.153 RG 108.20 102.00 m 108.20 105.42 105.42 108.20 102.00 108.20 c 98.58 108.20 95.80 105.42 95.80 102.00 c 95.80 98.58 98.58 95.80 102.00 95.80 c 105.42 95.80 108.20 98.58 108.20 102.00 c B Q
+BT /F3 5.8 Tf 0.067 0.094 0.153 rg 98.52 99.80 Td (10) Tj ET
+q 1.20 w 1.000 1.000 1.000 rg 0.067 0.094 0.153 RG 142.20 102.00 m 142.20 105.42 139.42 108.20 136.00 108.20 c 132.58 108.20 129.80 105.42 129.80 102.00 c 129.80 98.58 132.58 95.80 136.00 95.80 c 139.42 95.80 142.20 98.58 142.20 102.00 c B Q
+BT /F3 5.8 Tf 0.067 0.094 0.153 rg 132.52 99.80 Td (11) Tj ET
+q 1.20 w 1.000 1.000 1.000 rg 0.067 0.094 0.153 RG 40.20 68.00 m 40.20 71.42 37.42 74.20 34.00 74.20 c 30.58 74.20 27.80 71.42 27.80 68.00 c 27.80 64.58 30.58 61.80 34.00 61.80 c 37.42 61.80 40.20 64.58 40.20 68.00 c B Q
+BT /F3 5.8 Tf 0.067 0.094 0.153 rg 30.52 65.80 Td (12) Tj ET
+q 1.20 w 0.996 0.953 0.780 rg 0.706 0.325 0.035 RG 74.20 68.00 m 74.20 71.42 71.42 74.20 68.00 74.20 c 64.58 74.20 61.80 71.42 61.80 68.00 c 61.80 64.58 64.58 61.80 68.00 61.80 c 71.42 61.80 74.20 64.58 74.20 68.00 c B Q
+BT /F3 5.8 Tf 0.573 0.251 0.055 rg 64.52 65.80 Td (13) Tj ET
+q 1.20 w 1.000 1.000 1.000 rg 0.067 0.094 0.153 RG 108.20 68.00 m 108.20 71.42 105.42 74.20 102.00 74.20 c 98.58 74.20 95.80 71.42 95.80 68.00 c 95.80 64.58 98.58 61.80 102.00 61.80 c 105.42 61.80 108.20 64.58 108.20 68.00 c B Q
+BT /F3 5.8 Tf 0.067 0.094 0.153 rg 98.52 65.80 Td (14) Tj ET
+q 1.20 w 0.996 0.953 0.780 rg 0.706 0.325 0.035 RG 142.20 68.00 m 142.20 71.42 139.42 74.20 136.00 74.20 c 132.58 74.20 129.80 71.42 129.80 68.00 c 129.80 64.58 132.58 61.80 136.00 61.80 c 139.42 61.80 142.20 64.58 142.20 68.00 c B Q
+BT /F3 5.8 Tf 0.573 0.251 0.055 rg 132.52 65.80 Td (15) Tj ET
+0.70 w 0.859 0.918 0.996 rg 0.114 0.306 0.847 RG 34.00 19.00 9.00 7.00 re B
+BT /F1 6.5 Tf 0.067 0.094 0.153 rg 46.00 20.00 Td (R1 X-plaq) Tj ET
+0.70 w 0.863 0.988 0.906 rg 0.016 0.471 0.341 RG 92.00 19.00 9.00 7.00 re B
+BT /F1 6.5 Tf 0.067 0.094 0.153 rg 104.00 20.00 Td (R2 X-plaq) Tj ET
+q 1.00 w 0.996 0.953 0.780 rg 0.706 0.325 0.035 RG 162.00 22.50 m 162.00 24.71 160.21 26.50 158.00 26.50 c 155.79 26.50 154.00 24.71 154.00 22.50 c 154.00 20.29 155.79 18.50 158.00 18.50 c 160.21 18.50 162.00 20.29 162.00 22.50 c B Q
+BT /F1 6.5 Tf 0.067 0.094 0.153 rg 165.00 20.00 Td (R1 cond-Z) Tj ET
+BT /F2 8.2 Tf 0.067 0.094 0.153 rg 224.75 178.00 Td (\(b\) Round-2 Syndrome LUT \(Ancillas A1, A3, A9, A11 -> c4_2nd\)) Tj ET
+0.90 w 0.980 0.980 0.980 rg 0.200 0.255 0.333 RG 208.00 18.00 316.00 154.00 re B
+0.80 w 0.886 0.910 0.941 rg 0.200 0.255 0.333 RG 208.00 155.00 316.00 17.00 re B
+BT /F3 6.8 Tf 0.067 0.094 0.153 rg 216.00 160.50 Td (BE Synd.) Tj ET
+BT /F3 6.8 Tf 0.067 0.094 0.153 rg 266.00 160.50 Td (LE Int) Tj ET
+BT /F3 6.8 Tf 0.067 0.094 0.153 rg 332.00 160.50 Td (Conditional Z Support) Tj ET
+BT /F3 6.8 Tf 0.067 0.094 0.153 rg 444.00 160.50 Td (R1 Disturb.) Tj ET
+BT /F3 6.8 Tf 0.059 0.090 0.165 rg 220.00 143.80 Td (0011) Tj ET
+BT /F3 6.4 Tf 0.118 0.251 0.686 rg 266.00 143.80 Td (12 \(0b1100\)) Tj ET
+BT /F3 6.5 Tf 0.016 0.471 0.341 rg 332.00 143.80 Td (Z on q[10], q[11]) Tj ET
+BT /F3 6.5 Tf 0.216 0.255 0.318 rg 446.00 143.80 Td (None \(0/4\)) Tj ET
+0.945 0.961 0.976 rg 208.50 122.00 315.00 16.50 re f
+BT /F3 6.8 Tf 0.059 0.090 0.165 rg 220.00 127.30 Td (0101) Tj ET
+BT /F3 6.4 Tf 0.118 0.251 0.686 rg 266.00 127.30 Td (10 \(0b1010\)) Tj ET
+BT /F3 6.5 Tf 0.016 0.471 0.341 rg 332.00 127.30 Td (Z on q[4], q[8]) Tj ET
+BT /F3 6.5 Tf 0.216 0.255 0.318 rg 446.00 127.30 Td (None \(0/4\)) Tj ET
+BT /F3 6.8 Tf 0.059 0.090 0.165 rg 220.00 110.80 Td (0110) Tj ET
+BT /F3 6.4 Tf 0.118 0.251 0.686 rg 266.00 110.80 Td ( 6 \(0b0110\)) Tj ET
+BT /F3 6.5 Tf 0.016 0.471 0.341 rg 332.00 110.80 Td (Z on q[0], q[13]) Tj ET
+BT /F3 6.5 Tf 0.216 0.255 0.318 rg 446.00 110.80 Td (None \(0/4\)) Tj ET
+0.945 0.961 0.976 rg 208.50 89.00 315.00 16.50 re f
+BT /F3 6.8 Tf 0.059 0.090 0.165 rg 220.00 94.30 Td (1001) Tj ET
+BT /F3 6.4 Tf 0.118 0.251 0.686 rg 266.00 94.30 Td ( 9 \(0b1001\)) Tj ET
+BT /F3 6.5 Tf 0.016 0.471 0.341 rg 332.00 94.30 Td (Z on q[2], q[15]) Tj ET
+BT /F3 6.5 Tf 0.216 0.255 0.318 rg 446.00 94.30 Td (None \(0/4\)) Tj ET
+BT /F3 6.8 Tf 0.059 0.090 0.165 rg 220.00 77.80 Td (1010) Tj ET
+BT /F3 6.4 Tf 0.118 0.251 0.686 rg 266.00 77.80 Td ( 5 \(0b0101\)) Tj ET
+BT /F3 6.5 Tf 0.016 0.471 0.341 rg 332.00 77.80 Td (Z on q[5], q[9]) Tj ET
+BT /F3 6.5 Tf 0.216 0.255 0.318 rg 446.00 77.80 Td (None \(0/4\)) Tj ET
+0.945 0.961 0.976 rg 208.50 56.00 315.00 16.50 re f
+BT /F3 6.8 Tf 0.059 0.090 0.165 rg 220.00 61.30 Td (1100) Tj ET
+BT /F3 6.4 Tf 0.118 0.251 0.686 rg 266.00 61.30 Td ( 3 \(0b0011\)) Tj ET
+BT /F3 6.5 Tf 0.016 0.471 0.341 rg 332.00 61.30 Td (Z on q[6], q[7]) Tj ET
+BT /F3 6.5 Tf 0.216 0.255 0.318 rg 446.00 61.30 Td (None \(0/4\)) Tj ET
+BT /F3 6.8 Tf 0.059 0.090 0.165 rg 220.00 44.80 Td (1111) Tj ET
+BT /F3 6.4 Tf 0.118 0.251 0.686 rg 266.00 44.80 Td (15 \(0b1111\)) Tj ET
+BT /F3 6.5 Tf 0.016 0.471 0.341 rg 332.00 44.80 Td (Z on q[2, 3, 14, 15]) Tj ET
+BT /F3 6.5 Tf 0.216 0.255 0.318 rg 446.00 44.80 Td (None \(0/4\)) Tj ET
+BT /F3 6.3 Tf 0.200 0.255 0.333 rg 216.00 24.00 Td (4 recycled ancillas \(24 Meas, 8 Reset\) do not add logical distance.) Tj ET
+Q
+BT /F6 8.0 Tf 0.070 0.090 0.150 rg 50.00 144.27 Td (Figure 1: \(a\) [[16, 2, 4]] toroidal Wen-plaquette lattice \(16 data qubits + 4 recycled ancillas, 24 Measure, 8 Reset\).) Tj ET
+BT /F6 8.0 Tf 0.070 0.090 0.150 rg 50.00 134.67 Td (\(b\) Audited 7-entry Round-2 LUT with BE->LE pytket condition encoding and zero Round-1 plaquette disturbance.) Tj ET
+0.82 0.85 0.89 RG 0.6 w 50 32 m 562 32 l S
+BT /F3 6.5 Tf 0.35 0.39 0.45 rg 50 21 Td (OSIRIS-QEC-002 \(osiris-qec v1.1.1\)  |  DOI: 10.5281/zenodo.24424726  |  HARDWARE-UNVALIDATED  |  Page 1 of 4) Tj ET
+endstream
+endobj
+9 0 obj
+<< /Type /Page /Parent 7 0 R /MediaBox [0 0 612.00 792.00] /Resources << /Font << /F1 1 0 R /F2 2 0 R /F3 3 0 R /F4 4 0 R /F5 5 0 R /F6 6 0 R >> >> /Contents 8 0 R >>
+endobj
+10 0 obj
+<< /Length 16798 >>
+stream
+1 1 1 rg 0 0 612 792 re f
+BT /F5 10.0 Tf 0.070 0.090 0.150 rg 50.00 746.00 Td (2. Exact 256-Branch Statevector Verification and Dual-Basis Aer Cross-Checks) Tj ET
+BT /F4 9.0 Tf 0.070 0.090 0.150 rg 50.00 733.00 Td (Independent lattice derivation \(qec_math.py, qec_verify.py\) confirms pairwise commutation across) Tj ET
+BT /F4 9.0 Tf 0.070 0.090 0.150 rg 50.00 721.60 Td (all 120 generator pairs, GF\(2\) rank 14 \(k = 2\), and zero nontrivial centralizer operators of) Tj ET
+BT /F4 9.0 Tf 0.070 0.090 0.150 rg 50.00 710.20 Td (weight <= 3 \(exact d = 4\). Negative tests verify detection of corrupted LUT entries, invalid) Tj ET
+BT /F4 9.0 Tf 0.070 0.090 0.150 rg 50.00 698.80 Td (stabilizer supports, and BE/LE endianness mismatches. Exhaustive non-sampled enumeration of all) Tj ET
+BT /F4 9.0 Tf 0.070 0.090 0.150 rg 50.00 687.40 Td (2^8 = 256 mid-circuit outcome trajectories proves 128 reachable even-parity branches \(1/128) Tj ET
+BT /F4 9.0 Tf 0.070 0.090 0.150 rg 50.00 676.00 Td (probability each\) land in the +1 codespace \(worst stabilizer expectation 0.9999999999999942,) Tj ET
+BT /F4 9.0 Tf 0.070 0.090 0.150 rg 50.00 664.60 Td (branch-to-branch fidelity 0.9999999999999885 to fixed |00>_L\) while 128 odd-parity branches have) Tj ET
+BT /F4 9.0 Tf 0.070 0.090 0.150 rg 50.00 653.20 Td (exact zero amplitude. Dual destructive readout runs on C++ Qiskit AerBackend confirm 0/512 X-basis) Tj ET
+BT /F4 9.0 Tf 0.070 0.090 0.150 rg 50.00 641.80 Td (and 0/256 Z-basis plaquette parity violations, complemented by deterministic Selene local dry-run) Tj ET
+BT /F4 9.0 Tf 0.070 0.090 0.150 rg 50.00 630.40 Td (validation \(osiris qec run --target selene\) exercising Reset semantics and all 8 even Round-2 LUT) Tj ET
+BT /F4 9.0 Tf 0.070 0.090 0.150 rg 50.00 619.00 Td (branches.) Tj ET
+BT /F5 10.0 Tf 0.070 0.090 0.150 rg 50.00 600.60 Td (3. Reproducible Monte Carlo Depolarizing Noise Benchmark) Tj ET
+BT /F4 9.0 Tf 0.070 0.090 0.150 rg 50.00 587.60 Td (benchmarks/qec_noise_benchmark.py evaluates circuit-level noise injecting single-qubit) Tj ET
+BT /F4 9.0 Tf 0.070 0.090 0.150 rg 50.00 576.20 Td (depolarizing error p after every 1Q gate, two-qubit depolarizing error p after every CX, classical) Tj ET
+BT /F4 9.0 Tf 0.070 0.090 0.150 rg 50.00 564.80 Td (bit-flip p on each recorded measurement bit, and depolarizing error p after each ancilla Reset) Tj ET
+BT /F4 9.0 Tf 0.070 0.090 0.150 rg 50.00 553.40 Td (across seeds {11, 22, 33} \(60 trajectories per seed = 180 trajectories per \(p, mode\) cell\). Figure) Tj ET
+BT /F4 9.0 Tf 0.070 0.090 0.150 rg 50.00 542.00 Td (2 and Table I contrast LUT feed-forward against the no-feed-forward baseline: at p = 1e-3, LUT) Tj ET
+BT /F4 9.0 Tf 0.070 0.090 0.150 rg 50.00 530.60 Td (feed-forward achieves mean logical fidelity 0.9056 \(codespace rate 0.9333\) versus 0.0056 without) Tj ET
+BT /F4 9.0 Tf 0.070 0.090 0.150 rg 50.00 519.20 Td (feed-forward.) Tj ET
+q 0.90741 0 0 0.90741 61.00 314.06 cm
+1 1 1 rg
+0 0 540.00 208.00 re f
+BT /F2 9.2 Tf 0.067 0.094 0.153 rg 31.08 193.00 Td (OSIRIS-QEC-002: Depolarizing + Readout/Reset Noise Benchmark \(Seeds 11, 22, 33; 180 Shots/Point\)) Tj ET
+BT /F2 7.8 Tf 0.067 0.094 0.153 rg 42.38 179.00 Td (\(a\) Logical State Fidelity vs. Physical Error Rate p) Tj ET
+0.90 w 0.980 0.980 0.980 rg 0.216 0.255 0.318 RG 46.00 30.00 216.00 142.00 re B
+q [5 3] 0 d 0.70 w 0.898 0.906 0.922 RG 46.00 30.00 m 262.00 30.00 l S Q
+BT /F3 6.4 Tf 0.216 0.255 0.318 rg 26.64 27.50 Td (0.00) Tj ET
+q [5 3] 0 d 0.70 w 0.898 0.906 0.922 RG 46.00 65.50 m 262.00 65.50 l S Q
+BT /F3 6.4 Tf 0.216 0.255 0.318 rg 26.64 63.00 Td (0.25) Tj ET
+q [5 3] 0 d 0.70 w 0.898 0.906 0.922 RG 46.00 101.00 m 262.00 101.00 l S Q
+BT /F3 6.4 Tf 0.216 0.255 0.318 rg 26.64 98.50 Td (0.50) Tj ET
+q [5 3] 0 d 0.70 w 0.898 0.906 0.922 RG 46.00 136.50 m 262.00 136.50 l S Q
+BT /F3 6.4 Tf 0.216 0.255 0.318 rg 26.64 134.00 Td (0.75) Tj ET
+q [5 3] 0 d 0.70 w 0.898 0.906 0.922 RG 46.00 172.00 m 262.00 172.00 l S Q
+BT /F3 6.4 Tf 0.216 0.255 0.318 rg 26.64 169.50 Td (1.00) Tj ET
+BT /F3 6.5 Tf 0.067 0.094 0.153 rg 66.05 19.00 Td (0) Tj ET
+q [] 0 d 1.00 w 0.145 0.388 0.922 RG 68.00 172.00 m 68.00 172.00 l S Q
+q [] 0 d 1.00 w 0.145 0.388 0.922 RG 65.00 172.00 m 71.00 172.00 l S Q
+q [] 0 d 1.00 w 0.145 0.388 0.922 RG 65.00 172.00 m 71.00 172.00 l S Q
+BT /F3 6.5 Tf 0.067 0.094 0.153 rg 106.20 19.00 Td (1e-4) Tj ET
+q [] 0 d 1.00 w 0.145 0.388 0.922 RG 114.00 172.00 m 114.00 168.25 l S Q
+q [] 0 d 1.00 w 0.145 0.388 0.922 RG 111.00 172.00 m 117.00 172.00 l S Q
+q [] 0 d 1.00 w 0.145 0.388 0.922 RG 111.00 168.25 m 117.00 168.25 l S Q
+BT /F3 6.5 Tf 0.067 0.094 0.153 rg 152.20 19.00 Td (1e-3) Tj ET
+q [] 0 d 1.00 w 0.145 0.388 0.922 RG 160.00 164.66 m 160.00 152.52 l S Q
+q [] 0 d 1.00 w 0.145 0.388 0.922 RG 157.00 164.66 m 163.00 164.66 l S Q
+q [] 0 d 1.00 w 0.145 0.388 0.922 RG 157.00 152.52 m 163.00 152.52 l S Q
+BT /F3 6.5 Tf 0.067 0.094 0.153 rg 198.20 19.00 Td (5e-3) Tj ET
+q [] 0 d 1.00 w 0.145 0.388 0.922 RG 206.00 130.69 m 206.00 110.76 l S Q
+q [] 0 d 1.00 w 0.145 0.388 0.922 RG 203.00 130.69 m 209.00 130.69 l S Q
+q [] 0 d 1.00 w 0.145 0.388 0.922 RG 203.00 110.76 m 209.00 110.76 l S Q
+BT /F3 6.5 Tf 0.067 0.094 0.153 rg 236.20 19.00 Td (1e-2) Tj ET
+q [] 0 d 1.00 w 0.145 0.388 0.922 RG 244.00 94.52 m 244.00 74.35 l S Q
+q [] 0 d 1.00 w 0.145 0.388 0.922 RG 241.00 94.52 m 247.00 94.52 l S Q
+q [] 0 d 1.00 w 0.145 0.388 0.922 RG 241.00 74.35 m 247.00 74.35 l S Q
+q [5 3] 0 d 1.20 w 0.612 0.639 0.686 RG 68.00 30.00 m 114.00 30.00 l S Q
+q [5 3] 0 d 1.20 w 0.612 0.639 0.686 RG 114.00 30.00 m 160.00 30.79 l S Q
+q [5 3] 0 d 1.20 w 0.612 0.639 0.686 RG 160.00 30.79 m 206.00 31.58 l S Q
+q [5 3] 0 d 1.20 w 0.612 0.639 0.686 RG 206.00 31.58 m 244.00 30.79 l S Q
+q [] 0 d 1.60 w 0.145 0.388 0.922 RG 68.00 172.00 m 114.00 170.42 l S Q
+q [] 0 d 1.60 w 0.145 0.388 0.922 RG 114.00 170.42 m 160.00 158.59 l S Q
+q [] 0 d 1.60 w 0.145 0.388 0.922 RG 160.00 158.59 m 206.00 120.72 l S Q
+q [] 0 d 1.60 w 0.145 0.388 0.922 RG 206.00 120.72 m 244.00 84.43 l S Q
+q 0.50 w 0.612 0.639 0.686 rg 1.000 1.000 1.000 RG 70.30 30.00 m 70.30 31.27 69.27 32.30 68.00 32.30 c 66.73 32.30 65.70 31.27 65.70 30.00 c 65.70 28.73 66.73 27.70 68.00 27.70 c 69.27 27.70 70.30 28.73 70.30 30.00 c B Q
+q 0.50 w 0.612 0.639 0.686 rg 1.000 1.000 1.000 RG 116.30 30.00 m 116.30 31.27 115.27 32.30 114.00 32.30 c 112.73 32.30 111.70 31.27 111.70 30.00 c 111.70 28.73 112.73 27.70 114.00 27.70 c 115.27 27.70 116.30 28.73 116.30 30.00 c B Q
+q 0.50 w 0.612 0.639 0.686 rg 1.000 1.000 1.000 RG 162.30 30.79 m 162.30 32.06 161.27 33.09 160.00 33.09 c 158.73 33.09 157.70 32.06 157.70 30.79 c 157.70 29.52 158.73 28.49 160.00 28.49 c 161.27 28.49 162.30 29.52 162.30 30.79 c B Q
+q 0.50 w 0.612 0.639 0.686 rg 1.000 1.000 1.000 RG 208.30 31.58 m 208.30 32.85 207.27 33.88 206.00 33.88 c 204.73 33.88 203.70 32.85 203.70 31.58 c 203.70 30.31 204.73 29.28 206.00 29.28 c 207.27 29.28 208.30 30.31 208.30 31.58 c B Q
+q 0.50 w 0.612 0.639 0.686 rg 1.000 1.000 1.000 RG 246.30 30.79 m 246.30 32.06 245.27 33.09 244.00 33.09 c 242.73 33.09 241.70 32.06 241.70 30.79 c 241.70 29.52 242.73 28.49 244.00 28.49 c 245.27 28.49 246.30 29.52 246.30 30.79 c B Q
+q 0.60 w 0.145 0.388 0.922 rg 1.000 1.000 1.000 RG 70.80 172.00 m 70.80 173.55 69.55 174.80 68.00 174.80 c 66.45 174.80 65.20 173.55 65.20 172.00 c 65.20 170.45 66.45 169.20 68.00 169.20 c 69.55 169.20 70.80 170.45 70.80 172.00 c B Q
+q 0.60 w 0.145 0.388 0.922 rg 1.000 1.000 1.000 RG 116.80 170.42 m 116.80 171.97 115.55 173.22 114.00 173.22 c 112.45 173.22 111.20 171.97 111.20 170.42 c 111.20 168.88 112.45 167.62 114.00 167.62 c 115.55 167.62 116.80 168.88 116.80 170.42 c B Q
+q 0.60 w 0.145 0.388 0.922 rg 1.000 1.000 1.000 RG 162.80 158.59 m 162.80 160.14 161.55 161.39 160.00 161.39 c 158.45 161.39 157.20 160.14 157.20 158.59 c 157.20 157.04 158.45 155.79 160.00 155.79 c 161.55 155.79 162.80 157.04 162.80 158.59 c B Q
+q 0.60 w 0.145 0.388 0.922 rg 1.000 1.000 1.000 RG 208.80 120.72 m 208.80 122.27 207.55 123.52 206.00 123.52 c 204.45 123.52 203.20 122.27 203.20 120.72 c 203.20 119.18 204.45 117.92 206.00 117.92 c 207.55 117.92 208.80 119.18 208.80 120.72 c B Q
+q 0.60 w 0.145 0.388 0.922 rg 1.000 1.000 1.000 RG 246.80 84.43 m 246.80 85.98 245.55 87.23 244.00 87.23 c 242.45 87.23 241.20 85.98 241.20 84.43 c 241.20 82.89 242.45 81.63 244.00 81.63 c 245.55 81.63 246.80 82.89 246.80 84.43 c B Q
+0.60 w 1.000 1.000 1.000 rg 0.796 0.835 0.882 RG 54.00 46.00 136.00 23.00 re B
+q [] 0 d 1.60 w 0.145 0.388 0.922 RG 59.00 62.00 m 71.00 62.00 l S Q
+BT /F2 6.3 Tf 0.145 0.388 0.922 rg 75.00 59.70 Td (With LUT feed-forward) Tj ET
+q [5 3] 0 d 1.20 w 0.420 0.447 0.502 RG 59.00 50.00 m 71.00 50.00 l S Q
+BT /F1 6.2 Tf 0.294 0.333 0.388 rg 75.00 47.70 Td (No feed-forward \(~0.00-0.01\)) Tj ET
+BT /F2 7.8 Tf 0.067 0.094 0.153 rg 294.18 179.00 Td (\(b\) Codespace Correction Rate vs. Physical Error Rate p) Tj ET
+0.90 w 0.980 0.980 0.980 rg 0.216 0.255 0.318 RG 304.00 30.00 216.00 142.00 re B
+q [5 3] 0 d 0.70 w 0.898 0.906 0.922 RG 304.00 30.00 m 520.00 30.00 l S Q
+BT /F3 6.4 Tf 0.216 0.255 0.318 rg 284.64 27.50 Td (0.00) Tj ET
+q [5 3] 0 d 0.70 w 0.898 0.906 0.922 RG 304.00 65.50 m 520.00 65.50 l S Q
+BT /F3 6.4 Tf 0.216 0.255 0.318 rg 284.64 63.00 Td (0.25) Tj ET
+q [5 3] 0 d 0.70 w 0.898 0.906 0.922 RG 304.00 101.00 m 520.00 101.00 l S Q
+BT /F3 6.4 Tf 0.216 0.255 0.318 rg 284.64 98.50 Td (0.50) Tj ET
+q [5 3] 0 d 0.70 w 0.898 0.906 0.922 RG 304.00 136.50 m 520.00 136.50 l S Q
+BT /F3 6.4 Tf 0.216 0.255 0.318 rg 284.64 134.00 Td (0.75) Tj ET
+q [5 3] 0 d 0.70 w 0.898 0.906 0.922 RG 304.00 172.00 m 520.00 172.00 l S Q
+BT /F3 6.4 Tf 0.216 0.255 0.318 rg 284.64 169.50 Td (1.00) Tj ET
+BT /F3 6.5 Tf 0.067 0.094 0.153 rg 324.05 19.00 Td (0) Tj ET
+q [] 0 d 1.00 w 0.020 0.588 0.412 RG 326.00 172.00 m 326.00 172.00 l S Q
+q [] 0 d 1.00 w 0.020 0.588 0.412 RG 323.00 172.00 m 329.00 172.00 l S Q
+q [] 0 d 1.00 w 0.020 0.588 0.412 RG 323.00 172.00 m 329.00 172.00 l S Q
+BT /F3 6.5 Tf 0.067 0.094 0.153 rg 364.20 19.00 Td (1e-4) Tj ET
+q [] 0 d 1.00 w 0.020 0.588 0.412 RG 372.00 172.00 m 372.00 169.67 l S Q
+q [] 0 d 1.00 w 0.020 0.588 0.412 RG 369.00 172.00 m 375.00 172.00 l S Q
+q [] 0 d 1.00 w 0.020 0.588 0.412 RG 369.00 169.67 m 375.00 169.67 l S Q
+BT /F3 6.5 Tf 0.067 0.094 0.153 rg 410.20 19.00 Td (1e-3) Tj ET
+q [] 0 d 1.00 w 0.020 0.588 0.412 RG 418.00 167.71 m 418.00 157.36 l S Q
+q [] 0 d 1.00 w 0.020 0.588 0.412 RG 415.00 167.71 m 421.00 167.71 l S Q
+q [] 0 d 1.00 w 0.020 0.588 0.412 RG 415.00 157.36 m 421.00 157.36 l S Q
+BT /F3 6.5 Tf 0.067 0.094 0.153 rg 456.20 19.00 Td (5e-3) Tj ET
+q [] 0 d 1.00 w 0.020 0.588 0.412 RG 464.00 142.58 m 464.00 124.11 l S Q
+q [] 0 d 1.00 w 0.020 0.588 0.412 RG 461.00 142.58 m 467.00 142.58 l S Q
+q [] 0 d 1.00 w 0.020 0.588 0.412 RG 461.00 124.11 m 467.00 124.11 l S Q
+BT /F3 6.5 Tf 0.067 0.094 0.153 rg 494.20 19.00 Td (1e-2) Tj ET
+q [] 0 d 1.00 w 0.020 0.588 0.412 RG 502.00 118.42 m 502.00 97.78 l S Q
+q [] 0 d 1.00 w 0.020 0.588 0.412 RG 499.00 118.42 m 505.00 118.42 l S Q
+q [] 0 d 1.00 w 0.020 0.588 0.412 RG 499.00 97.78 m 505.00 97.78 l S Q
+q [5 3] 0 d 1.20 w 0.612 0.639 0.686 RG 326.00 30.00 m 372.00 30.00 l S Q
+q [5 3] 0 d 1.20 w 0.612 0.639 0.686 RG 372.00 30.00 m 418.00 30.79 l S Q
+q [5 3] 0 d 1.20 w 0.612 0.639 0.686 RG 418.00 30.79 m 464.00 33.16 l S Q
+q [5 3] 0 d 1.20 w 0.612 0.639 0.686 RG 464.00 33.16 m 502.00 30.79 l S Q
+q [] 0 d 1.60 w 0.020 0.588 0.412 RG 326.00 172.00 m 372.00 171.21 l S Q
+q [] 0 d 1.60 w 0.020 0.588 0.412 RG 372.00 171.21 m 418.00 162.53 l S Q
+q [] 0 d 1.60 w 0.020 0.588 0.412 RG 418.00 162.53 m 464.00 133.34 l S Q
+q [] 0 d 1.60 w 0.020 0.588 0.412 RG 464.00 133.34 m 502.00 108.10 l S Q
+q 0.50 w 0.612 0.639 0.686 rg 1.000 1.000 1.000 RG 328.30 30.00 m 328.30 31.27 327.27 32.30 326.00 32.30 c 324.73 32.30 323.70 31.27 323.70 30.00 c 323.70 28.73 324.73 27.70 326.00 27.70 c 327.27 27.70 328.30 28.73 328.30 30.00 c B Q
+q 0.50 w 0.612 0.639 0.686 rg 1.000 1.000 1.000 RG 374.30 30.00 m 374.30 31.27 373.27 32.30 372.00 32.30 c 370.73 32.30 369.70 31.27 369.70 30.00 c 369.70 28.73 370.73 27.70 372.00 27.70 c 373.27 27.70 374.30 28.73 374.30 30.00 c B Q
+q 0.50 w 0.612 0.639 0.686 rg 1.000 1.000 1.000 RG 420.30 30.79 m 420.30 32.06 419.27 33.09 418.00 33.09 c 416.73 33.09 415.70 32.06 415.70 30.79 c 415.70 29.52 416.73 28.49 418.00 28.49 c 419.27 28.49 420.30 29.52 420.30 30.79 c B Q
+q 0.50 w 0.612 0.639 0.686 rg 1.000 1.000 1.000 RG 466.30 33.16 m 466.30 34.43 465.27 35.46 464.00 35.46 c 462.73 35.46 461.70 34.43 461.70 33.16 c 461.70 31.89 462.73 30.86 464.00 30.86 c 465.27 30.86 466.30 31.89 466.30 33.16 c B Q
+q 0.50 w 0.612 0.639 0.686 rg 1.000 1.000 1.000 RG 504.30 30.79 m 504.30 32.06 503.27 33.09 502.00 33.09 c 500.73 33.09 499.70 32.06 499.70 30.79 c 499.70 29.52 500.73 28.49 502.00 28.49 c 503.27 28.49 504.30 29.52 504.30 30.79 c B Q
+q 0.60 w 0.020 0.588 0.412 rg 1.000 1.000 1.000 RG 328.80 172.00 m 328.80 173.55 327.55 174.80 326.00 174.80 c 324.45 174.80 323.20 173.55 323.20 172.00 c 323.20 170.45 324.45 169.20 326.00 169.20 c 327.55 169.20 328.80 170.45 328.80 172.00 c B Q
+q 0.60 w 0.020 0.588 0.412 rg 1.000 1.000 1.000 RG 374.80 171.21 m 374.80 172.76 373.55 174.01 372.00 174.01 c 370.45 174.01 369.20 172.76 369.20 171.21 c 369.20 169.66 370.45 168.41 372.00 168.41 c 373.55 168.41 374.80 169.66 374.80 171.21 c B Q
+q 0.60 w 0.020 0.588 0.412 rg 1.000 1.000 1.000 RG 420.80 162.53 m 420.80 164.08 419.55 165.33 418.00 165.33 c 416.45 165.33 415.20 164.08 415.20 162.53 c 415.20 160.99 416.45 159.73 418.00 159.73 c 419.55 159.73 420.80 160.99 420.80 162.53 c B Q
+q 0.60 w 0.020 0.588 0.412 rg 1.000 1.000 1.000 RG 466.80 133.34 m 466.80 134.89 465.55 136.14 464.00 136.14 c 462.45 136.14 461.20 134.89 461.20 133.34 c 461.20 131.80 462.45 130.54 464.00 130.54 c 465.55 130.54 466.80 131.80 466.80 133.34 c B Q
+q 0.60 w 0.020 0.588 0.412 rg 1.000 1.000 1.000 RG 504.80 108.10 m 504.80 109.65 503.55 110.90 502.00 110.90 c 500.45 110.90 499.20 109.65 499.20 108.10 c 499.20 106.55 500.45 105.30 502.00 105.30 c 503.55 105.30 504.80 106.55 504.80 108.10 c B Q
+0.60 w 1.000 1.000 1.000 rg 0.796 0.835 0.882 RG 312.00 46.00 136.00 23.00 re B
+q [] 0 d 1.60 w 0.020 0.588 0.412 RG 317.00 62.00 m 329.00 62.00 l S Q
+BT /F2 6.3 Tf 0.020 0.588 0.412 rg 333.00 59.70 Td (With LUT feed-forward) Tj ET
+q [5 3] 0 d 1.20 w 0.420 0.447 0.502 RG 317.00 50.00 m 329.00 50.00 l S Q
+BT /F1 6.2 Tf 0.294 0.333 0.388 rg 333.00 47.70 Td (No feed-forward \(~0.00-0.01\)) Tj ET
+BT /F1 6.8 Tf 0.216 0.255 0.318 rg 83.00 8.00 Td (Physical error rate p \(1Q/2Q depolarizing + measurement bit-flip + reset depolarizing; HARDWARE-UNVALIDATED\)) Tj ET
+Q
+BT /F6 8.0 Tf 0.070 0.090 0.150 rg 50.00 306.06 Td (Figure 2: Monte Carlo statevector trajectory benchmark across p in {0, 1e-4, 1e-3, 5e-3, 1e-2} \(seeds 11, 22, 33; 180 shots) Tj ET
+BT /F6 8.0 Tf 0.070 0.090 0.150 rg 50.00 296.26 Td (per point\) comparing LUT feed-forward against no-feed-forward control for \(a\) logical state fidelity and \(b\) codespace rate.) Tj ET
+BT /F3 7.2 Tf 0.070 0.090 0.150 rg 50.00 279.46 Td (Table I: Pooled Noisy State-Preparation Benchmark \(Seeds 11, 22, 33; 180 Trajectories/Cell; Simulation Only\)) Tj ET
+BT /F3 7.2 Tf 0.070 0.090 0.150 rg 50.00 269.86 Td (------------------------------------------------------------------------------------------------------------) Tj ET
+BT /F3 7.2 Tf 0.070 0.090 0.150 rg 50.00 260.26 Td (Noise Rate p    Shots   FF Logical Fidelity \(95% CI\)   FF Codespace Rate \(95% CI\)   No-FF Logical Fidelity) Tj ET
+BT /F3 7.2 Tf 0.070 0.090 0.150 rg 50.00 250.66 Td (------------------------------------------------------------------------------------------------------------) Tj ET
+BT /F3 7.2 Tf 0.070 0.090 0.150 rg 50.00 241.06 Td (0               180     1.0000 +/- 0.0000              1.0000 +/- 0.0000            0.0000) Tj ET
+BT /F3 7.2 Tf 0.070 0.090 0.150 rg 50.00 231.46 Td (0.0001          180     0.9889 +/- 0.0153              0.9944 +/- 0.0109            0.0000) Tj ET
+BT /F3 7.2 Tf 0.070 0.090 0.150 rg 50.00 221.86 Td (0.001           180     0.9056 +/- 0.0427              0.9333 +/- 0.0364            0.0056) Tj ET
+BT /F3 7.2 Tf 0.070 0.090 0.150 rg 50.00 212.26 Td (0.005           180     0.6389 +/- 0.0702              0.7278 +/- 0.0650            0.0111) Tj ET
+BT /F3 7.2 Tf 0.070 0.090 0.150 rg 50.00 202.66 Td (0.01            180     0.3833 +/- 0.0710              0.5500 +/- 0.0727            0.0056) Tj ET
+BT /F3 7.2 Tf 0.070 0.090 0.150 rg 50.00 193.06 Td (------------------------------------------------------------------------------------------------------------) Tj ET
+0.82 0.85 0.89 RG 0.6 w 50 32 m 562 32 l S
+BT /F3 6.5 Tf 0.35 0.39 0.45 rg 50 21 Td (OSIRIS-QEC-002 \(osiris-qec v1.1.1\)  |  DOI: 10.5281/zenodo.24424726  |  HARDWARE-UNVALIDATED  |  Page 2 of 4) Tj ET
+endstream
+endobj
+11 0 obj
+<< /Type /Page /Parent 7 0 R /MediaBox [0 0 612.00 792.00] /Resources << /Font << /F1 1 0 R /F2 2 0 R /F3 3 0 R /F4 4 0 R /F5 5 0 R /F6 6 0 R >> >> /Contents 10 0 R >>
+endobj
+12 0 obj
+<< /Length 9017 >>
+stream
+1 1 1 rg 0 0 612 792 re f
+BT /F5 10.0 Tf 0.070 0.090 0.150 rg 50.00 748.00 Td (4. Complete 16/16 Pre- & Post-Preparation Fault Taxonomy \(State Preparation != Memory\)) Tj ET
+BT /F4 9.0 Tf 0.070 0.090 0.150 rg 50.00 735.00 Td (OSIRIS-QEC-002 strictly separates pre-preparation fault tolerance from post-preparation memory) Tj ET
+BT /F4 9.0 Tf 0.070 0.090 0.150 rg 50.00 723.60 Td (claims. Weight-1 Z faults injected before Round 1 on any of the 16 data qubits are corrected 16/16) Tj ET
+BT /F4 9.0 Tf 0.070 0.090 0.150 rg 50.00 712.20 Td (times \(fidelity 1.0000\), whereas pre-preparation X and Y faults flip unmeasured Z stabilizers) Tj ET
+BT /F4 9.0 Tf 0.070 0.090 0.150 rg 50.00 700.80 Td (\(0/32 corrected\). Expanding post-preparation Y-fault validation across all 16/16 data qubits) Tj ET
+BT /F4 9.0 Tf 0.070 0.090 0.150 rg 50.00 689.40 Td (q[0..15] \(tests/test_y_error_sweep.py, reports/POST_PREP_Y_SWEEP_V1_1.json\) confirms a sharp) Tj ET
+BT /F4 9.0 Tf 0.070 0.090 0.150 rg 50.00 678.00 Td (negative result: every post-preparation Y fault excites two X-plaquettes and two unmeasured) Tj ET
+BT /F4 9.0 Tf 0.070 0.090 0.150 rg 50.00 666.60 Td (Z-plaquettes \(16/16 partially detected via X readout\) yet 0/16 preserve the logical state) Tj ET
+BT /F4 9.0 Tf 0.070 0.090 0.150 rg 50.00 655.20 Td (\(fidelity 0.0000\), matching post-preparation Z faults \(16/16 detected, 0/16 corrected; Fig. 3a,) Tj ET
+BT /F4 9.0 Tf 0.070 0.090 0.150 rg 50.00 643.80 Td (Table II\).) Tj ET
+q 0.90741 0 0 0.90741 61.00 438.66 cm
+1 1 1 rg
+0 0 540.00 208.00 re f
+BT /F2 9.1 Tf 0.067 0.094 0.153 rg 72.26 193.00 Td (OSIRIS-QEC-002: Pre/Post-Prep Taxonomy \(16/16 Y Sweep: 0/16 Preserved\) & H2 Lock) Tj ET
+BT /F2 7.6 Tf 0.067 0.094 0.153 rg 53.30 179.00 Td (\(a\) Pauli Injection \(State Prep != QEC Memory\)) Tj ET
+0.90 w 0.980 0.980 0.980 rg 0.216 0.255 0.318 RG 42.00 34.00 224.00 138.00 re B
+q [5 3] 0 d 0.70 w 0.898 0.906 0.922 RG 42.00 34.00 m 266.00 34.00 l S Q
+BT /F3 6.4 Tf 0.067 0.094 0.153 rg 30.32 31.50 Td (0%) Tj ET
+q [5 3] 0 d 0.70 w 0.898 0.906 0.922 RG 42.00 103.00 m 266.00 103.00 l S Q
+BT /F3 6.4 Tf 0.067 0.094 0.153 rg 26.48 100.50 Td (50%) Tj ET
+q [5 3] 0 d 0.70 w 0.898 0.906 0.922 RG 42.00 172.00 m 266.00 172.00 l S Q
+BT /F3 6.4 Tf 0.067 0.094 0.153 rg 22.64 169.50 Td (100%) Tj ET
+0.70 w 0.961 0.620 0.043 rg 0.573 0.251 0.055 RG 49.67 34.00 10.00 138.00 re B
+0.70 w 0.020 0.588 0.412 rg 0.024 0.373 0.275 RG 61.67 34.00 10.00 138.00 re B
+BT /F3 6.1 Tf 0.067 0.094 0.153 rg 51.52 23.00 Td (Pre Z) Tj ET
+0.70 w 0.961 0.620 0.043 rg 0.573 0.251 0.055 RG 87.00 34.00 10.00 0.00 re B
+0.70 w 0.020 0.588 0.412 rg 0.024 0.373 0.275 RG 99.00 34.00 10.00 0.00 re B
+BT /F3 6.1 Tf 0.067 0.094 0.153 rg 88.85 23.00 Td (Pre X) Tj ET
+0.70 w 0.961 0.620 0.043 rg 0.573 0.251 0.055 RG 124.33 34.00 10.00 0.00 re B
+0.70 w 0.020 0.588 0.412 rg 0.024 0.373 0.275 RG 136.33 34.00 10.00 0.00 re B
+BT /F3 6.1 Tf 0.067 0.094 0.153 rg 126.18 23.00 Td (Pre Y) Tj ET
+0.70 w 0.961 0.620 0.043 rg 0.573 0.251 0.055 RG 161.67 34.00 10.00 138.00 re B
+0.70 w 0.020 0.588 0.412 rg 0.024 0.373 0.275 RG 173.67 34.00 10.00 0.00 re B
+BT /F3 6.1 Tf 0.067 0.094 0.153 rg 161.69 23.00 Td (Post Z) Tj ET
+0.70 w 0.961 0.620 0.043 rg 0.573 0.251 0.055 RG 199.00 34.00 10.00 0.00 re B
+0.70 w 0.020 0.588 0.412 rg 0.024 0.373 0.275 RG 211.00 34.00 10.00 0.00 re B
+BT /F3 6.1 Tf 0.067 0.094 0.153 rg 199.02 23.00 Td (Post X) Tj ET
+0.70 w 0.961 0.620 0.043 rg 0.573 0.251 0.055 RG 236.33 34.00 10.00 138.00 re B
+0.70 w 0.020 0.588 0.412 rg 0.024 0.373 0.275 RG 248.33 34.00 10.00 0.00 re B
+BT /F3 6.1 Tf 0.067 0.094 0.153 rg 236.35 23.00 Td (Post Y) Tj ET
+0.60 w 1.000 1.000 1.000 rg 0.796 0.835 0.882 RG 82.00 144.00 82.00 21.00 re B
+0.60 w 0.961 0.620 0.043 rg 0.573 0.251 0.055 RG 86.00 156.50 7.00 5.50 re B
+BT /F1 5.9 Tf 0.067 0.094 0.153 rg 96.00 157.00 Td (X-Syndrome Detected) Tj ET
+0.60 w 0.020 0.588 0.412 rg 0.024 0.373 0.275 RG 86.00 147.50 7.00 5.50 re B
+BT /F1 5.9 Tf 0.067 0.094 0.153 rg 96.00 148.00 Td (Codespace Corrected) Tj ET
+BT /F1 6.3 Tf 0.216 0.255 0.318 rg 57.92 10.00 Td (Post-prep Z \(16/16\) & Y \(16/16\) detected, 0/32 preserved.) Tj ET
+BT /F2 7.8 Tf 0.067 0.094 0.153 rg 313.05 179.00 Td (\(b\) Hash-Locked H2-1 ISA & 95% Wilson Gate) Tj ET
+0.90 w 0.973 0.980 0.988 rg 0.200 0.255 0.333 RG 284.00 20.00 240.00 152.00 re B
+BT /F3 6.5 Tf 0.059 0.090 0.165 rg 292.00 159.00 Td (Frozen H2-1 ISA \(depth 19, opt_level=0 lock\):) Tj ET
+BT /F3 6.2 Tf 0.118 0.251 0.686 rg 292.00 148.00 Td (ZZPhase:32 PhasedX:72 Rz:20 Cond:20 Meas:24 Rst:8) Tj ET
+q [] 0 d 0.80 w 0.796 0.835 0.882 RG 290.00 142.00 m 518.00 142.00 l S Q
+BT /F3 6.3 Tf 0.067 0.094 0.153 rg 292.00 131.00 Td (Shots/Basis   Min Pass \(k\)   Max Fail   Wilson LCB) Tj ET
+BT /F3 6.3 Tf 0.016 0.471 0.341 rg 292.00 119.00 Td (512           512            0          0.9925) Tj ET
+BT /F3 6.3 Tf 0.016 0.471 0.341 rg 292.00 104.50 Td (1000          997            3          0.9912) Tj ET
+BT /F3 6.3 Tf 0.016 0.471 0.341 rg 292.00 90.00 Td (2000          1989           11         0.9902) Tj ET
+BT /F3 6.3 Tf 0.016 0.471 0.341 rg 292.00 75.50 Td (5000          4964           36         0.9900) Tj ET
+BT /F3 6.3 Tf 0.016 0.471 0.341 rg 292.00 61.00 Td (10000         9920           80         0.9900) Tj ET
+q [] 0 d 0.80 w 0.796 0.835 0.882 RG 290.00 46.00 m 518.00 46.00 l S Q
+BT /F3 6.0 Tf 0.573 0.251 0.055 rg 292.00 35.00 Td (rfc8785==0.1.4 WAL + Retry-After/jitter transport) Tj ET
+BT /F3 6.1 Tf 0.725 0.110 0.110 rg 292.00 25.00 Td (Status: HARDWARE-UNVALIDATED \(fail-closed gate\)) Tj ET
+Q
+BT /F6 8.0 Tf 0.070 0.090 0.150 rg 50.00 430.66 Td (Figure 3: \(a\) Single-qubit Z/X/Y injection before vs. after preparation including the complete 16/16 post-prep Y sweep.) Tj ET
+BT /F6 8.0 Tf 0.070 0.090 0.150 rg 50.00 420.86 Td (\(b\) Hash-locked H2-1 ISA compilation profile \(optimisation_level=0\) and frozen 95% Wilson \(>0.99\) acceptance thresholds.) Tj ET
+BT /F3 7.2 Tf 0.070 0.090 0.150 rg 50.00 404.06 Td (Table II: Pre- vs. Post-Preparation Fault Classification \(POST_PREP_INJECTION.json & POST_PREP_Y_SWEEP_V1_1.json\)) Tj ET
+BT /F3 7.2 Tf 0.070 0.090 0.150 rg 50.00 394.46 Td (------------------------------------------------------------------------------------------------------------) Tj ET
+BT /F3 7.2 Tf 0.070 0.090 0.150 rg 50.00 384.86 Td (Fault Class & Timing          Cases   X-Syndrome Detected   Logical Preserved     Operational Classification) Tj ET
+BT /F3 7.2 Tf 0.070 0.090 0.150 rg 50.00 375.26 Td (------------------------------------------------------------------------------------------------------------) Tj ET
+BT /F3 7.2 Tf 0.070 0.090 0.150 rg 50.00 365.66 Td (Weight-1 Z BEFORE prep         16     16 / 16 \(100%\)        16 / 16 \(fid = 1.0\)   Corrected by 2-round LUT) Tj ET
+BT /F3 7.2 Tf 0.070 0.090 0.150 rg 50.00 356.06 Td (Weight-1 X or Y BEFORE prep    32      0 / 32 \(Z unmeas.\)    0 / 32 \(fid = 0.0\)   Undetected / uncorrected) Tj ET
+BT /F3 7.2 Tf 0.070 0.090 0.150 rg 50.00 346.46 Td (Weight-1 Z AFTER prep          16     16 / 16 \(2 X-plaq\)     0 / 16 \(fid < 1e-3\)  Detectable, NOT corrected) Tj ET
+BT /F3 7.2 Tf 0.070 0.090 0.150 rg 50.00 336.86 Td (Weight-1 X AFTER prep           3      0 / 3  \(X synd = 0\)   0 / 3  \(2 Z-plaq\)    Undetected \(Z unmeasured\)) Tj ET
+BT /F3 7.2 Tf 0.070 0.090 0.150 rg 50.00 327.26 Td (Weight-1 Y AFTER prep \(16/16\)  16     16 / 16 \(2 X-plaq\)     0 / 16 \(fid = 0.0\)   Partially detected, 0% pres) Tj ET
+BT /F3 7.2 Tf 0.070 0.090 0.150 rg 50.00 317.66 Td (------------------------------------------------------------------------------------------------------------) Tj ET
+BT /F5 10.0 Tf 0.070 0.090 0.150 rg 50.00 300.06 Td (5. Fail-Closed Hash Gate, Pinned RFC 8785 WAL, and Retry-After/Jitter Transport) Tj ET
+BT /F4 8.9 Tf 0.070 0.090 0.150 rg 50.00 287.26 Td (Compilation and execution enforce a preregistered artifact lock: before any QNexus upload \(osiris) Tj ET
+BT /F4 8.9 Tf 0.070 0.090 0.150 rg 50.00 276.06 Td (qec run --target h2-1\), osiris_cli verifies pre-compile SHA-256 \(b86aeabd70eecb7f5f...\) and) Tj ET
+BT /F4 8.9 Tf 0.070 0.090 0.150 rg 50.00 264.86 Td (offline H2-1 ISA SHA-256 \(02d5cb72849f9b473c..., depth 19, 32 ZZPhase\), flushes an IETF RFC 8785) Tj ET
+BT /F4 8.9 Tf 0.070 0.090 0.150 rg 50.00 253.66 Td (write-ahead record serialized exclusively via rfc8785==0.1.4 \(no stdlib json fallback,) Tj ET
+BT /F4 8.9 Tf 0.070 0.090 0.150 rg 50.00 242.46 Td (guaranteeing cross-language IEEE-754 float determinism\), compiles under optimisation_level=0) Tj ET
+BT /F4 8.9 Tf 0.070 0.090 0.150 rg 50.00 231.26 Td (\(no_opt=True\) with Retry-After and +/-25% jittered backoff, and re-verifies the compiled ISA) Tj ET
+BT /F4 8.9 Tf 0.070 0.090 0.150 rg 50.00 220.06 Td (SHA-256 prior to start_execute_job \(aborting EXIT 1 on any drift\).) Tj ET
+0.82 0.85 0.89 RG 0.6 w 50 32 m 562 32 l S
+BT /F3 6.5 Tf 0.35 0.39 0.45 rg 50 21 Td (OSIRIS-QEC-002 \(osiris-qec v1.1.1\)  |  DOI: 10.5281/zenodo.24424726  |  HARDWARE-UNVALIDATED  |  Page 3 of 4) Tj ET
+endstream
+endobj
+13 0 obj
+<< /Type /Page /Parent 7 0 R /MediaBox [0 0 612.00 792.00] /Resources << /Font << /F1 1 0 R /F2 2 0 R /F3 3 0 R /F4 4 0 R /F5 5 0 R /F6 6 0 R >> >> /Contents 12 0 R >>
+endobj
+14 0 obj
+<< /Length 5931 >>
+stream
+1 1 1 rg 0 0 612 792 re f
+BT /F3 7.1 Tf 0.070 0.090 0.150 rg 50.00 746.00 Td (Table III: Frozen Statistical Acceptance Gate \(95% Wilson Lower Bound > 0.99, z = 1.959964, Per Basis\)) Tj ET
+BT /F3 7.1 Tf 0.070 0.090 0.150 rg 50.00 736.10 Td (------------------------------------------------------------------------------------------------------------) Tj ET
+BT /F3 7.1 Tf 0.070 0.090 0.150 rg 50.00 726.20 Td (Target Stage      Device   Shots / Basis \(X & Z indep.\)   Min Passing Shots   Max Parity Violations   Cost) Tj ET
+BT /F3 7.1 Tf 0.070 0.090 0.150 rg 50.00 716.30 Td (------------------------------------------------------------------------------------------------------------) Tj ET
+BT /F3 7.1 Tf 0.070 0.090 0.150 rg 50.00 706.40 Td (Local Dry-Run     Selene   1,000 \(deterministic local\)    1,000 \(LB=0.9962\)   0 \(Reset + LUT check\)   0 HQC) Tj ET
+BT /F3 7.1 Tf 0.070 0.090 0.150 rg 50.00 696.50 Td (Gate 1 \(Syntax\)   H2-1SC   1 \(compile + ISA hash check\)   ISA SHA-256 exact   0 syntax/hash errors    0 HQC) Tj ET
+BT /F3 7.1 Tf 0.070 0.090 0.150 rg 50.00 686.60 Td (Gate 2 \(Emul.\)    H2-1E    1,000 / 2,000 / 5,000 / 10k    997 / 1989 / 4964   3 / 11 / 36 \(80 @ 10k\)  HQC) Tj ET
+BT /F3 7.1 Tf 0.070 0.090 0.150 rg 50.00 676.70 Td (Gate 3 \(QPU\)      H2-1     512 / 1,000 / 5,000 / 10,000   512 / 997 / 4,964   0 / 3 / 36 \(80 @ 10k\)   HQC) Tj ET
+BT /F3 7.1 Tf 0.070 0.090 0.150 rg 50.00 666.80 Td (------------------------------------------------------------------------------------------------------------) Tj ET
+BT /F5 10.0 Tf 0.070 0.090 0.150 rg 50.00 647.90 Td (6. Audited Claim Matrix \(22 Claims: 15 VERIFIED, 5 REFUTED, 2 BLOCKED/UNVERIFIED\)) Tj ET
+BT /F4 8.9 Tf 0.070 0.090 0.150 rg 50.00 634.90 Td (* VERIFIED: Preparation-only & register-collision pass contract; metadata normalization & v1.0.0==v1.1.1 SHA-256) Tj ET
+BT /F4 8.9 Tf 0.070 0.090 0.150 rg 50.00 623.30 Td (  parity; independent 4x4 checkerboard symplectic derivation \([[16, 2, 4]]\); 7-entry LUT & BE->LE condition_bits;) Tj ET
+BT /F4 8.9 Tf 0.070 0.090 0.150 rg 50.00 611.70 Td (  exact 128/128 reachable codespace landing \(worst <S> = 0.9999999999999942\); dual-basis Aer C++ cross-checks;) Tj ET
+BT /F4 8.9 Tf 0.070 0.090 0.150 rg 50.00 600.10 Td (  16/16 pre-prep Z correction; 16/16 post-prep Z & 16/16 post-prep Y negative-preservation sweep; pinned rfc8785) Tj ET
+BT /F4 8.9 Tf 0.070 0.090 0.150 rg 50.00 588.50 Td (  JCS ledger; fail-closed QNexus opt_level=0 pre/post-compile hash gate with Retry-After + jittered backoff.) Tj ET
+BT /F4 8.9 Tf 0.070 0.090 0.150 rg 50.00 576.90 Td (* EXPLICITLY REFUTED OVERCLAIMS: Novelty of the underlying 2-round LUT protocol \(prior art: arXiv:2302.01917\);) Tj ET
+BT /F4 8.9 Tf 0.070 0.090 0.150 rg 50.00 565.30 Td (  X/Y data error correction \(0/32\); post-preparation error correction \(0/16 Z, 0/16 Y\); fault-tolerant QEC memory;) Tj ET
+BT /F4 8.9 Tf 0.070 0.090 0.150 rg 50.00 553.70 Td (  arbitrary logical state encoding \(prepares fixed |00>_L only; DD capsule fields are inert metadata\).) Tj ET
+BT /F4 8.9 Tf 0.070 0.090 0.150 rg 50.00 542.10 Td (* UNVERIFIED / BLOCKED: Quantum advantage \(none claimed\); live Quantinuum H2-1SC/H2-1E/H2-1 QPU execution) Tj ET
+BT /F4 8.9 Tf 0.070 0.090 0.150 rg 50.00 530.50 Td (  \(hash-locked CLI & manifests verified; blocked solely on out-of-band QNexus credentials & HQC allocation\).) Tj ET
+BT /F5 10.0 Tf 0.070 0.090 0.150 rg 50.00 509.90 Td (7. Reference CLI Verification & Reproducibility Workflow \(OSIRIS-QEC-002 / v1.1.1\)) Tj ET
+BT /F3 7.2 Tf 0.070 0.090 0.150 rg 50.00 496.90 Td (  osiris qec verify --manifest hardware/experiment_manifest_v1_0_0.json) Tj ET
+BT /F3 7.2 Tf 0.070 0.090 0.150 rg 50.00 486.50 Td (  osiris qec verify --manifest hardware/experiment_manifest_v1_1_1.json --strict) Tj ET
+BT /F3 7.2 Tf 0.070 0.090 0.150 rg 50.00 476.10 Td (  pytest -q                                          # 85 passed \(256-branch, 16/16 Y, rfc8785, Retry-After\)) Tj ET
+BT /F3 7.2 Tf 0.070 0.090 0.150 rg 50.00 465.70 Td (  osiris qec run --target selene --shots 1000 --manifest hardware/experiment_manifest_v1_1_1.json) Tj ET
+BT /F3 7.2 Tf 0.070 0.090 0.150 rg 50.00 455.30 Td (  osiris qec ledger verify ledger/run-*.json && sha256sum -c paper/SHA256SUMS.txt) Tj ET
+BT /F5 9.9 Tf 0.070 0.090 0.150 rg 50.00 435.90 Td (References) Tj ET
+BT /F4 8.3 Tf 0.070 0.090 0.150 rg 50.00 423.30 Td ([1] M. Iqbal et al., 'Topological Order from Measurements and Feed-Forward on a Trapped Ion Quantum Computer,') Tj ET
+BT /F4 8.3 Tf 0.070 0.090 0.150 rg 50.00 412.60 Td (    Commun. Phys. 7, 205 \(2024\); arXiv:2302.01917.) Tj ET
+BT /F4 8.3 Tf 0.070 0.090 0.150 rg 50.00 401.90 Td ([2] Quantinuum, 'Topological Order from Measurements and Feed-Forward' \(Official H-Series Documentation Tutorial\).) Tj ET
+BT /F4 8.3 Tf 0.070 0.090 0.150 rg 50.00 391.20 Td ([3] X.-G. Wen, Phys. Rev. Lett. 90, 016803 \(2003\); A. Yu. Kitaev, Ann. Phys. 303, 2-30 \(2003\).) Tj ET
+BT /F4 8.3 Tf 0.070 0.090 0.150 rg 50.00 380.50 Td ([4] S. Sivarajah et al., 't|ket>: a retargetable compiler for NISQ devices,' Quantum Sci. Technol. 6, 014003 \(2020\).) Tj ET
+BT /F4 8.3 Tf 0.070 0.090 0.150 rg 50.00 369.80 Td ([5] A. Rundgren, B. Jordan, and S. Erdtman, 'JSON Canonicalization Scheme \(JCS\),' IETF RFC 8785 \(2020\).) Tj ET
+BT /F4 8.3 Tf 0.070 0.090 0.150 rg 50.00 359.10 Td ([6] E. B. Wilson, J. Am. Stat. Assoc. 22, 209 \(1927\).) Tj ET
+BT /F4 8.3 Tf 0.070 0.090 0.150 rg 50.00 348.40 Td ([7] D. P. Davis, OSIRIS-QEC v1.0.0 \(10.5281/zenodo.24406733\) & v1.1.0 \(10.5281/zenodo.24421051\); Companion study OSIRIS-QEC-001,) Tj ET
+BT /F4 8.3 Tf 0.070 0.090 0.150 rg 50.00 337.70 Td (    Zenodo doi:10.5281/zenodo.24293756 \(2026\).) Tj ET
+0.82 0.85 0.89 RG 0.6 w 50 32 m 562 32 l S
+BT /F3 6.5 Tf 0.35 0.39 0.45 rg 50 21 Td (OSIRIS-QEC-002 \(osiris-qec v1.1.1\)  |  DOI: 10.5281/zenodo.24424726  |  HARDWARE-UNVALIDATED  |  Page 4 of 4) Tj ET
+endstream
+endobj
+15 0 obj
+<< /Type /Page /Parent 7 0 R /MediaBox [0 0 612.00 792.00] /Resources << /Font << /F1 1 0 R /F2 2 0 R /F3 3 0 R /F4 4 0 R /F5 5 0 R /F6 6 0 R >> >> /Contents 14 0 R >>
+endobj
+16 0 obj
+<< /Type /Catalog /Pages 7 0 R >>
+endobj
+xref
+0 17
+0000000000 65535 f 
+0000000015 00000 n 
+0000000085 00000 n 
+0000000160 00000 n 
+0000000228 00000 n 
+0000000300 00000 n 
+0000000371 00000 n 
+0000000444 00000 n 
+0000000522 00000 n 
+0000017314 00000 n 
+0000017496 00000 n 
+0000034347 00000 n 
+0000034531 00000 n 
+0000043600 00000 n 
+0000043784 00000 n 
+0000049767 00000 n 
+0000049951 00000 n 
+trailer
+<< /Size 17 /Root 16 0 R >>
+startxref
+50001
+%%EOF

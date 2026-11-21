@@ -21,6 +21,7 @@ from osiris_cli.qnexus_client import (
     HashMismatchError,
     QNexusAPIError,
     execute_h2_qnexus,
+    with_qnexus_retries,
 )
 from wen_plaquette_pass import WenPlaquetteFeedForwardPass
 
@@ -376,6 +377,57 @@ def test_cli_h2_dispatch_records_write_ahead_ledger_on_abort(tmp_path: Path, mon
     ledger_files = list(ledger_dir.glob("run-*.json"))
     assert len(ledger_files) == 1
     verify_ledger_file(ledger_files[0])
-    rows = read_ledger(ledger_files[0])
+    assert len( rows := read_ledger(ledger_files[0]) ) == 2
     assert [r["stage"] for r in rows] == ["pre_submit", "aborted_hash_mismatch"]
     assert len(mock_qnx.execute_calls) == 0
+
+
+def test_retry_after_header_and_jitter_prevent_thundering_herd() -> None:
+    class Mock429RetryAfterError(RuntimeError):
+        def __init__(self, retry_after: str):
+            super().__init__("429 Too Many Requests")
+            self.status_code = 429
+            self.headers = {"Retry-After": retry_after}
+
+    calls = 0
+    slept: List[float] = []
+
+    def flaky_op() -> str:
+        nonlocal calls
+        calls += 1
+        if calls == 1:
+            raise Mock429RetryAfterError("6")
+        if calls == 2:
+            raise ConnectionError("transient reset")
+        return "ok"
+
+    out = with_qnexus_retries(
+        "rate_limited_op",
+        flaky_op,
+        max_retries=3,
+        base_delay=0.5,
+        backoff_factor=2.0,
+        jitter_ratio=0.25,
+        rng_fn=lambda: 0.8,
+        sleep_fn=slept.append,
+    )
+    assert out == "ok"
+    assert len(slept) == 2
+    # First retry honors Retry-After=6s (+ small positive desync jitter), NOT 0.5s
+    assert 6.0 <= slept[0] <= 6.6
+    # Second retry (attempt=1) uses base_delay * 2^1 = 1.0s with jitter (rng=0.8 -> +15% = 1.15s)
+    assert abs(slept[1] - 1.15) < 1e-9
+
+    # Verify two clients with distinct RNG draws do NOT collide at identical retry timestamps
+    d_low: List[float] = []
+    d_high: List[float] = []
+    for rng_val, bucket in ((0.1, d_low), (0.9, d_high)):
+        n = 0
+        def _once_fail() -> str:
+            nonlocal n
+            n += 1
+            if n == 1:
+                raise TimeoutError("gateway timeout")
+            return "done"
+        with_qnexus_retries("jitter_test", _once_fail, rng_fn=lambda r=rng_val: r, sleep_fn=bucket.append)
+    assert d_low[0] != d_high[0]

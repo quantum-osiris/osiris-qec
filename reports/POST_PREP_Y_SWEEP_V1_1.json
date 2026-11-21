@@ -1,5 +1,5 @@
 {
-  "osiris_qec_version": "1.1.0",
+  "osiris_qec_version": "1.1.1",
   "sweep": "post_preparation_pauli_Y_data_qubits_0_to_15",
   "total_qubits": 16,
   "detected_count": 16,

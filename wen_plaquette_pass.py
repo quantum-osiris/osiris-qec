@@ -36,7 +36,8 @@ from pytket import Circuit, OpType
 from pytket.circuit import Bit, BitRegister, Qubit, QubitRegister
 from pytket.passes import BasePass, CustomPass
 
-OSIRIS_QEC_VERSION = "1.1.0"
+OSIRIS_QEC_VERSION = "1.1.1"
+OSIRIS_PROTOCOL_ID = "OSIRIS-QEC-002"
 FROZEN_PRECOMPILE_SHA256 = "b86aeabd70eecb7f5fbca5d0e1688e06d71dc358fd9fbaaab7fd8e4f9634230b"
 FROZEN_H2_ISA_SHA256 = "02d5cb72849f9b473c022e68023486fdecc8c9f7fc3da9a9a9299c3482f31062"
 

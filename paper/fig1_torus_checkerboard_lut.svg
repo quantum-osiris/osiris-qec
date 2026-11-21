@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="540" height="206" viewBox="0 0 540 206">
 <rect x="0" y="0" width="540" height="206" fill="#ffffff"/>
-<text x="270.00" y="15.00" font-family="Helvetica, Arial, sans-serif" font-size="9.3" font-weight="bold" fill="#111827" text-anchor="middle">4x4 Toroidal Wen-Plaquette CSS Code ([[16, 2, 4]]: 16 Data + 4 Recycled Ancillas) &amp; LUT</text>
+<text x="270.00" y="15.00" font-family="Helvetica, Arial, sans-serif" font-size="9.2" font-weight="bold" fill="#111827" text-anchor="middle">OSIRIS-QEC-002: [[16, 2, 4]] Toroidal Wen-Plaquette Code (16 Data + 4 Recycled Ancillas)</text>
 <text x="102.00" y="28.00" font-family="Helvetica, Arial, sans-serif" font-size="8.2" font-weight="bold" fill="#111827" text-anchor="middle">(a) Checkerboard Torus (q_{4r+c})</text>
 <rect x="34.00" y="36.00" width="34.00" height="34.00" fill="#f3f4f6" stroke="#64748b" stroke-width="0.70"/>
 <text x="51.00" y="55.04" font-family="monospace" font-size="6.2" font-weight="normal" fill="#4b5563" text-anchor="middle">Z0</text>
