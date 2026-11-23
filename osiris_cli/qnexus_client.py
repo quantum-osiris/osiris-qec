@@ -12,10 +12,11 @@ import os
 import random
 import time
 from collections import Counter
-from datetime import datetime, timezone
-from typing import Any, Callable, Dict, List, Optional, Tuple, TypeVar
+from collections.abc import Callable
+from datetime import UTC, datetime
+from typing import Any, TypeVar
 
-from pytket import Circuit, OpType
+from pytket import Circuit
 
 from hardware.quantinuum_h2 import local_h2_compile
 from osiris_cli.ledger import compute_wilson_lower_bound
@@ -56,8 +57,11 @@ def get_installed_qnexus_version() -> str:
     try:
         return importlib.metadata.version("qnexus")
     except importlib.metadata.PackageNotFoundError:
-        import qnexus as qnx  # type: ignore
-        return getattr(qnx, "__version__", "unknown")
+        try:
+            import qnexus as qnx  # type: ignore
+            return getattr(qnx, "__version__", "unknown")
+        except ImportError:
+            return "unknown"
 
 
 def verify_hash(observed: str, expected: str, label: str) -> None:
@@ -69,7 +73,7 @@ def verify_hash(observed: str, expected: str, label: str) -> None:
         )
 
 
-def verify_manifest_lock(manifest: Dict[str, Any], *, require_v1_1_locks: bool = True) -> None:
+def verify_manifest_lock(manifest: dict[str, Any], *, require_v1_1_locks: bool = True) -> None:
     if require_v1_1_locks:
         if not manifest.get("hash_lock", False):
             raise ManifestError("Hash lock disabled in manifest (`hash_lock` must be true).")
@@ -84,7 +88,7 @@ def verify_manifest_lock(manifest: Dict[str, Any], *, require_v1_1_locks: bool =
     verify_hash(manifest["isa_sha256"], EXPECTED_ISA, "H2-1 ISA")
 
 
-def build_and_verify_frozen_artifacts(manifest: Dict[str, Any]) -> Tuple[Circuit, Circuit, Dict[str, Any]]:
+def build_and_verify_frozen_artifacts(manifest: dict[str, Any]) -> tuple[Circuit, Circuit, dict[str, Any]]:
     """
     Deterministically build the pre-compile circuit and offline H2-1 ISA circuit,
     verifying both SHA-256 digests, depth=19, and ZZPhase=32 against the frozen baseline.
@@ -145,7 +149,7 @@ def _is_transient_exception(exc: BaseException) -> bool:
     return any(tok in msg for tok in retry_tokens)
 
 
-def _extract_retry_after_seconds(exc: BaseException, max_delay: float = 60.0) -> Optional[float]:
+def _extract_retry_after_seconds(exc: BaseException, max_delay: float = 60.0) -> float | None:
     """Extract HTTP `Retry-After` delay (delta-seconds or RFC 7231 HTTP-date) if present."""
     headers = getattr(exc, "headers", None)
     if headers is None and hasattr(exc, "response"):
@@ -153,7 +157,7 @@ def _extract_retry_after_seconds(exc: BaseException, max_delay: float = 60.0) ->
     if not headers or not hasattr(headers, "items"):
         return None
 
-    raw_val: Optional[str] = None
+    raw_val: str | None = None
     for k, v in headers.items():
         if str(k).lower() == "retry-after":
             raw_val = str(v).strip()
@@ -170,10 +174,10 @@ def _extract_retry_after_seconds(exc: BaseException, max_delay: float = 60.0) ->
     try:
         dt = email.utils.parsedate_to_datetime(raw_val)
         if dt.tzinfo is None:
-            dt = dt.replace(tzinfo=timezone.utc)
-        delta = (dt - datetime.now(timezone.utc)).total_seconds()
+            dt = dt.replace(tzinfo=UTC)
+        delta = (dt - datetime.now(UTC)).total_seconds()
         return max(0.0, min(max_delay, delta))
-    except Exception:
+    except (TypeError, ValueError, OverflowError):
         return None
 
 
@@ -221,7 +225,7 @@ def with_qnexus_retries(
             attempt += 1
 
 
-def build_qnexus_config() -> Dict[str, Any]:
+def build_qnexus_config() -> dict[str, Any]:
     return {
         "optimisation_level": 0,
         "compiler_lock": True,
@@ -258,11 +262,11 @@ def verify_compiled_program_hash(compiled_program: Any, expected_isa_sha256: str
     return observed
 
 
-def _score_qnexus_results(results: Any, requested_shots: int) -> Dict[str, Any]:
+def _score_qnexus_results(results: Any, requested_shots: int) -> dict[str, Any]:
     """Extract bitstrings, syndrome trajectories, parity fidelity, and Wilson LCB from QNexus results."""
     x_supports = [s.support for s in WEN_STABILIZERS if s.pauli_type == "X"]
-    raw_bitstrings: List[str] = []
-    syndrome_trajectories: List[str] = []
+    raw_bitstrings: list[str] = []
+    syndrome_trajectories: list[str] = []
 
     res_item = results[0] if isinstance(results, (list, tuple)) and results else results
     if isinstance(res_item, dict) and "c5_end_bitstrings" in res_item:
@@ -313,14 +317,14 @@ def login(qnx_mod: Any) -> None:
 
 def execute_h2_qnexus(
     isa_circuit: Circuit,
-    manifest: Dict[str, Any],
+    manifest: dict[str, Any],
     shots: int,
     *,
     device_name: str = "H2-1",
     qnx_module: Any = None,
     max_retries: int = 3,
     sleep_fn: Callable[[float], None] = time.sleep,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Two-phase provenance-locked Quantinuum Nexus execution:
       1. Verify manifest locks and local ISA circuit SHA-256 (`02d5cb72...`).
@@ -351,7 +355,7 @@ def execute_h2_qnexus(
         sleep_fn=sleep_fn,
     )
 
-    ts = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
+    ts = datetime.now(UTC).strftime("%Y%m%d-%H%M%S")
     circuit_ref = with_qnexus_retries(
         "circuits.upload",
         lambda: qnx.circuits.upload(
