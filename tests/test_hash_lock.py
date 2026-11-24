@@ -201,7 +201,10 @@ def test_rfc8785_canonicalization_is_stable_and_compliant() -> None:
 def test_no_deprecated_utcnow_in_repository() -> None:
     bad_token = "datetime." + "utcnow"
     for py_file in ROOT.rglob("*.py"):
-        if ".git" in py_file.parts or "__pycache__" in py_file.parts or "tests" in py_file.parts:
+        if any(
+            p in py_file.parts
+            for p in (".git", "__pycache__", "tests", ".venv", "venv", "build", "dist")
+        ):
             continue
         text = py_file.read_text(encoding="utf-8")
         assert bad_token not in text, f"Deprecated {bad_token}() found in {py_file}"
