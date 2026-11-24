@@ -8,15 +8,16 @@ from __future__ import annotations
 
 import json
 import shutil
+import sys
 from dataclasses import dataclass
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from typing import Any
 
 import numpy as np
 import pytest
 import rfc8785
-from pytket import Circuit
-
 from osiris_qec.qec003_memory_twists import (
     CSSBpOsdDecoder,
     compile_memory_rounds_h2_metrics,
@@ -27,6 +28,7 @@ from osiris_qec.qec003_memory_twists import (
     verify_twist_anyon_braiding_and_h2_compile,
     verify_twist_defect_algebra,
 )
+from pytket import Circuit
 from submission.run_nexus_qec002 import (
     DEFAULT_BUNDLE_DIR,
     EXPECTED_Z_H2_ISA_SHA256,
